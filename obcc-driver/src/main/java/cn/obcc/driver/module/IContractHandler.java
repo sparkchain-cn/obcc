@@ -29,7 +29,7 @@ public interface IContractHandler<T> extends IChainHandler<T> {
                                   IContractDeployFn fn, ReqConfig<T> config) throws Exception;
 
 
-    public RetData<Object> query(ReqConfig<T> config, Object... params) throws Exception;
+    public RetData<Object> query(ReqConfig<T> config,String methodName, Object... params) throws Exception;
 
 
     public RetData<String> invoke(String bizId, SrcAccount srcAccount, ReqConfig<T> config,

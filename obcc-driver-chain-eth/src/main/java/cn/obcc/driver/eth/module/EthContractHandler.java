@@ -36,9 +36,10 @@ public class EthContractHandler  extends BaseHandler<Web3j> implements IContract
 	}
 
 	@Override
-	public RetData<Object> query(ReqConfig<Web3j> config, Object... params) throws Exception {
+	public RetData<Object> query(ReqConfig<Web3j> config, String methodName, Object... params) throws Exception {
 		return null;
 	}
+
 
 	@Override
 	public RetData<String> invoke(String bizId, SrcAccount srcAccount, ReqConfig<Web3j> config, IContractInvokeFn fn, Object... params) throws Exception {

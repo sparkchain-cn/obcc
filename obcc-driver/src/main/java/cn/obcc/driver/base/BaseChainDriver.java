@@ -3,7 +3,6 @@ package cn.obcc.driver.base;
 import cn.obcc.config.ObccConfig;
 import cn.obcc.connect.pool.ChainClientPoolFactory;
 import cn.obcc.driver.IChainDriver;
-import cn.obcc.driver.adjuster.SpeedAdjuster;
 import cn.obcc.driver.tech.ISpeedAdjuster;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,8 +51,6 @@ public abstract class BaseChainDriver<T> implements IChainDriver<T> {
 
 
     private BaseHandler newHandler(String name) {
-
-
         try {
             return (BaseHandler) getClass().getClassLoader().loadClass(name).newInstance();
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {

@@ -22,7 +22,7 @@ public interface IDbStatement extends IStatement {
 
 	/*********************************************************************/
 
-	public RetData<Table> CreateTable(String tableName, TableDefine define) throws Exception;
+	public RetData<Table> createTable(String tableName, TableDefine define) throws Exception;
 
 	public RetData<Procedure> createProcedure(String procedureName, String code) throws Exception;
 

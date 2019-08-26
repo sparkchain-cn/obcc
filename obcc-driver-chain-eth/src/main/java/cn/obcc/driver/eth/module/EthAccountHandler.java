@@ -50,14 +50,11 @@ public class EthAccountHandler extends AccountBaseHandler<Web3j> implements IAcc
         } catch (NoSuchProviderException e) {
             throw ObccException.create(EExceptionCode.CREATE_ACCOUNT_FAIL, "NoSuchProvider" + e);
         }
-
     }
 
+
     @Override
-    public RetData<String> transfer(String bizId, SrcAccount account, BigInteger amount,
-                                    String destAddress, ReqConfig<Web3j> config, ITransferFn callback) throws Exception {
-
-
+    public RetData<String> innerTranfer(String bizId, SrcAccount account, BigInteger amount, String destAddress, ReqConfig<Web3j> config, ITransferFn callback) throws Exception {
         return null;
     }
 

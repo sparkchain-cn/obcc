@@ -16,7 +16,7 @@ public class DbStatement  extends BaseStatement implements IDbStatement {
 
 	
 	@Override
-	public RetData<Table> CreateTable(String tableName, TableDefine define) throws Exception {
+	public RetData<Table> createTable(String tableName, TableDefine define) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}

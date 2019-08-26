@@ -48,12 +48,12 @@
 			<version>2.6</version>
 			<scope>compile</scope>
 		</dependency>
-        <dependency>
-            <groupId>cn.obcc</groupId>
-            <artifactId>obcc-driver-adjuster</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>cn.obcc</groupId>-->
+<!--            <artifactId>obcc-driver-adjuster</artifactId>-->
+<!--            <version>0.0.1-SNAPSHOT</version>-->
+<!--            <scope>compile</scope>-->
+<!--        </dependency>-->
 
     </dependencies>
 

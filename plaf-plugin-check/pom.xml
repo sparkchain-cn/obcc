@@ -9,7 +9,7 @@
 		<groupId>cn.obcc</groupId>
 		<artifactId>obcc-plaf</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<!-- <relativePath>../plaf/pom.xml</relativePath> -->
+		<relativePath>../pom-plaf.xml</relativePath>
 	</parent>
 	<artifactId>plaf-plugin-check</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -30,7 +30,7 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
-			<!-- Maven assembly must be run after proguard obfuscation so it take 
+			<!-- Maven assembly must be run after proguard obfuscation so it take
 				already obfuscated files. -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
