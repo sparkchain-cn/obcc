@@ -1,0 +1,93 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>cn.obcc</groupId>
+		<artifactId>obcc</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>obcc-driver-chain-eth</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+
+
+	<packaging>jar</packaging>
+
+	<properties>
+		<jackson.version>2.9.4</jackson.version>
+		<chain3j.version>1.0-SNAPSHOT</chain3j.version>
+
+		<web3j.version>4.0.3</web3j.version>
+	</properties>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.7</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.web3j</groupId>
+			<artifactId>core</artifactId>
+			<version>${web3j.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.web3j</groupId>
+			<artifactId>crypto</artifactId>
+			<version>${web3j.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.web3j</groupId>
+			<artifactId>abi</artifactId>
+			<version>${web3j.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.web3j</groupId>
+			<artifactId>utils</artifactId>
+			<version>${web3j.version}</version>
+
+		</dependency>
+		<dependency>
+			<groupId>io.reactivex.rxjava2</groupId>
+			<artifactId>rxjava</artifactId>
+			<version>2.2.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>cn.obcc</groupId>
+			<artifactId>obcc-def</artifactId>
+			<version>${chain.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.obcc</groupId>
+			<artifactId>obcc-driver</artifactId>
+			<version>${chain.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.obcc</groupId>
+			<artifactId>obcc-utils</artifactId>
+			<version>${chain.version}</version>
+		</dependency>
+	</dependencies>
+
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+		</plugins>
+
+	</build>
+
+</project>

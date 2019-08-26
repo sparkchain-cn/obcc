@@ -1,0 +1,12 @@
+/.idea/
+/.settings/
+/target/
+/.project
+/.classpath
+*.iml
+*.pdb
+/logger/
+/.vscode/
+/temp
+/*.jpg
+/bin/
