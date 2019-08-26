@@ -8,7 +8,7 @@
 	<artifactId>obcc</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<modules>
-		<!--<module>obcc-plaf</module>-->
+
 		<module>obcc-def</module>
 		<module>obcc-utils</module>
 		<module>obcc-driver</module>
@@ -20,14 +20,14 @@
 		<module>obcc-stmt-ledger</module>
 		<module>obcc-client</module>
 		<module>obcc-client-examples</module>
-		<module>plaf-boot</module>
-		<module>plaf-plugin</module>
-		<module>plaf-plugin-check</module>
+
         <module>obcc-driver-nonce</module>
 		<module>obcc-driver-memo</module>
 		<module>obcc-driver-adjuster</module>
 		<module>obcc-driver-callback</module>
         <module>obcc-driver-contract-solc</module>
+
+		<module>obcc-plaf</module>
     </modules>
 
 	<packaging>pom</packaging>

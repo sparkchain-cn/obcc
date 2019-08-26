@@ -9,7 +9,6 @@
         <groupId>cn.obcc</groupId>
         <artifactId>obcc-plaf</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../pom-plaf.xml</relativePath>
     </parent>
     <artifactId>plaf-plugin</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -60,30 +59,6 @@
         </dependencies>
     </dependencyManagement>
 
-
-    <distributionManagement>
-        <repository>
-            <id>nexus-release</id>
-            <url>http://121.43.182.221:8090/repository/maven-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>nexus-snapshot</id>
-            <url>http://121.43.182.221:8090/repository/maven-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
-
-    <repositories>
-        <repository>
-            <id>proxyRepo</id>
-            <url>http://121.43.182.221:8090/repository/maven-public/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
 
 
     <dependencies>
