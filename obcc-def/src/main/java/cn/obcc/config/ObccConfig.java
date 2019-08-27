@@ -13,14 +13,15 @@ public class ObccConfig {
 
     private String clientId = "obcc";
 
-    private String dbStmtName = "com.obcc.stmt.db.DbStatement";
-    private String storageStmtName = "com.obcc.stmt.storage.StorageStatement";
-    private String ledgerStmtName = "com.obcc.stmt.ledger.LedgerStatement";
+    private String dbStmtName = "cn.obcc.stmt.db.DbStatement";
+    private String storageStmtName = "cn.obcc.stmt.storage.StorageStatement";
+    private String ledgerStmtName = "cn.obcc.stmt.ledger.LedgerStatement";
 
 
+    private String localDbName = "cn.obcc.db.SqliteDb";
     private String speedAdjusterName = "cn.obcc.driver.adjuster.SpeedAdjuster";
 
-    private String driverName = "com.obcc.driver.eth.EthChainDriver";
+    private String driverName = "cn.obcc.driver.eth.EthChainDriver";
 
     private ConnPoolConfig pollconfig;
 
@@ -168,5 +169,13 @@ public class ObccConfig {
 
     public void setTempPath(String tempPath) {
         this.tempPath = tempPath;
+    }
+
+    public String getLocalDbName() {
+        return localDbName;
+    }
+
+    public void setLocalDbName(String localDbName) {
+        this.localDbName = localDbName;
     }
 }

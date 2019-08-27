@@ -2,6 +2,7 @@ package cn.obcc.driver;
 
 import cn.obcc.config.ObccConfig;
 import cn.obcc.connect.builder.ChainClientBuilder;
+import cn.obcc.db.ILocalDb;
 import cn.obcc.driver.module.IAccountHandler;
 import cn.obcc.driver.module.IBlockHandler;
 import cn.obcc.driver.module.IContractHandler;
@@ -19,8 +20,9 @@ public interface IChainDriver<T> {
     /**
      * pengrk created or updated at 2019年8月22日 上午10:01:33
      */
-    public IChainDriver<T> init(ObccConfig config) throws Exception;
+    public IChainDriver<T> init(ObccConfig config, ILocalDb db) throws Exception;
 
+    public ILocalDb getLocalDb() throws Exception;
     /*********************************************************************/
     /**
      * 获取区块链的客户端类，如eth中使用Web3j<br>
