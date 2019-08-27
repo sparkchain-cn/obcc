@@ -46,7 +46,7 @@ public class AbiParser {
     }
 
     /**
-     * abi中指定方法的参数的个数
+     * abi中指定方法 数据
      * {"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_value","type":"uint256"},{"name":"memos","type":"string"}],"name":"transfer","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},
      *
      * @param abi
