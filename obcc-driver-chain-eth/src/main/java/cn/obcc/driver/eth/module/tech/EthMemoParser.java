@@ -1,5 +1,6 @@
 package cn.obcc.driver.eth.module.tech;
 
+import cn.obcc.driver.memo.MemoParser;
 import cn.obcc.driver.vo.BcMemo;
 import cn.obcc.driver.vo.SrcAccount;
 import cn.obcc.config.ReqConfig;
@@ -9,17 +10,14 @@ import org.web3j.protocol.Web3j;
 import cn.obcc.driver.base.BaseHandler;
 import cn.obcc.driver.tech.IMemoParser;
 
-public class EthMemoParser extends BaseHandler<Web3j> implements IMemoParser<Web3j> {
+import java.util.List;
 
-
-
-    @Override
-    public RetData<String> encode(SrcAccount transInfo, ReqConfig<Web3j> config) throws Exception {
-        return null;
-    }
+public class EthMemoParser extends MemoParser<Web3j> implements IMemoParser<Web3j> {
 
     @Override
-    public RetData<BcMemo> decode(SrcAccount transInfo, ReqConfig<Web3j> config) throws Exception {
-        return null;
+    public Long getMaxSize() throws Exception {
+        //28K
+        return 28 * 1024 * 1024L;
     }
+
 }

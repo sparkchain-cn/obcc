@@ -22,7 +22,7 @@ public class StringPackageUtils {
 
 
     public static String backString(String origin) {
-        return HexStringUtils.hexStr2Str(origin);
+        return HexUtils.hexStr2Str(origin);
     }
 
     /**

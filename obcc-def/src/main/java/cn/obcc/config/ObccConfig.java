@@ -5,6 +5,7 @@ import java.util.List;
 
 import cn.obcc.config.conn.pool.ConnPoolConfig;
 import cn.obcc.exception.enums.EChainType;
+import cn.obcc.exception.enums.EMemoStrategy;
 import cn.obcc.exception.enums.ENonceStrategy;
 
 public class ObccConfig {
@@ -28,6 +29,10 @@ public class ObccConfig {
 
 
     private ENonceStrategy nonceStrategy = ENonceStrategy.Memory;
+    private EMemoStrategy memoStrategy=EMemoStrategy.JSON;
+
+
+    private String memoPre = "&&spc";
 
     private List<String> uuids = new ArrayList<>();
 
@@ -119,5 +124,21 @@ public class ObccConfig {
 
     public void setNonceStrategy(ENonceStrategy nonceStrategy) {
         this.nonceStrategy = nonceStrategy;
+    }
+
+    public EMemoStrategy getMemoStrategy() {
+        return memoStrategy;
+    }
+
+    public void setMemoStrategy(EMemoStrategy memoStrategy) {
+        this.memoStrategy = memoStrategy;
+    }
+
+    public String getMemoPre() {
+        return memoPre;
+    }
+
+    public void setMemoPre(String memoPre) {
+        this.memoPre = memoPre;
     }
 }

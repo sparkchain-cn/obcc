@@ -52,7 +52,8 @@ public abstract class AccountBaseHandler<T> extends BaseHandler<T> implements IA
             account.setNonce((String) getDriver().getNonceCalculator().getNonce(account.getAccount(), config).getData());
         }
         //2、转换memo
-        account.setMemos((String) getDriver().getMemoParser().encode(account, config).getData());
+        //todo:多条返回多个hash
+        account.setMemos((String) getDriver().getMemoParser().encodeOne(bizId, account.getMemos()));
         //2、计算 gas
 
 

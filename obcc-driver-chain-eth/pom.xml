@@ -78,6 +78,11 @@
             <artifactId>obcc-driver-nonce</artifactId>
             <version>${chain.version}</version>
         </dependency>
+        <dependency>
+            <groupId>cn.obcc</groupId>
+            <artifactId>obcc-driver-memo</artifactId>
+            <version>${chain.version}</version>
+        </dependency>
     </dependencies>
 
 
