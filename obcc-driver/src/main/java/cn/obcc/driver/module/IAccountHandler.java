@@ -2,10 +2,10 @@ package cn.obcc.driver.module;
 
 import cn.obcc.driver.IChainHandler;
 import cn.obcc.driver.module.fn.ITransferFn;
-import cn.obcc.driver.vo.Account;
-import cn.obcc.driver.vo.SrcAccount;
-import cn.obcc.driver.vo.TransactionInfo;
+import cn.obcc.driver.module.fn.ITransferInfoFn;
+import cn.obcc.driver.vo.*;
 import cn.obcc.config.ReqConfig;
+import cn.obcc.vo.driver.AccountInfo;
 import cn.obcc.vo.RetData;
 
 import java.math.BigInteger;
@@ -22,24 +22,67 @@ public interface IAccountHandler<T> extends IChainHandler<T> {
      * 在链上创建钱包,包括激活其钱包,<br>
      * 目前链（moac,jingtum spp)
      *
-     * @param config 系统统一的配置<br>
      * @return address:钱包地址<br>
      * privateKey:钱包私钥<br>
      */
-    public RetData<Account> createAccount(ReqConfig<T> config) throws Exception;
+    public RetData<Account> createAccount() throws Exception;
 
 
     /**
+     * @param bizId
+     * @param username
+     * @param pwd
+     * @return
+     * @throws Exception
+     */
+    public RetData<AccountInfo> createAccount(String bizId, String username, String pwd) throws Exception;
+
+    /**
      * @param account 参数
-     * @param config  系统配置
-     * @return hash:交易的返回的hash,其它参数每个链不一样
+     * @param config  系统配置,在这中间配置是否需要拆分
+     * @return hash:交易的返回的hashs,其它参数每个链不一样,如果memo的过大，会自动拆分成多条上链。
      * @throws Exception
      */
     public RetData<String> transfer(String bizId, SrcAccount account, BigInteger amount,
                                     String destAddress, ReqConfig<T> config, ITransferFn callback) throws Exception;
 
+
+    /**
+     * @param bizId
+     * @param account
+     * @param amount
+     * @param destAddress
+     * @param config
+     * @param callback
+     * @return
+     * @throws Exception
+     */
     public RetData<String> asyncTransfer(String bizId, SrcAccount account, BigInteger amount,
-                                    String destAddress, ReqConfig<T> config, ITransferFn callback) throws Exception;
+                                         String destAddress, ReqConfig<T> config, ITransferFn callback) throws Exception;
+
+    /**
+     * 根据 transfer返回的hash获取该次支付的相关信息;<br>
+     * 多条记录进行合并
+     *
+     * @param bizId
+     * @param config
+     * @return
+     * @throws Exception
+     */
+    public RetData<BizTransactionInfo> getTransaction(String bizId, ReqConfig<T> config) throws Exception;
+
+    /**
+     * 异步取，特别是文件上链，其可能有几千个，最好采用异步。
+     *
+     * @param bizId
+     * @param config
+     * @param fn
+     * @return hashs
+     * @throws Exception
+     */
+    public RetData<String> getTransaction(String bizId, ReqConfig<T> config, ITransferInfoFn fn) throws Exception;
+
+
     /**
      * 根据 transfer返回的hash获取该次支付的相关信息;<br>
      *
@@ -48,7 +91,8 @@ public interface IAccountHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public RetData<TransactionInfo> getTransaction(String hash, ReqConfig<T> config) throws Exception;
+    public RetData<TransactionInfo> getTransactionByHash(String hash, ReqConfig<T> config) throws Exception;
+
 
     /**
      * 获取指定钱包中原生币的余额 <br>

@@ -4,6 +4,7 @@ import cn.obcc.driver.base.BaseHandler;
 import cn.obcc.driver.module.IAccountHandler;
 import cn.obcc.driver.module.fn.ITransferFn;
 import cn.obcc.driver.vo.SrcAccount;
+import cn.obcc.vo.driver.AccountInfo;
 import cn.obcc.utils.base.StringUtils;
 import cn.obcc.config.ReqConfig;
 import cn.obcc.vo.RetData;
@@ -21,6 +22,13 @@ import java.util.Map;
  **/
 public abstract class AccountBaseHandler<T> extends BaseHandler<T> implements IAccountHandler<T> {
 
+
+
+    @Override
+    public RetData<AccountInfo> createAccount(String bizId, String username, String pwd) throws Exception {
+        //创建完成调用 db保存
+        return null;
+    }
 
     @Override
     public RetData<String> asyncTransfer(String bizId, SrcAccount account, BigInteger amount,

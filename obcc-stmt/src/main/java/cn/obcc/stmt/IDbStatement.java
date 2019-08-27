@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import cn.obcc.exception.enums.EDbOperaType;
-import cn.obcc.stmt.module.db.Procedure;
-import cn.obcc.stmt.module.db.Table;
-import cn.obcc.stmt.module.db.TableDefine;
+import cn.obcc.vo.stmt.Procedure;
+import cn.obcc.vo.stmt.Table;
+import cn.obcc.vo.stmt.TableDefine;
 import cn.obcc.vo.Page;
 import cn.obcc.vo.RetData;
 
@@ -33,6 +33,7 @@ public interface IDbStatement extends IStatement {
 	public RetData<Object> update(String tableName, String id, String data) throws Exception;
 
 	public RetData<Object> exec(String procedureName, String method, Object... params) throws Exception;
+
 
 	/*******************************************************************/
 	public boolean exist(String tableName, String id) throws Exception;

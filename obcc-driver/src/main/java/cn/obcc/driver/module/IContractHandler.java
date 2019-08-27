@@ -1,11 +1,11 @@
 package cn.obcc.driver.module;
 
 import cn.obcc.driver.IChainHandler;
+import cn.obcc.driver.module.fn.IContractCompileFn;
 import cn.obcc.driver.module.fn.IContractDeployFn;
 import cn.obcc.driver.module.fn.IContractInvokeFn;
 import cn.obcc.driver.vo.SrcAccount;
-import cn.obcc.driver.vo.ContractInfo;
-import cn.obcc.exception.enums.EContractType;
+import cn.obcc.vo.driver.ContractInfo;
 import cn.obcc.config.ReqConfig;
 import cn.obcc.vo.RetData;
 
@@ -17,22 +17,45 @@ import cn.obcc.vo.RetData;
  */
 public interface IContractHandler<T> extends IChainHandler<T> {
 
-    public RetData<ContractInfo> compile(String contract, ReqConfig<T> config) throws Exception;
+    public RetData<ContractInfo> compile(String bizId, String contract, ReqConfig<T> config) throws Exception;
 
-    public RetData<ContractInfo> compile(String contract, EContractType type,
-                                         String version, ReqConfig<T> config) throws Exception;
+    public void compile(String bizId, String contract, IContractCompileFn fn, ReqConfig<T> config) throws Exception;
 
+    public ContractInfo getContract(String bizId) throws Exception;
+
+    public RetData<Boolean> addContract(String bizId, ContractInfo params) throws Exception;
+
+    /**
+     * 返回区块链的hash
+     *
+     * @param bizId
+     * @param srcAccount
+     * @param contract
+     * @param fn
+     * @param config
+     * @return
+     * @throws Exception
+     */
     public RetData<String> deploy(String bizId, SrcAccount srcAccount, ContractInfo contract,
                                   IContractDeployFn fn, ReqConfig<T> config) throws Exception;
 
+    /**
+     * @param bizId
+     * @param srcAccount
+     * @param contract
+     * @param fn
+     * @param config
+     * @return
+     * @throws Exception
+     */
     public RetData<String> deploy(String bizId, SrcAccount srcAccount, String contract,
                                   IContractDeployFn fn, ReqConfig<T> config) throws Exception;
 
 
-    public RetData<Object> query(ReqConfig<T> config,String methodName, Object... params) throws Exception;
+    public RetData<Object> query(ContractInfo contractInfo, ReqConfig<T> config, String methodName, Object... params) throws Exception;
 
 
-    public RetData<String> invoke(String bizId, SrcAccount srcAccount, ReqConfig<T> config,
+    public RetData<String> invoke(String bizId, ContractInfo contractInfo, SrcAccount srcAccount, ReqConfig<T> config,
                                   IContractInvokeFn fn, Object... params) throws Exception;
 
 

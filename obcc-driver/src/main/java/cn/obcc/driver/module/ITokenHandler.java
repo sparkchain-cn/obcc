@@ -4,7 +4,7 @@ import cn.obcc.driver.IChainHandler;
 import cn.obcc.driver.module.fn.ITokenCreateFn;
 import cn.obcc.driver.module.fn.ITokenOperateFn;
 import cn.obcc.driver.vo.SrcAccount;
-import cn.obcc.driver.vo.TokenInfo;
+import cn.obcc.vo.driver.TokenInfo;
 import cn.obcc.driver.vo.TransactionInfo;
 import cn.obcc.driver.vo.TokenParams;
 import cn.obcc.config.ReqConfig;
