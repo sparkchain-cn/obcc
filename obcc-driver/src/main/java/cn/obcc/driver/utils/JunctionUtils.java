@@ -12,8 +12,7 @@ import com.alibaba.fastjson.JSONArray;
 
 import cn.obcc.config.conn.pool.ChainNodeWeight;
 import cn.obcc.config.conn.pool.ConnPoolConfig;
-import cn.obcc.driver.vo.BcMemo;
-import cn.obcc.utils.HexStringUtils;
+import cn.obcc.utils.HexUtils;
 import cn.obcc.utils.base.MapUtils;
 import cn.obcc.utils.base.StringUtils;
 
@@ -70,7 +69,7 @@ public class JunctionUtils {
     public static String hexData(String data) {
 
         if (StringUtils.isNotNullOrEmpty(data)) {
-            data = HexStringUtils.str2HexStr(data);
+            data = HexUtils.str2HexStr(data);
         } else {
             data = "";
         }
@@ -93,20 +92,7 @@ public class JunctionUtils {
         return contractAddress;
     }
 
-    public static String parseMemos(Map<String, Object> otherParams) {
-        String memo = MapUtils.getIfNullDefault(otherParams, "memo", "");
-        String bizId = MapUtils.getIfNullDefault(otherParams, "format", "");
-        String appid = MapUtils.getIfNullDefault(otherParams, "md5", "");
-        String memos = SpcMemoUtils.encode(appid, bizId, memo);
-        return memos;
-    }
 
-    public static BcMemo parseMemoObj(Map<String, Object> otherParams) {
-        String memo = MapUtils.getIfNullDefault(otherParams, "memo", "");
-        String bizId = MapUtils.getIfNullDefault(otherParams, "bizId", "");
-        String appid = MapUtils.getIfNullDefault(otherParams, "appid", "");
-        return SpcMemoUtils.buildMemo(appid, bizId, memo);
-    }
 
     /**
      * abi中指定方法的参数的个数

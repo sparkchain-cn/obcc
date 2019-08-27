@@ -1,6 +1,6 @@
 package cn.obcc.utils;
 
-public class HexStringUtils {
+public class HexUtils {
 
 
     public static String str2HexStr(String origin) {
@@ -36,7 +36,7 @@ public class HexStringUtils {
      */
     public static String strOrHexStr2HexStr(String origin) {
         if (!StringPackageUtils.isBase64(origin)) {
-            return HexStringUtils.str2HexStr(origin);
+            return HexUtils.str2HexStr(origin);
         }
         return origin;
     }

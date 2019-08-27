@@ -1,9 +1,12 @@
-package cn.obcc.driver.vo;
+package cn.obcc.vo.driver;
+
+import cn.obcc.vo.Entity;
 
 import java.math.BigInteger;
 
-public class TokenInfo {
+public class TokenInfo extends Entity {
 
+    private String bizId;//unique
     private String contract;
     private String code;
     private String name;
@@ -13,8 +16,8 @@ public class TokenInfo {
     private String contractAbi;
     private String contractAddress;
     private String state;
-    private String bizId;
-    private String chainCode;
+
+    //private String chainCode;
 
     public String getContract() {
         return contract;
@@ -88,11 +91,11 @@ public class TokenInfo {
         this.bizId = bizId;
     }
 
-    public String getChainCode() {
-        return chainCode;
-    }
-
-    public void setChainCode(String chainCode) {
-        this.chainCode = chainCode;
-    }
+//    public String getChainCode() {
+//        return chainCode;
+//    }
+//
+//    public void setChainCode(String chainCode) {
+//        this.chainCode = chainCode;
+//    }
 }

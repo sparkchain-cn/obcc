@@ -2,25 +2,12 @@ package cn.obcc.stmt.storage;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
 
-import org.apache.commons.codec.binary.Base32;
-
-import cn.obcc.config.ObccConfig;
-import cn.obcc.driver.IChainDriver;
-import cn.obcc.exception.enums.EDbOperaType;
 import cn.obcc.exception.enums.EStoreType;
-import cn.obcc.stmt.IDbStatement;
-import cn.obcc.stmt.IStatement;
 import cn.obcc.stmt.IStorageStatement;
 import cn.obcc.stmt.base.BaseStatement;
 import cn.obcc.stmt.fn.IUploadFn;
 import cn.obcc.stmt.fn.IVerifyFn;
-import cn.obcc.stmt.module.db.Procedure;
-import cn.obcc.stmt.module.db.Table;
-import cn.obcc.stmt.module.db.TableDefine;
-import cn.obcc.vo.Page;
 import cn.obcc.vo.RetData;
 
 public class StorageStatement extends BaseStatement implements IStorageStatement {

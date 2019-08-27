@@ -5,6 +5,8 @@ import java.util.List;
 
 import cn.obcc.config.conn.pool.ConnPoolConfig;
 import cn.obcc.exception.enums.EChainType;
+import cn.obcc.exception.enums.EContractType;
+import cn.obcc.exception.enums.EMemoStrategy;
 import cn.obcc.exception.enums.ENonceStrategy;
 
 public class ObccConfig {
@@ -28,6 +30,13 @@ public class ObccConfig {
 
 
     private ENonceStrategy nonceStrategy = ENonceStrategy.Memory;
+    private EMemoStrategy memoStrategy = EMemoStrategy.JSON;
+    private EContractType contractType = EContractType.SOLC;
+
+    private String solcPath = "";
+    private String tempPath = "";
+
+    private String memoPre = "&&spc";
 
     private List<String> uuids = new ArrayList<>();
 
@@ -119,5 +128,45 @@ public class ObccConfig {
 
     public void setNonceStrategy(ENonceStrategy nonceStrategy) {
         this.nonceStrategy = nonceStrategy;
+    }
+
+    public EMemoStrategy getMemoStrategy() {
+        return memoStrategy;
+    }
+
+    public void setMemoStrategy(EMemoStrategy memoStrategy) {
+        this.memoStrategy = memoStrategy;
+    }
+
+    public String getMemoPre() {
+        return memoPre;
+    }
+
+    public void setMemoPre(String memoPre) {
+        this.memoPre = memoPre;
+    }
+
+    public EContractType getContractType() {
+        return contractType;
+    }
+
+    public void setContractType(EContractType contractType) {
+        this.contractType = contractType;
+    }
+
+    public String getSolcPath() {
+        return solcPath;
+    }
+
+    public void setSolcPath(String solcPath) {
+        this.solcPath = solcPath;
+    }
+
+    public String getTempPath() {
+        return tempPath;
+    }
+
+    public void setTempPath(String tempPath) {
+        this.tempPath = tempPath;
     }
 }

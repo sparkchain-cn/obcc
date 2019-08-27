@@ -9,6 +9,7 @@ public class Account {
 	private String address;
 	private String secret;
 	private String publicKey;
+
 	public String getAddress() {
 		return address;
 	}

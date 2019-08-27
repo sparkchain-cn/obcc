@@ -6,9 +6,9 @@ import java.util.Map;
 import cn.obcc.exception.enums.EDbOperaType;
 import cn.obcc.stmt.IDbStatement;
 import cn.obcc.stmt.base.BaseStatement;
-import cn.obcc.stmt.module.db.Procedure;
-import cn.obcc.stmt.module.db.Table;
-import cn.obcc.stmt.module.db.TableDefine;
+import cn.obcc.vo.stmt.Procedure;
+import cn.obcc.vo.stmt.Table;
+import cn.obcc.vo.stmt.TableDefine;
 import cn.obcc.vo.Page;
 import cn.obcc.vo.RetData;
 

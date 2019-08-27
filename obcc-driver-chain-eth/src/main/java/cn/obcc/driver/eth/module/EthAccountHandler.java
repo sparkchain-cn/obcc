@@ -1,7 +1,9 @@
 package cn.obcc.driver.eth.module;
 
 import cn.obcc.driver.module.base.AccountBaseHandler;
+import cn.obcc.driver.module.fn.ITransferInfoFn;
 import cn.obcc.driver.utils.JunctionUtils;
+import cn.obcc.driver.vo.BizTransactionInfo;
 import cn.obcc.driver.vo.SrcAccount;
 import cn.obcc.exception.ObccException;
 import cn.obcc.exception.enums.EExceptionCode;
@@ -30,7 +32,7 @@ import java.security.NoSuchProviderException;
 public class EthAccountHandler extends AccountBaseHandler<Web3j> implements IAccountHandler<Web3j> {
 
     @Override
-    public RetData<Account> createAccount(ReqConfig<Web3j> config) throws Exception {
+    public RetData<Account> createAccount() throws Exception {
         try {
             ECKeyPair ecKeyPair = Keys.createEcKeyPair();
             String addr = Keys.getAddress(ecKeyPair);
@@ -59,7 +61,17 @@ public class EthAccountHandler extends AccountBaseHandler<Web3j> implements IAcc
     }
 
     @Override
-    public RetData<TransactionInfo> getTransaction(String hash, ReqConfig<Web3j> config) throws Exception {
+    public RetData<BizTransactionInfo> getTransaction(String hash, ReqConfig<Web3j> config) throws Exception {
+        return null;
+    }
+
+    @Override
+    public RetData<String> getTransaction(String bizId, ReqConfig<Web3j> config, ITransferInfoFn fn) throws Exception {
+        return null;
+    }
+
+    @Override
+    public RetData<TransactionInfo> getTransactionByHash(String hash, ReqConfig<Web3j> config) throws Exception {
         return null;
     }
 

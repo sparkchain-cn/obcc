@@ -24,6 +24,9 @@ public class ReqConfig<T> {
 
 	private String type;
 
+	//是否是需要拆分
+	private boolean needSplit;
+
 	// 关联的连接对象
 	private T client;
 
@@ -70,4 +73,11 @@ public class ReqConfig<T> {
 		this.client = client;
 	}
 
+	public boolean isNeedSplit() {
+		return needSplit;
+	}
+
+	public void setNeedSplit(boolean needSplit) {
+		this.needSplit = needSplit;
+	}
 }
