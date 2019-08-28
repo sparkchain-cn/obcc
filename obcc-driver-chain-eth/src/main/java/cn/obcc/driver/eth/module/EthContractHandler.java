@@ -48,7 +48,7 @@ public class EthContractHandler extends BaseHandler<Web3j> implements IContractH
     }
 
     @Override
-    public RetData<String> deploy(String bizId, SrcAccount srcAccount, String contract, IContractDeployFn fn, ReqConfig<Web3j> config) throws Exception {
+    public RetData<String> deploy(String bizId, SrcAccount srcAccount, String contract, String name, IContractDeployFn fn, ReqConfig<Web3j> config) throws Exception {
         return null;
     }
 

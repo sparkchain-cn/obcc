@@ -1,5 +1,6 @@
 package cn.obcc.driver.vo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,7 +16,7 @@ public class ContractCompile {
 
     private String content;
 
-    private List<ContractBin> contractBinList;
+    private List<ContractBin> contractBinList = new ArrayList<>();
 
     private int state;//成功或失败
 

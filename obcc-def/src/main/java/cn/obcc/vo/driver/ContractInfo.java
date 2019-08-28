@@ -93,5 +93,11 @@ public class ContractInfo  extends Entity {
         this.compileException = compileException;
     }
 
+    public String getName() {
+        return name;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 }

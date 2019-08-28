@@ -50,7 +50,7 @@ public interface IContractHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public RetData<String> deploy(String bizId, SrcAccount srcAccount, String contract,
+    public RetData<String> deploy(String bizId, SrcAccount srcAccount, String contract,  String name,
                                   IContractDeployFn fn, ReqConfig<T> config) throws Exception;
 
 
