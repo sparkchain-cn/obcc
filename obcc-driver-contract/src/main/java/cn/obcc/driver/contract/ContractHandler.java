@@ -117,7 +117,7 @@ public abstract class ContractHandler<T> extends BaseHandler<T> implements ICont
                 info.setBin(bin.getBinary());
                 info.setName(bin.getName());
                 //发布
-                deploy(bizId, srcAccount, info, fn, config);
+                deploy(srcAccount, info, fn, config);
 
             } catch (Exception e) {
                 e.printStackTrace();
