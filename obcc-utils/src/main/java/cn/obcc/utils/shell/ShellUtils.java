@@ -31,6 +31,7 @@ public class ShellUtils {
             sb.append("\r\n");
             if (sb.toString().contains("error")) {
                 process.destroy();
+                throw new IOException(sb.toString());
             }
         }
 

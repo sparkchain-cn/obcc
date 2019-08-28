@@ -4,8 +4,11 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import cn.obcc.exception.enums.EExceptionCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.xml.crypto.Data;
 
 public class RetData<T> implements Serializable {
 
@@ -136,6 +139,15 @@ public class RetData<T> implements Serializable {
 		retData.setMessage(msg);
 		// retData.setData(data);
 		logger.error(msg);
+		return retData;
+	}
+
+	public static<T> RetData error(EExceptionCode code, T data){
+		RetData retData = new RetData();
+		retData.setSuccess(false);
+		retData.setCode(code.getName());
+		retData.setMessage(code.getDescr());
+		retData.setData(data);
 		return retData;
 	}
 

@@ -17,10 +17,9 @@ public interface IContractCompileFn {
     /**
      * @param bizId
      * @param hash
-     * @param state
      * @param resp
      * @throws Exception
      */
-    public void exec(String bizId, String hash, StateEnum state, ContractCompile resp) throws Exception;
+    void exec(String bizId, String hash, ContractCompile resp);
 
 }

@@ -67,8 +67,6 @@ public class SolcCompiler {
         String resultPath = tempPath + fileNamePrefix + "\\";
         String solFilePath = tempPath + fileNamePrefix + SolExtension;
 
-        //create temp dir
-        File tempFolder = newFilePath(tempPath);
         //create result path
         File resultFolder = newFilePath(resultPath);
 
@@ -87,8 +85,11 @@ public class SolcCompiler {
 
         //remove temp files
         if (deleteTemp) {
-            File path = new File(tempPath);
-            delFile(path);
+            //删除结果文件
+            delFile(resultFolder);
+            //删除 缓存源文件
+            File solFile = new File(solFilePath);
+            delFile(solFile);
         }
 
         return vo;
@@ -107,6 +108,7 @@ public class SolcCompiler {
         String abiContent = readFile(filePath);
         //  content.put("abi", abiContent);
         vo.setAbi(abiContent);
+        vo.setName(contractName);
         return vo;
         // return content;
     }
