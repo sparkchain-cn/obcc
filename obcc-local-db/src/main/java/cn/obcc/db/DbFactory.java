@@ -1,0 +1,67 @@
+package cn.obcc.db;
+
+import cn.obcc.config.ObccConfig;
+import cn.obcc.db.dao.AccountInfoDao;
+import cn.obcc.db.dao.ContractInfoDao;
+import cn.obcc.db.dao.RecordInfoDao;
+import cn.obcc.db.dao.TokenInfoDao;
+import cn.obcc.vo.driver.ContractInfo;
+
+import java.io.File;
+
+/**
+ * @author pengrk
+ * @version 1.0
+ * @ClassName DbFactory
+ * @desc TODO
+ * @date 2019/8/28 0028  18:03
+ **/
+public class DbFactory {
+    ObccConfig config;
+
+    static DbFactory instance;
+    AccountInfoDao accountInfoDao;
+    ContractInfoDao contractInfoDao;
+    TokenInfoDao tokenInfoDao;
+    RecordInfoDao recordInfoDao;
+
+    private DbFactory(ObccConfig config) throws Exception {
+        this.config = config;
+        initDao();
+    }
+
+    private void initDao() throws Exception {
+        accountInfoDao = new AccountInfoDao();
+        accountInfoDao.init(config);
+        contractInfoDao = new ContractInfoDao();
+        contractInfoDao.init(config);
+        tokenInfoDao = new TokenInfoDao();
+        tokenInfoDao.init(config);
+        recordInfoDao = new RecordInfoDao();
+        recordInfoDao.init(config);
+
+    }
+
+    public static DbFactory getInstance(ObccConfig config) throws Exception {
+        if (instance == null) {
+            DbFactory.instance = new DbFactory(config);
+        }
+        return instance;
+    }
+
+    public AccountInfoDao getAccountInfoDao() {
+        return accountInfoDao;
+    }
+
+    public ContractInfoDao getContractInfoDao() {
+        return contractInfoDao;
+    }
+
+    public RecordInfoDao getRecordInfoDao() {
+        return recordInfoDao;
+    }
+
+    public TokenInfoDao getTokenInfoDao() {
+        return tokenInfoDao;
+    }
+}

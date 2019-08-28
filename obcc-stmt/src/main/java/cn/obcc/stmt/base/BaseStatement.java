@@ -1,22 +1,20 @@
 package cn.obcc.stmt.base;
 
-import java.sql.DriverManager;
-
 import cn.obcc.config.ObccConfig;
-import cn.obcc.db.ILocalDb;
+import cn.obcc.db.DbFactory;
+import cn.obcc.db.base.JdbcDao;
 import cn.obcc.driver.IChainDriver;
 import cn.obcc.stmt.IStatement;
-import com.sun.org.apache.bcel.internal.generic.ILOAD;
 
 public class BaseStatement implements IStatement {
 
     protected ObccConfig config;
     protected IChainDriver driverManager;
 
-    protected ILocalDb localDb;
+    protected DbFactory localDb;
 
     @Override
-    public void init(ObccConfig config, ILocalDb db) {
+    public void init(ObccConfig config, DbFactory db) {
         this.config = config;
         this.localDb = db;
     }
@@ -27,7 +25,7 @@ public class BaseStatement implements IStatement {
     }
 
     @Override
-    public ILocalDb getLocalDb() {
+    public DbFactory getLocalDb() {
         return localDb;
     }
 

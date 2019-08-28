@@ -17,7 +17,16 @@
             <artifactId>sqlite-jdbc</artifactId>
             <version>3.28.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>cn.obcc</groupId>
+            <artifactId>obcc-local-db</artifactId>
+            <version>${chain.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.7.0</version>
+        </dependency>
     </dependencies>
 
 

@@ -3,7 +3,8 @@ package cn.obcc.client;
 import java.util.HashMap;
 import java.util.Map;
 
-import cn.obcc.db.ILocalDb;
+import cn.obcc.db.DbFactory;
+import cn.obcc.db.base.JdbcDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +27,7 @@ public class ObccClient {
     private IStorageStatement storageStatement;
     private ILedgerStatement ledgerStatement;
 
-    private ILocalDb localDb;
+    private DbFactory localDb;
 
 
     private static Map<String, ObccClient> clientMap = new HashMap<String, ObccClient>();
@@ -59,13 +60,10 @@ public class ObccClient {
         this.config = config;
     }
 
-    private ILocalDb initOrGetLocalDb() throws Exception {
+    private DbFactory initOrGetLocalDb() throws Exception {
         if (this.localDb == null) {
-            // if (config.getChain().equals(EChainType.ETHER)) {
-            ILocalDb localDb = (ILocalDb) newLocalDb();// new EthChainDriver();
-            //driver.init(config);
+            DbFactory localDb = DbFactory.getInstance(config);
             this.localDb = localDb;
-            // }
         }
         return this.localDb;
 
@@ -129,7 +127,6 @@ public class ObccClient {
 
     public IDbStatement getDbStatement() throws Exception {
         if (dbStatement == null) {
-
             dbStatement = (IDbStatement) newStatement(config.getDbStmtName());// new DbStatement();
             dbStatement.init(config, initOrGetLocalDb());
             dbStatement.setDriverManager(this.initOrGetDriver());

@@ -1,4 +1,4 @@
-package cn.obcc.db.sqlite.mapper;
+package cn.obcc.db.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

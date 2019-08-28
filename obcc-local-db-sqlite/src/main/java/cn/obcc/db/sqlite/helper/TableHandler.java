@@ -1,12 +1,9 @@
 package cn.obcc.db.sqlite.helper;
 
-import cn.obcc.db.sqlite.SqliteHelper;
-import cn.obcc.db.sqlite.utils.SqlUtils;
 import cn.obcc.db.sqlite.vo.Column;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.UnsupportedEncodingException;
 import java.sql.*;
 import java.util.Locale;
 
@@ -19,9 +16,9 @@ import java.util.Locale;
  **/
 public class TableHandler {
     final static Logger logger = LoggerFactory.getLogger(TableHandler.class);
-    SqliteHelper helper;
+    DbOperator helper;
 
-    public TableHandler(SqliteHelper helper) {
+    public TableHandler(DbOperator helper) {
         this.helper = helper;
     }
 
@@ -29,23 +26,12 @@ public class TableHandler {
      * 根據sql  创建表
      *
      * @param tableName 表名
-     * @param vos       {@link }
      * @return 创建成功与否
      */
-    public synchronized boolean createTable(String tableName, Column... vos) {
-        try {
-            helper.update(String.format(" drop table if exists %s; ", tableName));
-            String sql = SqlUtils.createTaleSql(tableName, vos);
-            helper.update(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            return false;
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+    public synchronized boolean createTable(String tableName, String sql) {
+        helper.update(String.format(" drop table if exists %s; ", tableName));
+        //String sql = SqlUtils.createTaleSql(tableName, vos);
+        helper.update(sql);
         return true;
     }
 
@@ -106,17 +92,17 @@ public class TableHandler {
      * 更新表名称
      * ALTER TABLE 旧表名 RENAME TO 新表名
      *
-     * @param oldTableName
-     * @param newTableName
+     * @param oldName
+     * @param newName
      */
-    public synchronized void tableRename(String oldTableName, String newTableName) {
+    public synchronized void rename(String oldName, String newName) {
         try {
             helper.update(String.format(Locale.CHINESE, "ALTER TABLE %s RENAME TO %s",
-                    oldTableName, newTableName));
+                    oldName, newName));
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(String.format(Locale.CHINESE, "表：%s 更新名称为 %s 失败==%s",
-                    oldTableName, newTableName, e.getMessage()));
+                    oldName, newName, e.getMessage()));
         }
     }
 
@@ -126,7 +112,7 @@ public class TableHandler {
      *
      * @param tableName
      */
-    public synchronized void deleteTable(String tableName) {
+    public synchronized void delete(String tableName) {
         try {
             helper.update(String.format(Locale.CHINESE, "DROP TABLE %s", tableName));
         } catch (Exception e) {
@@ -135,7 +121,7 @@ public class TableHandler {
         }
     }
 
-    public boolean isTableExist(String tableName) {
+    public boolean exist(String tableName) {
         boolean isTableExist = true;
         ResultSet c = null;
         Connection connection = null;

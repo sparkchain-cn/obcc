@@ -29,6 +29,9 @@ public class ObccConfig {
 
     private EChainType chain = EChainType.ETHER;
 
+    private String dbConn = "d:/obcc/obcc.dbf";
+    private String dbUserName = "root";
+    private String dbPassword = "123456";
 
     private ENonceStrategy nonceStrategy = ENonceStrategy.Memory;
     private EMemoStrategy memoStrategy = EMemoStrategy.JSON;
@@ -36,6 +39,7 @@ public class ObccConfig {
 
     private String solcPath = "";
     private String tempPath = "";
+    private String jdbcTemplateName = "cn.obcc.db.sqlite.SqliteJdbcTemplate";
 
     private String memoPre = "&&spc";
 
@@ -177,5 +181,37 @@ public class ObccConfig {
 
     public void setLocalDbName(String localDbName) {
         this.localDbName = localDbName;
+    }
+
+    public String getDbConn() {
+        return dbConn;
+    }
+
+    public void setDbConn(String dbConn) {
+        this.dbConn = dbConn;
+    }
+
+    public String getDbUserName() {
+        return dbUserName;
+    }
+
+    public void setDbUserName(String dbUserName) {
+        this.dbUserName = dbUserName;
+    }
+
+    public String getDbPassword() {
+        return dbPassword;
+    }
+
+    public void setDbPassword(String dbPassword) {
+        this.dbPassword = dbPassword;
+    }
+
+    public String getJdbcTemplateName() {
+        return jdbcTemplateName;
+    }
+
+    public void setJdbcTemplateName(String jdbcTemplateName) {
+        this.jdbcTemplateName = jdbcTemplateName;
     }
 }

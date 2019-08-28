@@ -2,7 +2,8 @@ package cn.obcc.driver.base;
 
 import cn.obcc.config.ObccConfig;
 import cn.obcc.connect.pool.ChainClientPoolFactory;
-import cn.obcc.db.ILocalDb;
+import cn.obcc.db.DbFactory;
+import cn.obcc.db.base.JdbcDao;
 import cn.obcc.driver.IChainDriver;
 import cn.obcc.driver.tech.ISpeedAdjuster;
 import org.slf4j.Logger;
@@ -12,7 +13,7 @@ public abstract class BaseChainDriver<T> implements IChainDriver<T> {
     public static final Logger logger = LoggerFactory.getLogger(BaseChainDriver.class);
     protected ISpeedAdjuster speedAdjuster;
 
-    protected ILocalDb localDb;
+    protected DbFactory localDb;
 
     public BaseChainDriver() {
 
@@ -26,14 +27,14 @@ public abstract class BaseChainDriver<T> implements IChainDriver<T> {
     }
 
     @Override
-    public IChainDriver init(ObccConfig config, ILocalDb db) throws Exception {
+    public IChainDriver init(ObccConfig config, DbFactory db) throws Exception {
         this.obccConfig = config;
         this.localDb = db;
         return this;
     }
 
     @Override
-    public ILocalDb getLocalDb() throws Exception {
+    public DbFactory getLocalDb() throws Exception {
         return this.localDb;
     }
 
