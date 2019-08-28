@@ -7,6 +7,7 @@ import cn.obcc.driver.module.IContractHandler;
 import cn.obcc.driver.module.fn.IContractCompileFn;
 import cn.obcc.driver.module.fn.IContractDeployFn;
 import cn.obcc.driver.module.fn.IContractInvokeFn;
+import cn.obcc.driver.vo.ContractCompile;
 import cn.obcc.driver.vo.SrcAccount;
 import cn.obcc.exception.enums.EContractType;
 import cn.obcc.utils.base.StringUtils;
@@ -26,18 +27,18 @@ import java.util.Map;
 public abstract class ContractHandler<T> extends BaseHandler<T> implements IContractHandler<T> {
 
     @Override
-    public RetData<ContractInfo> compile(String bizId, String contract, ReqConfig<T> config) throws Exception {
+    public RetData<ContractCompile> compile(String bizId, String contract, ReqConfig<T> config) throws Exception {
         if (getObccConfig().getContractType() == EContractType.SOLC) {
 
             cn.obcc.driver.contract.solc.vo.ContractInfo ci =
                     SolcCompiler.compile(contract, getObccConfig().getSolcPath(), getObccConfig().getTempPath(), true);
-            ContractInfo contractInfo=new ContractInfo();
-           if(StringUtils.isNullOrEmpty(ci.getException())){
-               contractInfo.setBizId(bizId);
-               contractInfo.setCompileException(ci.getException());
-               contractInfo.setCompileResult(ci.getCompileResult());
-                return RetData.error("201","ddd",contractInfo);
-           }
+            ContractInfo contractInfo = new ContractInfo();
+            if (StringUtils.isNullOrEmpty(ci.getException())) {
+                contractInfo.setBizId(bizId);
+                contractInfo.setCompileException(ci.getException());
+                contractInfo.setCompileResult(ci.getCompileResult());
+                return RetData.error("201", "ddd", contractInfo);
+            }
         }
         return null;
     }
@@ -48,7 +49,7 @@ public abstract class ContractHandler<T> extends BaseHandler<T> implements ICont
     }
 
     @Override
-    public ContractInfo getContract(String bizId) throws Exception {
+    public ContractInfo getContract(String bizId, String contractName) throws Exception {
         return null;
     }
 

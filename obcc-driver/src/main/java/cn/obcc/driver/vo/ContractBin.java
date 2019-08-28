@@ -9,6 +9,7 @@ package cn.obcc.driver.vo;
  **/
 public class ContractBin {
 
+    private String name;
     private String binary;
     private String abi;
 
@@ -26,5 +27,13 @@ public class ContractBin {
 
     public void setAbi(String abi) {
         this.abi = abi;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

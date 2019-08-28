@@ -1,25 +1,26 @@
-package cn.obcc.vo.driver;
+package cn.obcc.driver.vo;
 
-import cn.obcc.vo.Entity;
+import java.util.List;
 
-public class ContractInfo  extends Entity {
+/**
+ * @author pengrk
+ * @version 1.0
+ * @ClassName ContractCompile
+ * @desc TODO
+ * @date 2019/8/28 0028  9:42
+ **/
+public class ContractCompile {
 
     private String bizId; //unique
 
-    private String name;
-
     private String content;
-    private String abi;
-    private String bin;
 
-    private String hash;
-    private String contractAddr;
+    private List<ContractBin> contractBinList;
 
-    private int state;
+    private int state;//成功或失败
 
     private String compileResult;
     private String compileException;
-
 
     public String getBizId() {
         return bizId;
@@ -37,36 +38,12 @@ public class ContractInfo  extends Entity {
         this.content = content;
     }
 
-    public String getAbi() {
-        return abi;
+    public List<ContractBin> getContractBinList() {
+        return contractBinList;
     }
 
-    public void setAbi(String abi) {
-        this.abi = abi;
-    }
-
-    public String getBin() {
-        return bin;
-    }
-
-    public void setBin(String bin) {
-        this.bin = bin;
-    }
-
-    public String getHash() {
-        return hash;
-    }
-
-    public void setHash(String hash) {
-        this.hash = hash;
-    }
-
-    public String getContractAddr() {
-        return contractAddr;
-    }
-
-    public void setContractAddr(String contractAddr) {
-        this.contractAddr = contractAddr;
+    public void setContractBinList(List<ContractBin> contractBinList) {
+        this.contractBinList = contractBinList;
     }
 
     public int getState() {
@@ -92,6 +69,4 @@ public class ContractInfo  extends Entity {
     public void setCompileException(String compileException) {
         this.compileException = compileException;
     }
-
-
 }

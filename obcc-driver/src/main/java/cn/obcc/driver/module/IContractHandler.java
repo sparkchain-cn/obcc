@@ -4,6 +4,7 @@ import cn.obcc.driver.IChainHandler;
 import cn.obcc.driver.module.fn.IContractCompileFn;
 import cn.obcc.driver.module.fn.IContractDeployFn;
 import cn.obcc.driver.module.fn.IContractInvokeFn;
+import cn.obcc.driver.vo.ContractCompile;
 import cn.obcc.driver.vo.SrcAccount;
 import cn.obcc.vo.driver.ContractInfo;
 import cn.obcc.config.ReqConfig;
@@ -17,11 +18,12 @@ import cn.obcc.vo.RetData;
  */
 public interface IContractHandler<T> extends IChainHandler<T> {
 
-    public RetData<ContractInfo> compile(String bizId, String contract, ReqConfig<T> config) throws Exception;
+    public RetData<ContractCompile> compile(String bizId, String contract, ReqConfig<T> config) throws Exception;
 
     public void compile(String bizId, String contract, IContractCompileFn fn, ReqConfig<T> config) throws Exception;
 
-    public ContractInfo getContract(String bizId) throws Exception;
+
+    public ContractInfo getContract(String bizId,String contractName) throws Exception;
 
     public RetData<Boolean> addContract(String bizId, ContractInfo params) throws Exception;
 

@@ -3,6 +3,7 @@ package cn.obcc.driver.eth.module;
 import cn.obcc.driver.module.fn.IContractCompileFn;
 import cn.obcc.driver.module.fn.IContractDeployFn;
 import cn.obcc.driver.module.fn.IContractInvokeFn;
+import cn.obcc.driver.vo.ContractCompile;
 import cn.obcc.driver.vo.SrcAccount;
 import cn.obcc.config.ReqConfig;
 import org.web3j.protocol.Web3j;
@@ -17,7 +18,7 @@ public class EthContractHandler extends BaseHandler<Web3j> implements IContractH
 
 
     @Override
-    public RetData<ContractInfo> compile(String bizId, String contract, ReqConfig<Web3j> config) throws Exception {
+    public RetData<ContractCompile> compile(String bizId, String contract, ReqConfig<Web3j> config) throws Exception {
         return null;
     }
 
@@ -27,14 +28,19 @@ public class EthContractHandler extends BaseHandler<Web3j> implements IContractH
     }
 
     @Override
-    public RetData<Boolean> addContract(String bizId, ContractInfo params) throws Exception {
+    public ContractInfo getContract(String bizId, String contractName) throws Exception {
         return null;
     }
 
     @Override
-    public ContractInfo getContract(String bizId) throws Exception {
+    public RetData<Boolean> addContract(String bizId, ContractInfo params) throws Exception {
         return null;
     }
+
+//    @Override
+//    public ContractInfo getContract(String bizId) throws Exception {
+//        return null;
+//    }
 
     @Override
     public RetData<String> deploy(String bizId, SrcAccount srcAccount, ContractInfo contract, IContractDeployFn fn, ReqConfig<Web3j> config) throws Exception {

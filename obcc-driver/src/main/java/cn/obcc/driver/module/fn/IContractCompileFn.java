@@ -1,5 +1,6 @@
 package cn.obcc.driver.module.fn;
 
+import cn.obcc.driver.vo.ContractCompile;
 import cn.obcc.exception.enums.StateEnum;
 
 import java.util.Map;
@@ -14,13 +15,12 @@ import java.util.Map;
 public interface IContractCompileFn {
 
     /**
-     *
      * @param bizId
      * @param hash
      * @param state
      * @param resp
      * @throws Exception
      */
-    public void exec(String bizId, String hash, StateEnum state, Map<String, String> resp) throws Exception;
+    public void exec(String bizId, String hash, StateEnum state, ContractCompile resp) throws Exception;
 
 }

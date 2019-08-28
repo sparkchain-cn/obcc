@@ -3,6 +3,7 @@ package cn.obcc.db.sqlite;
 import cn.obcc.db.sqlite.mapper.TableMapper;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * SqliteFactroy
@@ -19,37 +20,45 @@ public class SqliteFactroy {
 
     private static SqliteHelper instance;
 
-    public synchronized static SqliteHelper getInstance(String name) throws Exception {
+    public static SqliteHelper getInstance() {
+        return instance;
+    }
+
+
+    private static void createDb(String dbName) throws IOException {
+        File file = new File(dbName);
+        File parentFile = file.getParentFile();
+        if (!parentFile.exists()) {
+            parentFile.mkdirs();
+        }
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+    }
+
+    private synchronized static SqliteHelper createSqliteHelper(String dbName) throws Exception {
         if (instance == null) {
-            instance = new SqliteHelper(name);
+            instance = new SqliteHelper(dbName);
         }
         return instance;
     }
 
+    private static void createTables(TableMapper tableMapper) {
+        if (tableMapper != null) {
+            tableMapper.createTable(instance, TB_CONNECTOR, TB_UP_CHAIN_RECORD);
+        }
+    }
+
     public static void init(String dbName, TableMapper tableMapper) {
         try {
-            File file = new File(dbName);
-            File parentFile = file.getParentFile();
-            if (!parentFile.exists()) {
-                parentFile.mkdirs();
-            }
-
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-
-            getInstance(dbName);
-
-            if (tableMapper != null) {
-                tableMapper.createTable(instance, TB_CONNECTOR, TB_UP_CHAIN_RECORD);
-            }
+            createDb(dbName);
+            createSqliteHelper(dbName);
+            createTables(tableMapper);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static SqliteHelper getInstance() {
-        return instance;
-    }
+
 }

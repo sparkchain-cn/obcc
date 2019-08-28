@@ -1,4 +1,4 @@
-package cn.obcc.db.sqlite.mapper;
+package cn.obcc.db.sqlite.helper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,7 +11,7 @@ import java.sql.SQLException;
  * @date 2019/8/20 9:19
  * @details
  */
-public interface ResultSetExtractor<T> {
+public interface IResultSetExtractor<T> {
 
     T extractData(ResultSet rs) throws SQLException;
 
