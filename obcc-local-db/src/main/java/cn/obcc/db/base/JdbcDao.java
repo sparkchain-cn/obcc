@@ -12,7 +12,7 @@ import java.util.List;
  * @desc TODO
  * @date 2019/8/27 0027  18:01
  **/
-public interface JdbcDao<T,PK> {
+public interface JdbcDao<T, PK> {
 
     public void init(ObccConfig config) throws Exception;
 
@@ -40,6 +40,8 @@ public interface JdbcDao<T,PK> {
      * @return 存放对象的列表
      */
     public List<T> query(String conditionSql, Object[] params);
+
+    public T findOne(String conditionSql, Object[] params);
 
     /**
      * 使用sql语句进行查询

@@ -33,12 +33,16 @@ public class DbFactory {
     private void initDao() throws Exception {
         accountInfoDao = new AccountInfoDao();
         accountInfoDao.init(config);
+        accountInfoDao.createTable();
         contractInfoDao = new ContractInfoDao();
         contractInfoDao.init(config);
+        contractInfoDao.createTable();
         tokenInfoDao = new TokenInfoDao();
         tokenInfoDao.init(config);
+        tokenInfoDao.createTable();
         recordInfoDao = new RecordInfoDao();
         recordInfoDao.init(config);
+        recordInfoDao.createTable();
 
     }
 

@@ -33,8 +33,8 @@ public class SqliteJdbcTemplate implements IJdbcTemplate {
         createDb(config.getDbConn());
         dbOperator = new DbOperator(config.getDbConn());
         // sqlHandler=new TableHandler(dbOperator);
-       // sqlHandler = new SqlHandler(dbOperator);
-       // tableHandler = new TableHandler(dbOperator);
+        // sqlHandler = new SqlHandler(dbOperator);
+        // tableHandler = new TableHandler(dbOperator);
     }
 
 
@@ -73,6 +73,19 @@ public class SqliteJdbcTemplate implements IJdbcTemplate {
         return null;
     }
 
+    @Override
+    public String queryForSingle(String sql) {
+        String s = null;
+        try {
+            s = dbOperator.queryForSingle(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return s;
+    }
 
     @Override
     public int update(String sql, Object[] params) {

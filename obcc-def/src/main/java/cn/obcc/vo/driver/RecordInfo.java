@@ -2,6 +2,8 @@ package cn.obcc.vo.driver;
 
 import cn.obcc.vo.Entity;
 
+import javax.persistence.Column;
+
 /**
  * @author pengrk
  * @version 1.0
@@ -18,5 +20,35 @@ public class RecordInfo extends Entity {
 
     private int state;//
 
+    public String getBizId() {
+        return bizId;
+    }
 
+    public void setBizId(String bizId) {
+        this.bizId = bizId;
+    }
+
+    public String getHashs() {
+        return hashs;
+    }
+
+    public void setHashs(String hashs) {
+        this.hashs = hashs;
+    }
+    @Column(name = "user_name")
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
 }

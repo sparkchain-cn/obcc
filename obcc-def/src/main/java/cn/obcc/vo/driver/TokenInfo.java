@@ -2,6 +2,7 @@ package cn.obcc.vo.driver;
 
 import cn.obcc.vo.Entity;
 
+import javax.persistence.Column;
 import java.math.BigInteger;
 
 public class TokenInfo extends Entity {
@@ -10,12 +11,12 @@ public class TokenInfo extends Entity {
     private String contract;
     private String code;
     private String name;
-    private BigInteger supply;
+    private Long supply;
     private int precisions;
 
     private String contractAbi;
     private String contractAddress;
-    private String state;
+    private int state;
 
     //private String chainCode;
 
@@ -43,11 +44,11 @@ public class TokenInfo extends Entity {
         this.name = name;
     }
 
-    public BigInteger getSupply() {
+    public Long getSupply() {
         return supply;
     }
 
-    public void setSupply(BigInteger supply) {
+    public void setSupply(Long supply) {
         this.supply = supply;
     }
 
@@ -59,6 +60,7 @@ public class TokenInfo extends Entity {
         this.precisions = precisions;
     }
 
+    @Column(name = "contract_abi")
     public String getContractAbi() {
         return contractAbi;
     }
@@ -67,6 +69,7 @@ public class TokenInfo extends Entity {
         this.contractAbi = contractAbi;
     }
 
+    @Column(name = "contract_address")
     public String getContractAddress() {
         return contractAddress;
     }
@@ -75,14 +78,15 @@ public class TokenInfo extends Entity {
         this.contractAddress = contractAddress;
     }
 
-    public String getState() {
+    public int getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(int state) {
         this.state = state;
     }
 
+    @Column(name = "biz_id")
     public String getBizId() {
         return bizId;
     }

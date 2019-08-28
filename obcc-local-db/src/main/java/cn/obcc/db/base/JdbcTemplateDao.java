@@ -4,10 +4,12 @@ import cn.obcc.config.ObccConfig;
 import cn.obcc.db.mapper.RowMapper;
 import cn.obcc.db.utils.BeanUtil;
 import cn.obcc.db.utils.JdbcUtil;
+import cn.obcc.utils.base.StringUtils;
 import org.apache.log4j.Logger;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -106,8 +108,6 @@ public abstract class JdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java.io.
     }
 
 
-
-
     @Override
     public void update(T object) {
         //Assert.notNull(object, "对象不能为空");
@@ -148,9 +148,20 @@ public abstract class JdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java.io.
                 params, rowMapper);
     }
 
+    public T findOne(String conditionSql, Object[] params) {
+        List<T> list = query(conditionSql, params);
+        if (list == null) return null;
+        return list.get(0);
+    }
+
     @SuppressWarnings("unchecked")
     public List<T> queryBySql(String sql, Object[] params) {
         return getJdbcTemplate().query(sql, params, rowMapper);
+    }
+
+
+    public String queryForSingle(String sql) {
+        return getJdbcTemplate().queryForSingle(sql);
     }
 
     public String queryIdsBySql(String sql, Object[] params) {
@@ -201,6 +212,16 @@ public abstract class JdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java.io.
     public List<T> queryAll() {
         return getJdbcTemplate().query("select * from " + tableName(),
                 rowMapper);
+    }
+
+    public boolean exist(String tableName) {
+        String sql = String.format("SELECT count(*) FROM sqlite_master WHERE type='table' AND name= '%s'", tableName);
+        String count = queryForSingle(sql);
+        if (StringUtils.isNotNullOrEmpty(count) && Integer.parseInt(count) > 0) {
+            return true;
+        }
+        return false;
+
     }
 
     public void deleteById(Long id) {
@@ -259,8 +280,16 @@ public abstract class JdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java.io.
         }
     };
 
+    @Override
+    public void createTable() {
+        ////todo:
+        if (!exist(tableName())) {
+            String sql = getCreateSql();
+            getJdbcTemplate().update(sql);
 
+        }
 
+    }
 
     public String primaryKeyName() {
         return JdbcUtil.findIdNameForClz(entityClass);
@@ -275,5 +304,6 @@ public abstract class JdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java.io.
         return jdbcTemplate;
     }
 
-
+    ////todo:
+    public abstract String getCreateSql();
 }

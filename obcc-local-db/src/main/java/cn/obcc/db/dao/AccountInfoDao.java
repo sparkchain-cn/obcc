@@ -11,15 +11,20 @@ import cn.obcc.vo.driver.AccountInfo;
  * @desc TODO
  * @date 2019/8/28 0028  17:44
  **/
-public class AccountInfoDao extends JdbcTemplateDao<AccountInfo, Long>implements JdbcDao<AccountInfo, Long>, java.io.Serializable  {
+public class AccountInfoDao extends JdbcTemplateDao<AccountInfo, Long> implements JdbcDao<AccountInfo, Long>, java.io.Serializable {
 
-    @Override
-    public void createTable() {
-        ////todo:
-        String sql = "";
-        getJdbcTemplate().update(sql);
+
+    ////todo:
+    public String getCreateSql(){
+        return " CREATE TABLE account_info" +
+                " id bigint(80) NOT NULL," +
+                " biz_id varchar(200) DEFAULT NULL," +
+                " user_name varchar(200) DEFAULT NULL," +
+                " password varchar(200) DEFAULT NULL," +
+                " address varchar(200) DEFAULT NULL," +
+                " secret varchar(200) DEFAULT NULL," +
+                " PRIMARY KEY (`id`) )";
     }
-
     public String primaryKeyName() {
         //return JdbcUtil.findIdNameForClz(entityClass);
         return "id";

@@ -2,6 +2,8 @@ package cn.obcc.vo.driver;
 
 import cn.obcc.vo.Entity;
 
+import javax.persistence.Column;
+
 public class ContractInfo  extends Entity {
 
     private String bizId; //unique
@@ -20,7 +22,7 @@ public class ContractInfo  extends Entity {
     private String compileResult;
     private String compileException;
 
-
+    @Column(name = "biz_id")
     public String getBizId() {
         return bizId;
     }
@@ -60,7 +62,7 @@ public class ContractInfo  extends Entity {
     public void setHash(String hash) {
         this.hash = hash;
     }
-
+    @Column(name = "contract_addr")
     public String getContractAddr() {
         return contractAddr;
     }
@@ -76,7 +78,7 @@ public class ContractInfo  extends Entity {
     public void setState(int state) {
         this.state = state;
     }
-
+    @Column(name = "compile_result")
     public String getCompileResult() {
         return compileResult;
     }
@@ -84,7 +86,7 @@ public class ContractInfo  extends Entity {
     public void setCompileResult(String compileResult) {
         this.compileResult = compileResult;
     }
-
+    @Column(name = "compile_exception")
     public String getCompileException() {
         return compileException;
     }

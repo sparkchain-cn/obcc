@@ -75,6 +75,46 @@ public class DbOperator {
         return rsList;
     }
 
+    public <T> String queryForSingle(String sql)
+            throws SQLException, ClassNotFoundException {
+        List<T> rsList = new ArrayList<T>();
+        ResultSet resultSet = null;
+        Connection connection = null;
+        try {
+            connection = this.openConn();
+            PreparedStatement statement = connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
+            String obj = resultSet.getString(1);
+//              if (TypeUtil.isString(cls)) {
+//                return (T)resultSet.getString(1);
+//            } else if (TypeUtil.isLong(cls)) {
+//                  return  resultSet.getLong(1);
+//            } else if (TypeUtil.isInteger(cls)) {
+//                  return (long)resultSet.getInt(1);
+//            } else if (TypeUtil.isBoolean(cls)) {
+//                  return (T)resultSet.getString(1);
+//            } else if (TypeUtil.isDouble(cls)) {
+//                  return (T)resultSet.getString(1);
+//            } else if (TypeUtil.isFloat(cls)) {
+//                  return (T)resultSet.getString(1);
+//            } else if (o instanceof Date || (o instanceof java.sql.Date)) {
+//                  return (T)resultSet.getString(1);
+//            } else if (TypeUtil.isShort(cls)) {
+//                  return (T)resultSet.getString(1);
+//            } else if (o instanceof Timestamp) {
+//                  return (T)resultSet.getString(1);
+//            } else {
+//                  return (T)resultSet.getString(1);
+//            }
+
+            return obj;
+
+        } finally {
+            this.close(resultSet);
+            this.close(connection);
+
+        }
+    }
 
     public <T> List<T> query(String sql, Object[] params, RowMapper<T> rm) throws SQLException, ClassNotFoundException {
         List<T> rsList = new ArrayList<T>();

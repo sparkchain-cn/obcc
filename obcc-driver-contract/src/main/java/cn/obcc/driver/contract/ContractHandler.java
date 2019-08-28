@@ -32,6 +32,7 @@ public abstract class ContractHandler<T> extends BaseHandler<T> implements ICont
     public RetData<ContractCompile> compile(String bizId, String contract, ReqConfig<T> config) throws Exception {
         ContractCompile contractCompile = ContractCompiler.compile(contract, getObccConfig());
         contractCompile.setBizId(bizId);
+        //getDriver().getLocalDb().getContractInfoDao().
         return contractCompile.getState() == -1 ?
                 RetData.error(EExceptionCode.CONTRACT_COMPILE_ERROR, contractCompile)
                 : RetData.succuess(contractCompile);
@@ -50,7 +51,8 @@ public abstract class ContractHandler<T> extends BaseHandler<T> implements ICont
 
     @Override
     public ContractInfo getContract(String bizId, String contractName) throws Exception {
-        return null;
+       return getDriver().getLocalDb().getContractInfoDao().findOne("biz_id=?&&name=?",
+                new Object[]{bizId, contractName});
     }
 
     @Override
