@@ -2,8 +2,11 @@ package cn.obcc.driver.nonce.strategy;
 
 import cn.obcc.driver.nonce.INonceStrategy;
 import cn.obcc.utils.base.StringUtils;
+import net.jodah.expiringmap.ExpirationPolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author pengrk
@@ -92,5 +95,14 @@ public abstract class RedisNonceStrategy implements INonceStrategy {
         return nowSeq;
 
     }
+
+    public Long adjustNonce(String chainCode, String address,Long num) throws Exception{
+        String key = genAccountSeqKey(chainCode, address);
+        Long nowSeq =num;
+        Long nextSeq = nowSeq + 1;
+        setValueIntoRedis(key, nextSeq, 20 * 60L);
+        return nowSeq;
+    }
+
 
 }

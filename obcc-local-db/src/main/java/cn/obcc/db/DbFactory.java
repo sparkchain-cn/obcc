@@ -1,10 +1,7 @@
 package cn.obcc.db;
 
 import cn.obcc.config.ObccConfig;
-import cn.obcc.db.dao.AccountInfoDao;
-import cn.obcc.db.dao.ContractInfoDao;
-import cn.obcc.db.dao.RecordInfoDao;
-import cn.obcc.db.dao.TokenInfoDao;
+import cn.obcc.db.dao.*;
 import cn.obcc.vo.driver.ContractInfo;
 
 import java.io.File;
@@ -24,6 +21,8 @@ public class DbFactory {
     ContractInfoDao contractInfoDao;
     TokenInfoDao tokenInfoDao;
     RecordInfoDao recordInfoDao;
+    TxInfoDao txInfoDao;
+
 
     private DbFactory(ObccConfig config) throws Exception {
         this.config = config;
@@ -43,6 +42,8 @@ public class DbFactory {
         recordInfoDao = new RecordInfoDao();
         recordInfoDao.init(config);
         recordInfoDao.createTable();
+        txInfoDao=new TxInfoDao();
+        txInfoDao.createTable();
 
     }
 
@@ -68,4 +69,6 @@ public class DbFactory {
     public TokenInfoDao getTokenInfoDao() {
         return tokenInfoDao;
     }
+
+    public TxInfoDao getTxInfoDao(){return txInfoDao;}
 }

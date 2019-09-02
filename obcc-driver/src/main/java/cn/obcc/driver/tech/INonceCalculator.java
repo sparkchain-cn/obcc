@@ -17,5 +17,9 @@ public interface INonceCalculator<T> extends IChainHandler<T> {
      */
     public RetData<Long> getNonce(String address, ReqConfig<T> config) throws Exception;
 
+
+    public RetData<Long> adjustNonce(String address, Long num,ReqConfig<T> config) throws Exception;
+
+
     public RetData<Long> getNonceFromChain(String address) throws Exception;
 }

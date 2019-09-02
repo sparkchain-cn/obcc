@@ -6,7 +6,6 @@ import cn.obcc.driver.IChainHandler;
 import cn.obcc.driver.callback.CallbackListener;
 import cn.obcc.driver.eth.module.tech.callback.EthNewBlockMonitor;
 import cn.obcc.driver.module.ICallbackListener;
-import cn.obcc.driver.vo.BlockTxInfo;
 import io.reactivex.disposables.Disposable;
 import org.web3j.protocol.Web3j;
 

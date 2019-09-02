@@ -1,13 +1,14 @@
-package cn.obcc.driver.vo;
+package cn.obcc.vo.driver;
 
-import java.util.HashMap;
+import cn.obcc.vo.Entity;
+
+import javax.persistence.Column;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 回调区块信息
  */
-public class BlockInfo {
+public class BlockInfo extends Entity {
     private List<String> transactions;// 该账本里的交易列表
     private String blockHash;
     private String blockNumber;
@@ -21,7 +22,7 @@ public class BlockInfo {
     public void setTransactions(List<String> transactions) {
         this.transactions = transactions;
     }
-
+    @Column(name = "block_hash")
     public String getBlockHash() {
         return blockHash;
     }
@@ -29,7 +30,7 @@ public class BlockInfo {
     public void setBlockHash(String blockHash) {
         this.blockHash = blockHash;
     }
-
+    @Column(name = "block_number")
     public String getBlockNumber() {
         return blockNumber;
     }
@@ -37,7 +38,7 @@ public class BlockInfo {
     public void setBlockNumber(String blockNumber) {
         this.blockNumber = blockNumber;
     }
-
+    @Column(name = "trade_time")
     public Long getTradeTime() {
         return tradeTime;
     }

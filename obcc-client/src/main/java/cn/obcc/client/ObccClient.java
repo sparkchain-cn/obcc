@@ -5,6 +5,7 @@ import java.util.Map;
 
 import cn.obcc.db.DbFactory;
 import cn.obcc.db.base.JdbcDao;
+import cn.obcc.stmt.IStatement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,13 +22,11 @@ public class ObccClient {
 
     private ObccConfig config;
 
+    private DbFactory localDb;
     private IChainDriver driver;
 
-    private IDbStatement dbStatement;
-    private IStorageStatement storageStatement;
-    private ILedgerStatement ledgerStatement;
+    private Map<String,IStatement> statementMap=new HashMap<>();
 
-    private DbFactory localDb;
 
 
     private static Map<String, ObccClient> clientMap = new HashMap<String, ObccClient>();
@@ -82,7 +81,7 @@ public class ObccClient {
 
     }
 
-    ;
+
 
     private Object newLocalDb() {
 
@@ -125,46 +124,14 @@ public class ObccClient {
 
     /*********************************************/
 
-    public IDbStatement getDbStatement() throws Exception {
-        if (dbStatement == null) {
-            dbStatement = (IDbStatement) newStatement(config.getDbStmtName());// new DbStatement();
-            dbStatement.init(config, initOrGetLocalDb());
-            dbStatement.setDriverManager(this.initOrGetDriver());
-        }
-        return dbStatement;
-    }
-
-    ;
-
-    public IStorageStatement getStorageStatement() throws Exception {
-        if (storageStatement == null) {
-            storageStatement = (IStorageStatement) newStatement(config.getStorageStmtName());// new StorageStatement();
-            storageStatement.init(config, initOrGetLocalDb());
-            storageStatement.setDriverManager(this.initOrGetDriver());
-        }
-        return storageStatement;
-    }
-
-    public ILedgerStatement getLedgerStatement() throws Exception {
-        if (ledgerStatement == null) {
-            ledgerStatement = (ILedgerStatement) newStatement(config.getLedgerStmtName());// new LedgerStatement();
-            ledgerStatement.init(config, initOrGetLocalDb());
-            ledgerStatement.setDriverManager(this.initOrGetDriver());
-        }
-        return ledgerStatement;
-    }
-
-    private Object newStatement(String clzName) {
-        try {
-            return getClass().getClassLoader().loadClass(clzName).newInstance();
-        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-            e.printStackTrace();
-            logger.error("不能加载或实例化statement:" + clzName + ",请引用对应的JAR,并设定好对应的statement类名。");
-        }
-
-        return null;
+    public <T> T getStatement(Class<? extends IStatement> clz) throws Exception{
+           if(!statementMap.containsKey(clz.getSimpleName())){
+               statementMap.put(clz.getSimpleName(),clz.newInstance());
+           }
+           return (T)statementMap.get(clz.getSimpleName());
 
     }
+
 
     /**************************************************/
 
@@ -172,16 +139,9 @@ public class ObccClient {
 
         clientMap.remove(this.config.getClientId());
 
-        if (this.dbStatement != null) {
-            dbStatement.destory();
-        }
-        if (this.storageStatement != null) {
-            storageStatement.destory();
-        }
-        if (this.ledgerStatement != null) {
-            ledgerStatement.destory();
-        }
-
+        statementMap.forEach((key,value)->{
+            value.destory();
+        });
         if (this.driver != null) {
             this.driver.destory();
         }

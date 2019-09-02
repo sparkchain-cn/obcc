@@ -5,9 +5,8 @@ import cn.obcc.driver.IChainDriver;
 import cn.obcc.driver.IChainHandler;
 import cn.obcc.driver.base.BaseHandler;
 import cn.obcc.driver.module.ICallbackListener;
-import cn.obcc.driver.module.IContractHandler;
-import cn.obcc.driver.vo.BlockInfo;
-import cn.obcc.driver.vo.BlockTxInfo;
+import cn.obcc.vo.driver.BlockInfo;
+import cn.obcc.vo.driver.BlockTxInfo;
 
 /**
  * @author pengrk
@@ -34,7 +33,8 @@ public class CallbackListener<T> extends BaseHandler<T> implements ICallbackList
     @Override
     public boolean writeToDb(BlockTxInfo txInfo) throws Exception {
         //todo:在这里调用dao进行写入数据库
-        return false;
+        driver.getLocalDb().getTxInfoDao().add(txInfo);
+        return true;
     }
 
     @Override

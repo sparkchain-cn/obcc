@@ -1,12 +1,8 @@
-package cn.obcc.driver.vo;
+package cn.obcc.vo.driver;
 
-import cn.obcc.config.ReqConfig;
-import cn.obcc.driver.module.fn.ITokenOperateFn;
 import cn.obcc.exception.enums.EChainTxType;
-import cn.obcc.vo.RetData;
-import cn.obcc.vo.driver.TokenInfo;
 
-import java.math.BigInteger;
+import javax.persistence.Column;
 
 public class BlockTxInfo {
 
@@ -39,7 +35,7 @@ public class BlockTxInfo {
 
 	private int shardingFlag;
 
-
+	@Column(name = "tx_type")
 	public EChainTxType getTxType() {
 		return txType;
 	}
@@ -47,7 +43,7 @@ public class BlockTxInfo {
 	public void setTxType(EChainTxType txType) {
 		this.txType = txType;
 	}
-
+	@Column(name = "chain_code")
 	public String getChainCode() {
 		return chainCode;
 	}
@@ -55,7 +51,7 @@ public class BlockTxInfo {
 	public void setChainCode(String chainCode) {
 		this.chainCode = chainCode;
 	}
-
+	@Column(name = "block_hash")
 	public String getBlockHash() {
 		return blockHash;
 	}
@@ -63,7 +59,7 @@ public class BlockTxInfo {
 	public void setBlockHash(String blockHash) {
 		this.blockHash = blockHash;
 	}
-
+	@Column(name = "block_number")
 	public String getBlockNumber() {
 		return blockNumber;
 	}
@@ -71,7 +67,7 @@ public class BlockTxInfo {
 	public void setBlockNumber(String blockNumber) {
 		this.blockNumber = blockNumber;
 	}
-
+	@Column(name = "block_time")
 	public Long getBlockTime() {
 		return blockTime;
 	}
@@ -95,7 +91,7 @@ public class BlockTxInfo {
 	public void setState(String state) {
 		this.state = state;
 	}
-
+	@Column(name = "src_addr")
 	public String getSrcAddr() {
 		return srcAddr;
 	}
@@ -111,7 +107,7 @@ public class BlockTxInfo {
 	public void setNonce(Long nonce) {
 		this.nonce = nonce;
 	}
-
+	@Column(name = "dest_addr")
 	public String getDestAddr() {
 		return destAddr;
 	}
@@ -119,7 +115,7 @@ public class BlockTxInfo {
 	public void setDestAddr(String destAddr) {
 		this.destAddr = destAddr;
 	}
-
+	@Column(name = "gas_price")
 	public String getGasPrice() {
 		return gasPrice;
 	}
@@ -127,7 +123,7 @@ public class BlockTxInfo {
 	public void setGasPrice(String gasPrice) {
 		this.gasPrice = gasPrice;
 	}
-
+	@Column(name = "gas_limit")
 	public String getGasLimit() {
 		return gasLimit;
 	}
@@ -167,7 +163,7 @@ public class BlockTxInfo {
 	public void setDetails(String details) {
 		this.details = details;
 	}
-
+	@Column(name = "contract_address")
 	public String getContractAddress() {
 		return contractAddress;
 	}
@@ -183,7 +179,7 @@ public class BlockTxInfo {
 	public void setMethod(String method) {
 		this.method = method;
 	}
-
+	@Column(name = "method_params")
 	public String getMethodParams() {
 		return methodParams;
 	}
@@ -191,7 +187,7 @@ public class BlockTxInfo {
 	public void setMethodParams(String methodParams) {
 		this.methodParams = methodParams;
 	}
-
+	@Column(name = "sharding_flag")
 	public int getShardingFlag() {
 		return shardingFlag;
 	}
@@ -199,7 +195,7 @@ public class BlockTxInfo {
 	public void setShardingFlag(int shardingFlag) {
 		this.shardingFlag = shardingFlag;
 	}
-
+	@Column(name = "gas_used")
 	public String getGasUsed() {
 		return gasUsed;
 	}

@@ -1,8 +1,8 @@
 package cn.obcc.driver.module;
 
 import cn.obcc.driver.IChainHandler;
-import cn.obcc.driver.vo.BlockInfo;
-import cn.obcc.driver.vo.BlockTxInfo;
+import cn.obcc.vo.driver.BlockInfo;
+import cn.obcc.vo.driver.BlockTxInfo;
 
 /**
  * @author pengrk

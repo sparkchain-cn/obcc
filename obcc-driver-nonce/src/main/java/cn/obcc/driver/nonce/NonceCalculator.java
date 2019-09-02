@@ -27,6 +27,12 @@ public abstract class NonceCalculator<T> extends BaseHandler<T> implements INonc
         return RetData.succuess(getNonceStrategy().computNonce(chainCode, address));
     }
 
+    public RetData<Long> adjustNonce(String address, Long num, ReqConfig<T> config) throws Exception {
+        String chainCode = getObccConfig().getChain().name();
+        return RetData.succuess(getNonceStrategy().adjustNonce(chainCode, address, num));
+    }
+
+
     protected MemoryNonceStrategy memoryNonceStrategy = new MemoryNonceStrategy() {
         @Override
         public Long getNonceFromChain(String address) throws Exception {

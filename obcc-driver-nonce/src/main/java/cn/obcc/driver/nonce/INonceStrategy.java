@@ -20,4 +20,6 @@ public interface INonceStrategy {
      * @throws Exception
      */
     public Long computNonce(String chainCode, String address) throws Exception;
+
+    public Long adjustNonce(String chainCode, String address,Long num) throws Exception;
 }

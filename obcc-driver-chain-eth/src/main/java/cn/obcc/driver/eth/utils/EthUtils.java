@@ -106,14 +106,14 @@ public class EthUtils {
 		return gasPrice;
 	}
 
-	public static String signEthTxData(String privateKey, String to, BigInteger nonce, StaticGasProvider gasTwo,
+	public static String signEthTxData(String privateKey, String to, BigInteger nonce, Long gasPrice,Long gasLimit,
 			BigInteger value, String hexData) {
 		// 把十进制的转换成ETH的Wei, 1ETH = 10^18 Wei
-		System.out.println("nonce:" + nonce + ",GasPrice:" + gasTwo.getGasPrice() + ",GasLimit:" + gasTwo.getGasLimit()
+		System.out.println("nonce:" + nonce + ",GasPrice:" + gasPrice + ",GasLimit:" + gasLimit
 				+ ",to:" + to + ",value:" + value + ",hexData:" + hexData);
 		System.out.println("privateKey:" + privateKey);
-		RawTransaction rawTransaction = RawTransaction.createTransaction(nonce, gasTwo.getGasPrice(),
-				gasTwo.getGasLimit(), to, value, hexData);
+		RawTransaction rawTransaction = RawTransaction.createTransaction(nonce, BigInteger.valueOf(gasPrice),
+				BigInteger.valueOf(gasLimit), to, value, hexData);
 		Credentials credentials = Credentials.create(privateKey);
 		// 使用TransactionEncoder对RawTransaction进行签名操作
 		byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
@@ -182,7 +182,6 @@ public class EthUtils {
 		return new StaticGasProvider(gasPriceBInt, gasLimitBInt);
 
 	}
-
 	public static boolean isNouceLowError(String msg) {
 		if (msg == null) {
 			return false;

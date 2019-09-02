@@ -1,8 +1,8 @@
 package cn.obcc.driver.module;
 
 import cn.obcc.driver.IChainHandler;
-import cn.obcc.driver.vo.BlockInfo;
-import cn.obcc.driver.vo.BlockTxInfo;
+import cn.obcc.vo.driver.BlockInfo;
+import cn.obcc.vo.driver.BlockTxInfo;
 import cn.obcc.driver.vo.DetailBlockInfo;
 import cn.obcc.config.ReqConfig;
 import cn.obcc.vo.RetData;

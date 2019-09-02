@@ -43,10 +43,31 @@ public interface IAccountHandler<T> extends IChainHandler<T> {
      * @return hash:交易的返回的hashs,其它参数每个链不一样,如果memo的过大，会自动拆分成多条上链。
      * @throws Exception
      */
-    public RetData<String> transfer(String bizId, SrcAccount account, BigInteger amount,
+    public RetData<String> transfer(String bizId, SrcAccount account, String amount,
                                     String destAddress, ReqConfig<T> config, ITransferFn callback) throws Exception;
 
 
+    /**
+     *
+     * @param account
+     * @param amount
+     * @param destAddress
+     * @param config
+     * @return
+     * @throws Exception
+     */
+    public Long[] calGas( SrcAccount account, String amount,
+                          String destAddress, ReqConfig<T> config)throws Exception;
+
+
+    /**
+     *
+     * @param account
+     * @param config
+     * @return
+     * @throws Exception
+     */
+    public boolean checkAccount( SrcAccount account, ReqConfig<T> config)throws Exception;
     /**
      * @param bizId
      * @param account

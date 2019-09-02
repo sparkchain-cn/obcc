@@ -5,7 +5,7 @@ import cn.obcc.driver.IChainDriver;
 import cn.obcc.driver.eth.utils.EthUtils;
 import cn.obcc.driver.module.IContractHandler;
 import cn.obcc.driver.module.ITokenHandler;
-import cn.obcc.driver.vo.BlockTxInfo;
+import cn.obcc.vo.driver.BlockTxInfo;
 import cn.obcc.driver.vo.ContractExecRec;
 import cn.obcc.driver.vo.TokenRec;
 import cn.obcc.exception.enums.EChainTxType;

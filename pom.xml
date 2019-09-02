@@ -32,6 +32,7 @@
 		<module>obcc-local-db-sqlite</module>
 		<module>obcc-local-db-mysql</module>
         <module>obcc-driver-contract</module>
+        <module>obcc-driver-callback-pull</module>
     </modules>
 
 	<packaging>pom</packaging>

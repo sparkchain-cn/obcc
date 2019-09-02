@@ -10,9 +10,10 @@ public class ObccConfig {
 
     private String clientId = "obcc";
 
-    private String dbStmtName = "cn.obcc.stmt.db.DbStatement";
-    private String storageStmtName = "cn.obcc.stmt.storage.StorageStatement";
-    private String ledgerStmtName = "cn.obcc.stmt.ledger.LedgerStatement";
+//    private String dbStmtName = "cn.obcc.stmt.db.DbStatement";
+//    private String storageStmtName = "cn.obcc.stmt.storage.StorageStatement";
+//    private String ledgerStmtName = "cn.obcc.stmt.ledger.LedgerStatement";
+
 
 
     private String localDbName = "cn.obcc.db.SqliteDb";
@@ -76,29 +77,29 @@ public class ObccConfig {
         this.chain = chain;
     }
 
-    public String getDbStmtName() {
-        return dbStmtName;
-    }
-
-    public void setDbStmtName(String dbStmtName) {
-        this.dbStmtName = dbStmtName;
-    }
-
-    public String getStorageStmtName() {
-        return storageStmtName;
-    }
-
-    public void setStorageStmtName(String storageStmtName) {
-        this.storageStmtName = storageStmtName;
-    }
-
-    public String getLedgerStmtName() {
-        return ledgerStmtName;
-    }
-
-    public void setLedgerStmtName(String ledgerStmtName) {
-        this.ledgerStmtName = ledgerStmtName;
-    }
+//    public String getDbStmtName() {
+//        return dbStmtName;
+//    }
+//
+//    public void setDbStmtName(String dbStmtName) {
+//        this.dbStmtName = dbStmtName;
+//    }
+//
+//    public String getStorageStmtName() {
+//        return storageStmtName;
+//    }
+//
+//    public void setStorageStmtName(String storageStmtName) {
+//        this.storageStmtName = storageStmtName;
+//    }
+//
+//    public String getLedgerStmtName() {
+//        return ledgerStmtName;
+//    }
+//
+//    public void setLedgerStmtName(String ledgerStmtName) {
+//        this.ledgerStmtName = ledgerStmtName;
+//    }
 
     public String getDriverName() {
         return driverName;
