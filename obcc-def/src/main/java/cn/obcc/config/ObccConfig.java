@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.obcc.config.conn.pool.ConnPoolConfig;
-import cn.obcc.exception.enums.EChainType;
-import cn.obcc.exception.enums.EContractType;
-import cn.obcc.exception.enums.EMemoStrategy;
-import cn.obcc.exception.enums.ENonceStrategy;
+import cn.obcc.exception.enums.*;
 
 public class ObccConfig {
 
@@ -35,6 +32,7 @@ public class ObccConfig {
 
     private ENonceStrategy nonceStrategy = ENonceStrategy.Memory;
     private EMemoStrategy memoStrategy = EMemoStrategy.JSON;
+    private ECallbackStrategy callbackStrategy = ECallbackStrategy.Subscribe;
     private EContractType contractType = EContractType.SOLC;
 
     private String solcPath = "";
@@ -207,9 +205,18 @@ public class ObccConfig {
         this.dbPassword = dbPassword;
     }
 
+    public ECallbackStrategy getCallbackStrategy() {
+        return callbackStrategy;
+    }
+
+    public void setCallbackStrategy(ECallbackStrategy callbackStrategy) {
+        this.callbackStrategy = callbackStrategy;
+    }
+
     public String getJdbcTemplateName() {
         return jdbcTemplateName;
     }
+
 
     public void setJdbcTemplateName(String jdbcTemplateName) {
         this.jdbcTemplateName = jdbcTemplateName;

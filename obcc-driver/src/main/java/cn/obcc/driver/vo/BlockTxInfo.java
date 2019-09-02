@@ -1,54 +1,59 @@
 package cn.obcc.driver.vo;
 
+import cn.obcc.config.ReqConfig;
+import cn.obcc.driver.module.fn.ITokenOperateFn;
+import cn.obcc.exception.enums.EChainTxType;
+import cn.obcc.vo.RetData;
+import cn.obcc.vo.driver.TokenInfo;
+
+import java.math.BigInteger;
+
 public class BlockTxInfo {
 
-	private String hash;
-	private String srcAddr;
-	private String destAddr;
+	private EChainTxType txType;
+	private String chainCode;
 	private String blockHash;
 	private String blockNumber;
-	private String memos;
-	private String chainCode;
-	private String token;
-	private String contractAddress;
-	private String gasFee;
-	private String amount;
-	private String sparkHash;
+	private Long  blockTime;
+
+
+	private String hash;
 	private String state;
-	private Long tradeTime;
+
+
+	private String srcAddr;
 	private Long nonce;
-	private String txType;
-	private boolean normal;
+
+	private String destAddr;
 	private String gasPrice;
 	private String gasLimit;
+	private String gasUsed;
+	private String token;
+	private String amount;
+	private String memos;
+
 	private String details;
-	private String appid;
+	private String contractAddress;
+     private String method;
+     private String methodParams;//toJson
+
 	private int shardingFlag;
-	private Long srcFlowId;
-	private Long destFlowId;
 
-	public String getHash() {
-		return hash;
+
+	public EChainTxType getTxType() {
+		return txType;
 	}
 
-	public void setHash(String hash) {
-		this.hash = hash;
+	public void setTxType(EChainTxType txType) {
+		this.txType = txType;
 	}
 
-	public String getSrcAddr() {
-		return srcAddr;
+	public String getChainCode() {
+		return chainCode;
 	}
 
-	public void setSrcAddr(String srcAddr) {
-		this.srcAddr = srcAddr;
-	}
-
-	public String getDestAddr() {
-		return destAddr;
-	}
-
-	public void setDestAddr(String destAddr) {
-		this.destAddr = destAddr;
+	public void setChainCode(String chainCode) {
+		this.chainCode = chainCode;
 	}
 
 	public String getBlockHash() {
@@ -67,52 +72,20 @@ public class BlockTxInfo {
 		this.blockNumber = blockNumber;
 	}
 
-	public String getMemos() {
-		return memos;
+	public Long getBlockTime() {
+		return blockTime;
 	}
 
-	public void setMemos(String memos) {
-		this.memos = memos;
+	public void setBlockTime(Long blockTime) {
+		this.blockTime = blockTime;
 	}
 
-	public String getChainCode() {
-		return chainCode;
+	public String getHash() {
+		return hash;
 	}
 
-	public void setChainCode(String chainCode) {
-		this.chainCode = chainCode;
-	}
-
-	public String getContractAddress() {
-		return contractAddress;
-	}
-
-	public void setContractAddress(String contractAddress) {
-		this.contractAddress = contractAddress;
-	}
-
-	public String getGasFee() {
-		return gasFee;
-	}
-
-	public void setGasFee(String gasFee) {
-		this.gasFee = gasFee;
-	}
-
-	public String getAmount() {
-		return amount;
-	}
-
-	public void setAmount(String amount) {
-		this.amount = amount;
-	}
-
-	public String getSparkHash() {
-		return sparkHash;
-	}
-
-	public void setSparkHash(String sparkHash) {
-		this.sparkHash = sparkHash;
+	public void setHash(String hash) {
+		this.hash = hash;
 	}
 
 	public String getState() {
@@ -123,12 +96,12 @@ public class BlockTxInfo {
 		this.state = state;
 	}
 
-	public Long getTradeTime() {
-		return tradeTime;
+	public String getSrcAddr() {
+		return srcAddr;
 	}
 
-	public void setTradeTime(Long tradeTime) {
-		this.tradeTime = tradeTime;
+	public void setSrcAddr(String srcAddr) {
+		this.srcAddr = srcAddr;
 	}
 
 	public Long getNonce() {
@@ -139,30 +112,13 @@ public class BlockTxInfo {
 		this.nonce = nonce;
 	}
 
-	public String getToken() {
-		return token;
+	public String getDestAddr() {
+		return destAddr;
 	}
 
-	public void setToken(String token) {
-		this.token = token;
+	public void setDestAddr(String destAddr) {
+		this.destAddr = destAddr;
 	}
-
-	public String getTxType() {
-		return txType;
-	}
-
-	public void setTxType(String txType) {
-		this.txType = txType;
-	}
-
-	public boolean isNormal() {
-		return normal;
-	}
-
-	public void setNormal(boolean normal) {
-		this.normal = normal;
-	}
-
 
 	public String getGasPrice() {
 		return gasPrice;
@@ -180,6 +136,30 @@ public class BlockTxInfo {
 		this.gasLimit = gasLimit;
 	}
 
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public String getAmount() {
+		return amount;
+	}
+
+	public void setAmount(String amount) {
+		this.amount = amount;
+	}
+
+	public String getMemos() {
+		return memos;
+	}
+
+	public void setMemos(String memos) {
+		this.memos = memos;
+	}
+
 	public String getDetails() {
 		return details;
 	}
@@ -188,28 +168,28 @@ public class BlockTxInfo {
 		this.details = details;
 	}
 
-	public String getAppid() {
-		return appid;
+	public String getContractAddress() {
+		return contractAddress;
 	}
 
-	public void setAppid(String appid) {
-		this.appid = appid;
+	public void setContractAddress(String contractAddress) {
+		this.contractAddress = contractAddress;
 	}
 
-	public Long getSrcFlowId() {
-		return srcFlowId;
+	public String getMethod() {
+		return method;
 	}
 
-	public void setSrcFlowId(Long srcFlowId) {
-		this.srcFlowId = srcFlowId;
+	public void setMethod(String method) {
+		this.method = method;
 	}
 
-	public Long getDestFlowId() {
-		return destFlowId;
+	public String getMethodParams() {
+		return methodParams;
 	}
 
-	public void setDestFlowId(Long destFlowId) {
-		this.destFlowId = destFlowId;
+	public void setMethodParams(String methodParams) {
+		this.methodParams = methodParams;
 	}
 
 	public int getShardingFlag() {
@@ -218,6 +198,14 @@ public class BlockTxInfo {
 
 	public void setShardingFlag(int shardingFlag) {
 		this.shardingFlag = shardingFlag;
+	}
+
+	public String getGasUsed() {
+		return gasUsed;
+	}
+
+	public void setGasUsed(String gasUsed) {
+		this.gasUsed = gasUsed;
 	}
 }
 

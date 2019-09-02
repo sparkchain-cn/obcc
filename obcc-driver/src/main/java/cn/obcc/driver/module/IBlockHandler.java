@@ -68,7 +68,7 @@ public interface IBlockHandler<T> extends IChainHandler<T> {
      * @param txInfo
      * @return
      */
-    public boolean writeToDb(BlockTxInfo txInfo, ReqConfig<T> config) throws Exception;
+   // public boolean writeToDb(BlockTxInfo txInfo, ReqConfig<T> config) throws Exception;
 
     /**
      * CbBlockInfo，分库分表写到数据库中， 如果存在就抛弃，这时也返回true 保存
@@ -76,7 +76,7 @@ public interface IBlockHandler<T> extends IChainHandler<T> {
      * @param blockInfo
      * @return
      */
-    boolean writeToDb(BlockInfo blockInfo, ReqConfig<T> config) throws Exception;
+   // boolean writeToDb(BlockInfo blockInfo, ReqConfig<T> config) throws Exception;
 
 
 }

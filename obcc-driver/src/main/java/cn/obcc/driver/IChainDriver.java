@@ -4,10 +4,7 @@ import cn.obcc.config.ObccConfig;
 import cn.obcc.connect.builder.ChainClientBuilder;
 import cn.obcc.db.DbFactory;
 import cn.obcc.db.base.JdbcDao;
-import cn.obcc.driver.module.IAccountHandler;
-import cn.obcc.driver.module.IBlockHandler;
-import cn.obcc.driver.module.IContractHandler;
-import cn.obcc.driver.module.ITokenHandler;
+import cn.obcc.driver.module.*;
 import cn.obcc.driver.tech.*;
 
 /**
@@ -48,6 +45,8 @@ public interface IChainDriver<T> {
     public IContractHandler<T> getContractHandler() throws Exception;
 
     public IBlockHandler<T> getBlockHandler() throws Exception;
+
+    public ICallbackListener<T> getCallbackListener() throws  Exception;
 
     /*****************************************************************/
 

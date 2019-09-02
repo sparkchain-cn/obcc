@@ -14,10 +14,13 @@ public class TokenInfo extends Entity {
     private Long supply;
     private int precisions;
 
+
     private String contractAbi;
     private String contractAddress;
     private int state;
 
+//转币的方法名
+    private String transferName;
     //private String chainCode;
 
     public String getContract() {
@@ -95,7 +98,16 @@ public class TokenInfo extends Entity {
         this.bizId = bizId;
     }
 
-//    public String getChainCode() {
+    public String getTransferName() {
+        return transferName;
+    }
+
+    public void setTransferName(String transferName) {
+        this.transferName = transferName;
+    }
+
+
+    //    public String getChainCode() {
 //        return chainCode;
 //    }
 //

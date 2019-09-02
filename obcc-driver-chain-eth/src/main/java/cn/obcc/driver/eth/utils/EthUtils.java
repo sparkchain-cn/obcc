@@ -7,6 +7,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 
+import cn.obcc.exception.enums.ETransferStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.web3j.crypto.Credentials;
@@ -340,5 +341,27 @@ public class EthUtils {
 		signedMessage = TransactionEncoder.signMessage(rawTransaction, chainId.byteValue(), credentials);
 		// 转换成0x开头的字符串
 		return Numeric.toHexString(signedMessage);
+	}
+
+
+	/**
+	 * 从tr中取得状态
+	 *
+	 * @param state
+	 * @return
+	 */
+	public static ETransferStatus getState(String state) {
+		if (StringUtils.isNullOrEmpty(state)) {
+			return ETransferStatus.STATE_CHAIN_DEFINITE_FAILURE;
+		}
+		if ("1".equals(state) || "0x1".equalsIgnoreCase(state)) {
+			return ETransferStatus.STATE_SPC_SUCCESS;
+		} else if ("0".equals(state)) {
+			return ETransferStatus.STATE_CHAIN_DEFINITE_FAILURE;
+		}
+		// tr.getStatus().equalsIgnoreCase("1")
+
+		return ETransferStatus.STATE_CHAIN_DEFINITE_FAILURE;
+
 	}
 }

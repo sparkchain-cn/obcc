@@ -4,10 +4,8 @@ import cn.obcc.driver.base.BaseHandler;
 import cn.obcc.driver.module.ITokenHandler;
 import cn.obcc.driver.module.fn.ITokenCreateFn;
 import cn.obcc.driver.module.fn.ITokenOperateFn;
-import cn.obcc.driver.vo.SrcAccount;
+import cn.obcc.driver.vo.*;
 import cn.obcc.vo.driver.TokenInfo;
-import cn.obcc.driver.vo.TokenParams;
-import cn.obcc.driver.vo.TransactionInfo;
 import cn.obcc.config.ReqConfig;
 import cn.obcc.vo.RetData;
 import org.web3j.protocol.Web3j;
@@ -33,9 +31,30 @@ public class EthTokenHandler extends BaseHandler<Web3j> implements ITokenHandler
     }
 
     @Override
-    public RetData<TokenInfo> getToken(String tokenCode, ReqConfig<Web3j> config) throws Exception {
+    public boolean isToken(String contractAddr) throws Exception {
+        return false;
+    }
+
+    @Override
+    public ContractExecRec parseExecRec(TokenInfo info, String input) throws Exception {
         return null;
     }
+
+    @Override
+    public boolean isToken(TokenInfo info, ContractExecRec rec) {
+        return false;
+    }
+
+    @Override
+    public TokenRec parseExecRec(TokenInfo info, ContractExecRec rec) throws Exception {
+        return null;
+    }
+
+    @Override
+    public TokenInfo getToken(String tokenCodeOrContractAddr) throws Exception {
+        return null;
+    }
+
 
     @Override
     public RetData<String> balanceOf(TokenInfo token, String address, ReqConfig<Web3j> config) throws Exception {

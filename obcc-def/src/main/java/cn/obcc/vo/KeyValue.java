@@ -2,12 +2,12 @@ package cn.obcc.vo;
 
 import java.io.Serializable;
 
-public class KeyValue  implements Serializable{
+public class KeyValue<T>  implements Serializable{
 
     private String key;
-    private Object val;
+    private T val;
 
-    public KeyValue(String key, Object val) {
+    public KeyValue(String key, T val) {
         super();
         this.key = key;
         this.val = val;
@@ -21,11 +21,11 @@ public class KeyValue  implements Serializable{
         this.key = key;
     }
 
-    public Object getVal() {
+    public T getVal() {
         return val;
     }
 
-    public void setVal(Object val) {
+    public void setVal(T val) {
         this.val = val;
     }
 }

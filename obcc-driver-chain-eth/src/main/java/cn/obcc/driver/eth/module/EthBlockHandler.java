@@ -37,12 +37,12 @@ public class EthBlockHandler extends BaseHandler<Web3j> implements IBlockHandler
 		return null;
 	}
 
-	@Override
+//	@Override
 	public boolean writeToDb(BlockTxInfo txInfo, ReqConfig<Web3j> config) throws Exception {
 		return false;
 	}
 
-	@Override
+	//@Override
 	public boolean writeToDb(BlockInfo blockInfo, ReqConfig<Web3j> config) throws Exception {
 		return false;
 	}

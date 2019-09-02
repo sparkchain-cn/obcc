@@ -1,5 +1,10 @@
 package cn.obcc.driver.eth;
 
+import cn.obcc.driver.eth.module.EthBlockHandler;
+import cn.obcc.driver.eth.module.EthTokenHandler;
+import cn.obcc.driver.eth.module.tech.EthCallBackListener;
+import cn.obcc.driver.eth.module.tech.EthMemoParser;
+import cn.obcc.driver.module.*;
 import cn.obcc.driver.tech.IMemoParser;
 import org.web3j.protocol.Web3j;
 
@@ -11,13 +16,10 @@ import cn.obcc.driver.eth.module.EthAccountHandler;
 import cn.obcc.driver.eth.module.EthContractHandler;
 import cn.obcc.driver.eth.module.tech.EthNonceCalculator;
 import cn.obcc.driver.eth.module.tech.EthStateMonitor;
-import cn.obcc.driver.module.IAccountHandler;
-import cn.obcc.driver.module.IBlockHandler;
-import cn.obcc.driver.module.IContractHandler;
-import cn.obcc.driver.module.ITokenHandler;
 import cn.obcc.driver.tech.INonceCalculator;
 import cn.obcc.driver.tech.IStateMonitor;
 import cn.obcc.driver.tech.ITxSignature;
+
 
 public class EthChainDriver extends BaseChainDriver<Web3j> implements IChainDriver<Web3j> {
 
@@ -34,13 +36,23 @@ public class EthChainDriver extends BaseChainDriver<Web3j> implements IChainDriv
 
     @Override
     public IBlockHandler<Web3j> getBlockHandler() throws Exception {
-        return null;
+        EthBlockHandler handler = new EthBlockHandler();
+        handler.initObccConfig(obccConfig, this);
+        return handler;
+    }
+
+    @Override
+    public ICallbackListener<Web3j> getCallbackListener() throws Exception {
+        EthCallBackListener listener = new EthCallBackListener();
+        listener.initObccConfig(obccConfig, this);
+        return listener;
     }
 
     @Override
     public ITokenHandler<Web3j> getTokenHandler() throws Exception {
-        // TODO Auto-generated method stub
-        return null;
+        EthTokenHandler handler = new EthTokenHandler();
+        handler.initObccConfig(obccConfig, this);
+        return handler;
     }
 
     @Override
@@ -71,7 +83,9 @@ public class EthChainDriver extends BaseChainDriver<Web3j> implements IChainDriv
 
     @Override
     public IMemoParser<Web3j> getMemoParser() throws Exception {
-        return null;
+        EthMemoParser parser = new EthMemoParser();
+        parser.initObccConfig(obccConfig, this);
+        return parser;
     }
 
 

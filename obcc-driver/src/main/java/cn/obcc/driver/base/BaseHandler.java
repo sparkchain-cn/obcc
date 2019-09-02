@@ -12,7 +12,7 @@ public class BaseHandler<T> implements IChainHandler<T> {
     protected IChainDriver<T> driver;
 
     @Override
-    public IChainHandler initObccConfig(ObccConfig config, IChainDriver<T> driver) {
+    public IChainHandler initObccConfig(ObccConfig config, IChainDriver<T> driver) throws Exception {
         this.config = config;
         this.driver = driver;
         return this;

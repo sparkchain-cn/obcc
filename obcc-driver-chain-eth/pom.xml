@@ -86,6 +86,11 @@
 
         <dependency>
             <groupId>cn.obcc</groupId>
+            <artifactId>obcc-driver-callback</artifactId>
+            <version>${chain.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.obcc</groupId>
             <artifactId>obcc-driver-contract</artifactId>
             <version>${chain.version}</version>
         </dependency>
