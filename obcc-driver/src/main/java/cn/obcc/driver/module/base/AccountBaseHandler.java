@@ -3,21 +3,25 @@ package cn.obcc.driver.module.base;
 import cn.obcc.driver.base.BaseHandler;
 import cn.obcc.driver.module.IAccountHandler;
 import cn.obcc.driver.module.fn.ITransferFn;
+import cn.obcc.driver.module.fn.ITransferInfoFn;
 import cn.obcc.driver.utils.JunctionUtils;
+import cn.obcc.driver.vo.Account;
+import cn.obcc.driver.vo.BizTransactionInfo;
 import cn.obcc.driver.vo.SrcAccount;
+import cn.obcc.driver.vo.TransactionInfo;
 import cn.obcc.exception.ObccException;
 import cn.obcc.exception.enums.EExceptionCode;
 import cn.obcc.exception.enums.StateEnum;
+import cn.obcc.uuid.UuidUtils;
 import cn.obcc.vo.driver.AccountInfo;
 import cn.obcc.utils.base.StringUtils;
 import cn.obcc.config.ReqConfig;
 import cn.obcc.vo.RetData;
+import cn.obcc.vo.driver.BlockTxInfo;
+import cn.obcc.vo.driver.RecordInfo;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author pengrk
@@ -32,7 +36,21 @@ public abstract class AccountBaseHandler<T> extends BaseHandler<T> implements IA
     @Override
     public RetData<AccountInfo> createAccount(String bizId, String username, String pwd) throws Exception {
         //创建完成调用 db保存
-        return null;
+        RetData<Account> ret = this.createAccount();
+        if (ret.isSuccess()) {
+            Account ac = (Account) ret.getData();
+            AccountInfo acInfo = new AccountInfo();
+            acInfo.setId(UuidUtils.get());
+            acInfo.setBizId(bizId);
+            acInfo.setUserName(username);
+            acInfo.setPassword(pwd);
+            acInfo.setAddress(ac.getAddress());
+            acInfo.setSecret(ac.getSecret());
+            acInfo.setState(0);
+            getDriver().getLocalDb().getAccountInfoDao().add(acInfo);
+        }
+        throw ObccException.create(EExceptionCode.CREATE_ACCOUNT_FAIL, ret.getCode() + ret.getMessage());
+
     }
 
     @Override
@@ -59,6 +77,7 @@ public abstract class AccountBaseHandler<T> extends BaseHandler<T> implements IA
     public RetData<String> transfer(String bizId, SrcAccount account, String amount,
                                     String destAddress, ReqConfig<T> config, ITransferFn callback) throws Exception {
 
+        //todo:区块回调的处理
         account.setAccount(JunctionUtils.hexAddrress(account.getAccount()));
         final String destAddr = JunctionUtils.hexAddrress(destAddress);
 
@@ -103,6 +122,45 @@ public abstract class AccountBaseHandler<T> extends BaseHandler<T> implements IA
 
     public abstract RetData<String> onTransfer(String bizId, SrcAccount account, String amount,
                                                String destAddress, ReqConfig<T> config, ITransferFn callback) throws Exception;
+
+    public RetData<BizTransactionInfo> getTransactionByBizId(String bizId, ReqConfig<T> config) throws Exception {
+        RecordInfo recordInfo = getDriver().getLocalDb().getRecordInfoDao().findOne("biz_id=?", new Object[]{bizId});
+        if (recordInfo == null) {
+            return RetData.error("根据BizId:" + bizId + "不能找到对应的hash");
+        }
+        RetData<BizTransactionInfo> bizInfos = getTransactionByHashs(recordInfo.getHashs(), config);
+        return bizInfos;
+    }
+
+
+    @Override
+    public RetData<BizTransactionInfo> getTransactionByHashs(String hashs, ReqConfig<T> config) throws Exception {
+        if (StringUtils.isNullOrEmpty(hashs)) return RetData.error("参数Hash is null.");
+        List<BlockTxInfo> list = new ArrayList<>();
+
+        BizTransactionInfo bizTx = new BizTransactionInfo();
+        bizTx.setHashs(hashs);
+        StringBuffer sb = new StringBuffer();
+        Arrays.stream(hashs.split("[,，]")).forEach((s) -> {
+            try {
+                RetData<BlockTxInfo> ret = getTransactionByHash(hashs, config);
+                BlockTxInfo tx = (BlockTxInfo) ret.getData();
+                sb.append(tx.getMemosObj().getData());
+                //todo:判断多个hash的流水的bizid是否相同
+                bizTx.setBizId(tx.getMemosObj().getBizId());
+                bizTx.setSourceAddress(tx.getSrcAddr());
+                bizTx.setDestinationAddress(tx.getDestAddr());
+                list.add(tx);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        bizTx.setMemos(sb.toString());
+        bizTx.setRecordInfos(list);
+        bizTx.setState(1 + "");
+        return RetData.succuess(bizTx);
+    }
 
 
 }

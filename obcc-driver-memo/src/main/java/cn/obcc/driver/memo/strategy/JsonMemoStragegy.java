@@ -1,9 +1,8 @@
 package cn.obcc.driver.memo.strategy;
 
 import cn.obcc.driver.memo.IMemoStrategy;
-import cn.obcc.driver.vo.BcMemo;
+import cn.obcc.vo.BcMemo;
 import cn.obcc.utils.HexUtils;
-import cn.obcc.utils.base.StringUtils;
 import com.alibaba.fastjson.JSON;
 
 import java.util.ArrayList;
@@ -31,7 +30,10 @@ public abstract class JsonMemoStragegy implements IMemoStrategy {
 
         for (int i = 0; i < duanshu; i++) {
             String segment = (i == duanshu - 1) ? memo.substring(i * duan) : memo.substring(i * duan, (i + 1) * duan);
-            result.add(new BcMemo(bizId, segment));
+            BcMemo vo = new BcMemo(bizId, segment);
+            vo.setSeq(i + 1L);
+            vo.setSum(duanshu);
+            result.add(vo);
         }
         return result;
     }

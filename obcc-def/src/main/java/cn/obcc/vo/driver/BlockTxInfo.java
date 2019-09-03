@@ -1,8 +1,10 @@
 package cn.obcc.vo.driver;
 
 import cn.obcc.exception.enums.EChainTxType;
+import cn.obcc.vo.BcMemo;
 
 import javax.persistence.Column;
+import javax.persistence.Transient;
 
 public class BlockTxInfo {
 
@@ -20,6 +22,7 @@ public class BlockTxInfo {
 	private String srcAddr;
 	private Long nonce;
 
+
 	private String destAddr;
 	private String gasPrice;
 	private String gasLimit;
@@ -28,6 +31,7 @@ public class BlockTxInfo {
 	private String amount;
 	private String memos;
 
+	private BcMemo memosObj;
 	private String details;
 	private String contractAddress;
      private String method;
@@ -203,5 +207,15 @@ public class BlockTxInfo {
 	public void setGasUsed(String gasUsed) {
 		this.gasUsed = gasUsed;
 	}
+
+	public void setMemosObj(BcMemo memosObj) {
+		this.memosObj = memosObj;
+	}
+
+	@Transient
+	public BcMemo getMemosObj() {
+		return memosObj;
+	}
+
 }
 

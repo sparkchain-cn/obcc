@@ -2,7 +2,7 @@
 //
 //import com.alibaba.fastjson.JSON;
 //
-//import cn.obcc.driver.vo.BcMemo;
+//import cn.obcc.vo.BcMemo;
 //import cn.obcc.utils.base.StringUtils;
 //
 //public class SpcMemoUtils {

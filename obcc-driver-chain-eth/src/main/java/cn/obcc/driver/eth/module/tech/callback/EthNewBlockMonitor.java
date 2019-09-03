@@ -2,9 +2,12 @@ package cn.obcc.driver.eth.module.tech.callback;
 
 import cn.obcc.config.ObccConfig;
 import cn.obcc.driver.IChainDriver;
+import cn.obcc.driver.eth.module.tech.common.BlockTxInfoParser;
 import cn.obcc.driver.eth.utils.EthUtils;
 import cn.obcc.driver.module.IContractHandler;
 import cn.obcc.driver.module.ITokenHandler;
+import cn.obcc.utils.HexUtils;
+import cn.obcc.utils.base.StringUtils;
 import cn.obcc.vo.driver.BlockTxInfo;
 import cn.obcc.driver.vo.ContractExecRec;
 import cn.obcc.driver.vo.TokenRec;
@@ -29,7 +32,7 @@ import java.util.List;
 
 public class EthNewBlockMonitor {
 
-    public Logger logger = LoggerFactory.getLogger(getClass());
+    public Logger logger = LoggerFactory.getLogger(EthNewBlockMonitor.class);
 
     public List<Disposable> subcribeList = new ArrayList<>();
 
@@ -66,38 +69,6 @@ public class EthNewBlockMonitor {
         return subcribeList;
     }
 
-    private boolean isContract(Web3j web3j, Transaction t) {
-        return EthUtils.isContractAddr(web3j, t.getTo());
-    }
-
-
-    private void parseContract(Web3j web3j, Transaction t, BlockTxInfo tx) throws Exception {
-        IContractHandler contractHandler = driver.getContractHandler();
-        ITokenHandler tokenHandler = driver.getTokenHandler();
-        ContractInfo contractInfo = contractHandler.getContract(t.getTo());
-        if (contractInfo == null) {
-            logger.debug("Contract " + t.getTo() + "is not  Contract  registed in this system.");
-        }
-        ContractExecRec rec = contractHandler.parseExecRec(contractInfo, t.getInput());
-
-        tx.setTxType(EChainTxType.Contract);
-        tx.setContractAddress(t.getTo());
-        tx.setMethod(rec.getMethod());
-        tx.setMethodParams(JSON.toJSONString(rec.getParams()));
-
-        if (tokenHandler.isToken(t.getTo())) {
-            TokenInfo tokenInfo = tokenHandler.getToken(t.getTo());
-            TokenRec tokenRec = tokenHandler.parseExecRec(tokenInfo, rec);
-            tx.setDestAddr(tokenRec.getDestAddr());
-            tx.setAmount(tokenRec.getAmount());
-            tx.setMemos(tokenRec.getMemo());
-            tx.setTxType(EChainTxType.Token);
-        }
-    }
-
-    private String getAmount(Transaction t) {
-        return Convert.fromWei(new BigDecimal(t.getValue()), Unit.ETHER).toPlainString();
-    }
 
     private void newTransactionFilter(Web3j web3j, String chainCode) {
         Flowable<Transaction> flow = web3j.transactionFlowable();
@@ -105,36 +76,20 @@ public class EthNewBlockMonitor {
         TransactionReceipt r;
 
         Disposable d;
-        d = flow.subscribe(t -> {
-            if (t == null) return;
+        d = flow.subscribe((t) -> {
             try {
-                BlockTxInfo txInfo = new BlockTxInfo();
-                txInfo.setChainCode(chainCode);
-
-                BigInteger gasPrice = t.getGasPrice();
-                String blockHash = t.getBlockHash();
-                String hash = t.getHash();
-
-                txInfo.setTxType(EChainTxType.Orign);
-                txInfo.setHash(t.getHash());
-
-                txInfo.setSrcAddr(t.getFrom());
-                txInfo.setNonce(t.getNonce().longValue());
-                txInfo.setAmount(getAmount(t));
-                txInfo.setDestAddr(t.getTo());
-                txInfo.setGasPrice(t.getGasPrice().longValue() + "");
-                txInfo.setGasLimit(t.getGas().longValue() + "");
-
-                txInfo.setBlockHash(t.getBlockHash());
-                txInfo.setBlockNumber(t.getBlockNumber().longValue() + "");
-
-                if (isContract(web3j, t)) {
-                    parseContract(web3j, t, txInfo);
+                if (t == null) return;
+                //过滤非本应用的
+                boolean isContract = BlockTxInfoParser.isContract(web3j, t);
+                if (isContract) {
+                    //todo:是我们的合约，我们的合约需要加上标识，或者从数据库取出进行比较
+                } else {
+                    if (!t.getInput().startsWith(HexUtils.str2HexStr(config.getMemoPre()))) {
+                        return;
+                    }
                 }
-
-                parseStatus(web3j, hash, gasPrice, txInfo);
-                txInfo.setBlockTime(EthUtils.getTradeTime(web3j, blockHash));
-
+                //解析区块流水
+                BlockTxInfo txInfo = BlockTxInfoParser.parseTxInfo(web3j, chainCode, driver, t, isContract);
                 //todo:修改异步
                 //把数据写到数据库中
                 driver.getCallbackListener().writeToDb(txInfo);
@@ -144,27 +99,10 @@ public class EthNewBlockMonitor {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-        }, t -> {
-            t.printStackTrace();
+        }, (e) -> {
+            e.printStackTrace();
         });
         subcribeList.add(d);
-    }
-
-    private void parseStatus(Web3j web3j, String hash, BigInteger gasPrice, BlockTxInfo tx) {
-        try {
-            TransactionReceipt tr = web3j.ethGetTransactionReceipt(hash).send().getResult();
-            if (tr != null) {
-                tx.setGasUsed(EthUtils.calUsedGasFee(tr, gasPrice));
-                tx.setState(EthUtils.getState(tr.getStatus()) + "");
-
-            } else {
-                System.out.println("hahs:" + hash + " can not get  TransactionReceipt.");
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 

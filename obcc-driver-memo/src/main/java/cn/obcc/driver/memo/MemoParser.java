@@ -3,7 +3,7 @@ package cn.obcc.driver.memo;
 import cn.obcc.driver.base.BaseHandler;
 import cn.obcc.driver.memo.strategy.JsonMemoStragegy;
 import cn.obcc.driver.tech.IMemoParser;
-import cn.obcc.driver.vo.BcMemo;
+import cn.obcc.vo.BcMemo;
 import cn.obcc.exception.enums.EMemoStrategy;
 
 import java.util.List;

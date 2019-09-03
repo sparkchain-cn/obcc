@@ -10,16 +10,12 @@ public class ObccConfig {
 
     private String clientId = "obcc";
 
-//    private String dbStmtName = "cn.obcc.stmt.db.DbStatement";
-//    private String storageStmtName = "cn.obcc.stmt.storage.StorageStatement";
-//    private String ledgerStmtName = "cn.obcc.stmt.ledger.LedgerStatement";
-
-
-
     private String localDbName = "cn.obcc.db.SqliteDb";
     private String speedAdjusterName = "cn.obcc.driver.adjuster.SpeedAdjuster";
-
+    private String jdbcTemplateName = "cn.obcc.db.sqlite.SqliteJdbcTemplate";
     private String driverName = "cn.obcc.driver.eth.EthChainDriver";
+
+    private long callbackWaitTime = 20 * 60 * 1000;//20分钟
 
     private ConnPoolConfig pollconfig;
 
@@ -38,7 +34,7 @@ public class ObccConfig {
 
     private String solcPath = "";
     private String tempPath = "";
-    private String jdbcTemplateName = "cn.obcc.db.sqlite.SqliteJdbcTemplate";
+
 
     private String memoPre = "&&spc";
 
@@ -77,30 +73,6 @@ public class ObccConfig {
         this.chain = chain;
     }
 
-//    public String getDbStmtName() {
-//        return dbStmtName;
-//    }
-//
-//    public void setDbStmtName(String dbStmtName) {
-//        this.dbStmtName = dbStmtName;
-//    }
-//
-//    public String getStorageStmtName() {
-//        return storageStmtName;
-//    }
-//
-//    public void setStorageStmtName(String storageStmtName) {
-//        this.storageStmtName = storageStmtName;
-//    }
-//
-//    public String getLedgerStmtName() {
-//        return ledgerStmtName;
-//    }
-//
-//    public void setLedgerStmtName(String ledgerStmtName) {
-//        this.ledgerStmtName = ledgerStmtName;
-//    }
-
     public String getDriverName() {
         return driverName;
     }
@@ -116,7 +88,6 @@ public class ObccConfig {
     public void setPollconfig(ConnPoolConfig pollconfig) {
         this.pollconfig = pollconfig;
     }
-
 
     public String getSpeedAdjusterName() {
         return speedAdjusterName;
@@ -218,8 +189,15 @@ public class ObccConfig {
         return jdbcTemplateName;
     }
 
-
     public void setJdbcTemplateName(String jdbcTemplateName) {
         this.jdbcTemplateName = jdbcTemplateName;
+    }
+
+    public long getCallbackWaitTime() {
+        return callbackWaitTime;
+    }
+
+    public void setCallbackWaitTime(long callbackWaitTime) {
+        this.callbackWaitTime = callbackWaitTime;
     }
 }

@@ -1,32 +1,29 @@
 package cn.obcc.driver.eth.module;
 
+import cn.obcc.config.ReqConfig;
 import cn.obcc.driver.eth.module.account.AccountTransfer;
-import cn.obcc.driver.eth.utils.EthUtils;
+import cn.obcc.driver.eth.module.tech.common.BlockTxInfoParser;
+import cn.obcc.driver.module.IAccountHandler;
 import cn.obcc.driver.module.base.AccountBaseHandler;
+import cn.obcc.driver.module.fn.ITransferFn;
 import cn.obcc.driver.module.fn.ITransferInfoFn;
 import cn.obcc.driver.utils.JunctionUtils;
-import cn.obcc.driver.vo.BizTransactionInfo;
+import cn.obcc.driver.vo.Account;
 import cn.obcc.driver.vo.SrcAccount;
 import cn.obcc.exception.ObccException;
 import cn.obcc.exception.enums.EExceptionCode;
-import cn.obcc.utils.base.StringUtils;
+import cn.obcc.vo.RetData;
+import cn.obcc.vo.driver.BlockTxInfo;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.Keys;
 import org.web3j.protocol.Web3j;
-
-import cn.obcc.driver.module.fn.ITransferFn;
-import cn.obcc.driver.module.IAccountHandler;
-import cn.obcc.driver.vo.Account;
-import cn.obcc.driver.vo.TransactionInfo;
-import cn.obcc.config.ReqConfig;
-import cn.obcc.vo.RetData;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.Response;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
+import org.web3j.protocol.core.methods.response.Transaction;
 import org.web3j.tx.gas.DefaultGasProvider;
-import org.web3j.tx.gas.StaticGasProvider;
 import org.web3j.utils.Convert;
 
 import java.io.IOException;
@@ -61,6 +58,7 @@ public class EthAccountHandler extends AccountBaseHandler<Web3j> implements IAcc
             throw ObccException.create(EExceptionCode.CREATE_ACCOUNT_FAIL, "NoSuchProvider" + e);
         }
     }
+
 
     @Override
     public Long[] calGas(SrcAccount account, String amount, String destAddress, ReqConfig<Web3j> config) throws Exception {
@@ -132,20 +130,26 @@ public class EthAccountHandler extends AccountBaseHandler<Web3j> implements IAcc
         return RetData.succuess(est.getTransactionHash());
     }
 
-    @Override
-    public RetData<BizTransactionInfo> getTransaction(String hash, ReqConfig<Web3j> config) throws Exception {
-        return null;
-    }
 
     @Override
-    public RetData<String> getTransaction(String bizId, ReqConfig<Web3j> config, ITransferInfoFn fn) throws Exception {
-        return null;
+    public RetData<BlockTxInfo> getTransactionByHash(String hash, ReqConfig<Web3j> config) throws Exception {
+
+        try {
+            Web3j web3j = config.getClient();
+            Transaction tx;
+            String chaincode = getObccConfig().getChain().name();
+
+            tx = web3j.ethGetTransactionByHash(hash).send().getTransaction().get();
+            BlockTxInfo txInfo = BlockTxInfoParser.parseTxInfo(web3j, chaincode, getDriver(), tx);
+            if (txInfo != null) {
+                return RetData.succuess(txInfo);
+            }
+        } catch (Exception e) {
+            throw ObccException.create(EExceptionCode.FETCH_TX_FAIL, e.getMessage());
+        }
+        return RetData.error("没有找到返回的结果");
     }
 
-    @Override
-    public RetData<TransactionInfo> getTransactionByHash(String hash, ReqConfig<Web3j> config) throws Exception {
-        return null;
-    }
 
     @Override
     public RetData<String> getBalance(String addr, ReqConfig<Web3j> config) throws Exception {

@@ -2,6 +2,7 @@ package cn.obcc.driver.vo;
 
 import cn.obcc.driver.utils.JunctionUtils;
 import cn.obcc.utils.base.StringUtils;
+import cn.obcc.vo.driver.BlockTxInfo;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class BizTransactionInfo {
 
     private String state;
 
-    private List<TransactionInfo> recordInfos;
+    private List<BlockTxInfo> recordInfos;
 
     public String getBizId() {
         return bizId;
@@ -66,11 +67,11 @@ public class BizTransactionInfo {
         this.state = state;
     }
 
-    public List<TransactionInfo> getRecordInfos() {
+    public List<BlockTxInfo> getRecordInfos() {
         return recordInfos;
     }
 
-    public void setRecordInfos(List<TransactionInfo> recordInfos) {
+    public void setRecordInfos(List<BlockTxInfo> recordInfos) {
         this.recordInfos = recordInfos;
     }
 }

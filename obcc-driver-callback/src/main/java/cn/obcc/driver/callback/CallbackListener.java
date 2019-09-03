@@ -32,14 +32,12 @@ public class CallbackListener<T> extends BaseHandler<T> implements ICallbackList
 
     @Override
     public boolean writeToDb(BlockTxInfo txInfo) throws Exception {
-        //todo:在这里调用dao进行写入数据库
         driver.getLocalDb().getTxInfoDao().add(txInfo);
         return true;
     }
 
     @Override
     public boolean writeToDb(BlockInfo blockInfo) throws Exception {
-        //todo:在这里调用dao进行写入数据库
         return false;
     }
 }

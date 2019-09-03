@@ -1,10 +1,7 @@
 package cn.obcc.driver.tech;
 
 import cn.obcc.driver.IChainHandler;
-import cn.obcc.driver.vo.BcMemo;
-import cn.obcc.driver.vo.SrcAccount;
-import cn.obcc.config.ReqConfig;
-import cn.obcc.vo.RetData;
+import cn.obcc.vo.BcMemo;
 
 import java.util.List;
 

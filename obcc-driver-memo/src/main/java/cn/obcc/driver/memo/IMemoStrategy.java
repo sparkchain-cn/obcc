@@ -1,7 +1,7 @@
 package cn.obcc.driver.memo;
 
 
-import cn.obcc.driver.vo.BcMemo;
+import cn.obcc.vo.BcMemo;
 
 import java.util.List;
 

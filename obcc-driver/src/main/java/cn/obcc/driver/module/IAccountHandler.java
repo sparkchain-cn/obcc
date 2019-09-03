@@ -7,6 +7,7 @@ import cn.obcc.driver.vo.*;
 import cn.obcc.config.ReqConfig;
 import cn.obcc.vo.driver.AccountInfo;
 import cn.obcc.vo.RetData;
+import cn.obcc.vo.driver.BlockTxInfo;
 
 import java.math.BigInteger;
 
@@ -90,18 +91,16 @@ public interface IAccountHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public RetData<BizTransactionInfo> getTransaction(String bizId, ReqConfig<T> config) throws Exception;
+    public RetData<BizTransactionInfo> getTransactionByBizId(String bizId, ReqConfig<T> config) throws Exception;
 
     /**
      * 异步取，特别是文件上链，其可能有几千个，最好采用异步。
-     *
-     * @param bizId
+     * @param hashs
      * @param config
-     * @param fn
-     * @return hashs
+     * @return
      * @throws Exception
      */
-    public RetData<String> getTransaction(String bizId, ReqConfig<T> config, ITransferInfoFn fn) throws Exception;
+    public RetData<BizTransactionInfo> getTransactionByHashs(String hashs, ReqConfig<T> config) throws Exception;
 
 
     /**
@@ -112,7 +111,7 @@ public interface IAccountHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public RetData<TransactionInfo> getTransactionByHash(String hash, ReqConfig<T> config) throws Exception;
+    public RetData<BlockTxInfo> getTransactionByHash(String hash, ReqConfig<T> config) throws Exception;
 
 
     /**
