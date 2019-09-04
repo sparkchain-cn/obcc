@@ -12,19 +12,20 @@ import cn.obcc.vo.driver.RecordInfo;
  * @desc TODO
  * @date 2019/8/28 0028  17:44
  **/
-public class RecordInfoDao extends JdbcTemplateDao<RecordInfo, Long> implements JdbcDao<RecordInfo, Long>, java.io.Serializable  {
+public class RecordInfoDao extends JdbcTemplateDao<RecordInfo, Long> implements JdbcDao<RecordInfo, Long>, java.io.Serializable {
 
 
     ////todo:
-    public String getCreateSql(){
-        return " CREATE TABLE account_info" +
-                " id bigint(80) NOT NULL," +
+    public String getCreateSql() {
+        return " CREATE TABLE " + this.tableName() + " (" +
+                primaryKeyName() + "  bigint(80) NOT NULL," +
                 " biz_id varchar(200) DEFAULT NULL," +
                 " hashs varchar(200) DEFAULT NULL," +
                 " user_name varchar(200) DEFAULT NULL," +
                 " state int DEFAULT NULL," +
-                " PRIMARY KEY (`id`) )";
+                " PRIMARY KEY (`" + primaryKeyName() + "`) )";
     }
+
     public String primaryKeyName() {
         //return JdbcUtil.findIdNameForClz(entityClass);
         return "id";

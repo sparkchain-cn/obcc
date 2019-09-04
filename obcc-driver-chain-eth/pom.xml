@@ -95,6 +95,26 @@
             <version>${chain.version}</version>
         </dependency>
 
+
+        <dependency>
+            <groupId>cn.obcc</groupId>
+            <artifactId>obcc-driver-callback-notify</artifactId>
+            <version>${chain.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>cn.obcc</groupId>
+            <artifactId> obcc-local-db-sqlite</artifactId>
+            <version>${chain.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>cn.obcc</groupId>
+            <artifactId>obcc-driver-adjuster</artifactId>
+            <version>${chain.version}</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
 

@@ -3,7 +3,6 @@ package cn.obcc.driver;
 import cn.obcc.config.ObccConfig;
 import cn.obcc.connect.builder.ChainClientBuilder;
 import cn.obcc.db.DbFactory;
-import cn.obcc.db.base.JdbcDao;
 import cn.obcc.driver.module.*;
 import cn.obcc.driver.tech.*;
 import cn.obcc.driver.tech.register.ICallbackRegister;
@@ -47,15 +46,17 @@ public interface IChainDriver<T> {
 
     public IBlockHandler<T> getBlockHandler() throws Exception;
 
-    public ICallbackListener<T> getCallbackListener() throws  Exception;
+    public ITxSignatureHandler<T> getTxSignatureHandler() throws Exception;
+
 
     /*****************************************************************/
+
+    public ICallbackListener<T> getCallbackListener() throws  Exception;
 
     public IStateMonitor<T> getStateMonitor() throws Exception;
 
     public INonceCalculator<T> getNonceCalculator() throws Exception;
 
-    public ITxSignature<T> getTxSignature() throws Exception;
 
     public IMemoParser<T> getMemoParser() throws Exception;
 

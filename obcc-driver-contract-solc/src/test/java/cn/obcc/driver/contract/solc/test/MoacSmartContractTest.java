@@ -4,8 +4,9 @@ import cn.obcc.driver.contract.solc.core.AbiParser;
 import cn.obcc.driver.contract.solc.core.SolcCompiler;
 import cn.obcc.driver.contract.solc.vo.ContractInfo;
 import com.alibaba.fastjson.JSONObject;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -148,7 +149,7 @@ public class MoacSmartContractTest {
     //endregion
 
     //region basic test
-    @Before
+    @BeforeClass
     public void setupMockMvc() throws Exception {
         // mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
     }

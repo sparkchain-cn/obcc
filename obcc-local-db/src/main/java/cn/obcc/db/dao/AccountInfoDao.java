@@ -16,14 +16,14 @@ public class AccountInfoDao extends JdbcTemplateDao<AccountInfo, Long> implement
 
     ////todo:
     public String getCreateSql(){
-        return " CREATE TABLE account_info" +
-                " id bigint(80) NOT NULL," +
+        return " CREATE TABLE " + this.tableName() + " (" +
+                primaryKeyName() + "  bigint(80) NOT NULL," +
                 " biz_id varchar(200) DEFAULT NULL," +
                 " user_name varchar(200) DEFAULT NULL," +
                 " password varchar(200) DEFAULT NULL," +
                 " address varchar(200) DEFAULT NULL," +
                 " secret varchar(200) DEFAULT NULL," +
-                " PRIMARY KEY (`id`) )";
+                " PRIMARY KEY (`" + primaryKeyName() + "`) )";
     }
     public String primaryKeyName() {
         //return JdbcUtil.findIdNameForClz(entityClass);

@@ -11,6 +11,7 @@ public class BaseHandler<T> implements IChainHandler<T> {
 
     protected ObccConfig config;
 
+
     protected IChainDriver<T> driver;
 
     @Override
@@ -24,6 +25,7 @@ public class BaseHandler<T> implements IChainHandler<T> {
     public ObccConfig getObccConfig() {
         return config;
     }
+
 
     @Override
     public T getClient() throws Exception {

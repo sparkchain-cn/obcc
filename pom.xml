@@ -1,104 +1,118 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>cn.obcc</groupId>
-	<artifactId>obcc</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<modules>
+    <groupId>cn.obcc</groupId>
+    <artifactId>obcc</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <modules>
 
-		<module>obcc-def</module>
-		<module>obcc-utils</module>
-		<module>obcc-driver</module>
-		<module>obcc-driver-pool</module>
+        <module>obcc-def</module>
+        <module>obcc-utils</module>
+        <module>obcc-driver</module>
+        <module>obcc-driver-pool</module>
 
-	      <module>obcc-driver-nonce</module>
-		<module>obcc-driver-memo</module>
-		<module>obcc-driver-adjuster</module>
-		<module>obcc-driver-callback</module>
+        <module>obcc-driver-nonce</module>
+        <module>obcc-driver-memo</module>
+        <module>obcc-driver-adjuster</module>
+        <module>obcc-driver-callback</module>
         <module>obcc-driver-contract-solc</module>
 
-		<module>obcc-driver-contract</module>
-		<module>obcc-driver-callback-pull</module>
-		<module>obcc-driver-callback-notify</module>
-		<module>obcc-driver-callback-notify-consul</module>
+        <module>obcc-driver-contract</module>
+        <module>obcc-driver-callback-pull</module>
+        <module>obcc-driver-callback-notify</module>
+        <module>obcc-driver-callback-notify-consul</module>
 
-		<module>obcc-driver-chain-eth</module>
+        <module>obcc-driver-chain-eth</module>
 
-		<module>obcc-stmt</module>
-		<module>obcc-stmt-db</module>
-		<module>obcc-stmt-storage</module>
-		<module>obcc-stmt-ledger</module>
-		<module>obcc-client</module>
-		<module>obcc-client-examples</module>
+        <module>obcc-stmt</module>
+        <module>obcc-stmt-db</module>
+        <module>obcc-stmt-storage</module>
+        <module>obcc-stmt-ledger</module>
+        <module>obcc-client</module>
+        <module>obcc-client-examples</module>
 
-		<module>obcc-local-db</module>
-		<module>obcc-local-db-sqlite</module>
-		<module>obcc-local-db-mysql</module>
+        <module>obcc-local-db</module>
+        <module>obcc-local-db-sqlite</module>
+        <module>obcc-local-db-mysql</module>
 
-		<module>obcc-plaf</module>
-
-
-	</modules>
-
-	<packaging>pom</packaging>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.8</java.version>
-		<chain.version>0.0.1-SNAPSHOT</chain.version>
-	</properties>
+        <module>obcc-plaf</module>
 
 
-	<distributionManagement>
-		<repository>
-			<id>nexus-release</id>
-			<url>http://121.43.182.221:8090/repository/maven-releases/</url>
-		</repository>
-		<snapshotRepository>
-			<id>nexus-snapshot</id>
-			<url>http://121.43.182.221:8090/repository/maven-snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement>
+    </modules>
 
-	<repositories>
-		<repository>
-			<id>proxyRepo</id>
-			<url>http://121.43.182.221:8090/repository/maven-public/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
+    <packaging>pom</packaging>
 
-		<repository>
-			<id>aliyun</id>
-			<name>aliyun</name>
-			<url>http://maven.aliyun.com/nexus/content/groups/public</url>
-		</repository>
-	</repositories>
-	<dependencies>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.7.25</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.25</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <chain.version>0.0.1-SNAPSHOT</chain.version>
+    </properties>
+
+
+    <distributionManagement>
+        <repository>
+            <id>nexus-release</id>
+            <url>http://121.43.182.221:8090/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus-snapshot</id>
+            <url>http://121.43.182.221:8090/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>proxyRepo</id>
+            <url>http://121.43.182.221:8090/repository/maven-public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+
+        <repository>
+            <id>aliyun</id>
+            <name>aliyun</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+        </repository>
+    </repositories>
+    <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>2.0.1.Final</version>
+        </dependency>
+
+        <!--        <dependency>-->
+        <!--            <groupId>junit</groupId>-->
+        <!--            <artifactId>junit</artifactId>-->
+        <!--            <version>4.12</version>-->
+        <!--            <scope>test</scope>-->
+        <!--        </dependency>-->
+        <!-- https://mvnrepository.com/artifact/org.testng/testng -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>7.0.0</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
 
 </project>

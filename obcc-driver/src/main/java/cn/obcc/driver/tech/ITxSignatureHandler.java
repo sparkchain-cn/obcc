@@ -14,7 +14,7 @@ import cn.obcc.vo.RetData;
  * @email 546711211@qq.com
  * @date 2019年8月22日 上午10:06:21
  */
-public interface ITxSignature<T> extends IChainHandler<T> {
+public interface ITxSignatureHandler<T> extends IChainHandler<T> {
 
     /**
      * 获取签名的参数，这里就是返回sequence

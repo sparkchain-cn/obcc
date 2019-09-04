@@ -7,6 +7,8 @@ import cn.obcc.db.mapper.RowMapper;
 import cn.obcc.db.sqlite.helper.DbOperator;
 import cn.obcc.db.sqlite.helper.SqlHandler;
 import cn.obcc.db.sqlite.helper.TableHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +23,7 @@ import java.util.List;
  * @date 2019/8/28 0028  10:06
  **/
 public class SqliteJdbcTemplate implements IJdbcTemplate {
+    final static Logger logger = LoggerFactory.getLogger(DbOperator.class);
 
     protected ObccConfig config;
     protected DbOperator dbOperator;// = new SqliteHelper(dbName);
@@ -47,6 +50,7 @@ public class SqliteJdbcTemplate implements IJdbcTemplate {
         if (!file.exists()) {
             file.createNewFile();
         }
+        logger.debug("sqlite 数据器文件:" + file.getAbsoluteFile());
     }
 
     @Override

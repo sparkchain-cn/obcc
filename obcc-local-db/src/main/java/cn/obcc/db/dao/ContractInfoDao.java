@@ -17,8 +17,8 @@ public class ContractInfoDao  extends JdbcTemplateDao<ContractInfo, Long> implem
 
     ////todo:
     public String getCreateSql(){
-        return " CREATE TABLE account_info" +
-                " id bigint(80) NOT NULL," +
+        return " CREATE TABLE " + this.tableName() + " (" +
+                primaryKeyName() + "  bigint(80) NOT NULL," +
                 " biz_id varchar(200) DEFAULT NULL," +
                 " name varchar(200) DEFAULT NULL," +
                 " abi varchar(200) DEFAULT NULL," +
@@ -28,7 +28,7 @@ public class ContractInfoDao  extends JdbcTemplateDao<ContractInfo, Long> implem
                 " compile_result varchar(200) DEFAULT NULL," +
                 " compile_exception varchar(200) DEFAULT NULL," +
                 " state int DEFAULT NULL," +
-                " PRIMARY KEY (`id`) )";
+                " PRIMARY KEY (`" + primaryKeyName() + "`) )";
     }
     public String primaryKeyName() {
         //return JdbcUtil.findIdNameForClz(entityClass);

@@ -3,6 +3,7 @@ package cn.obcc.db.sqlite.helper;
 import cn.obcc.db.mapper.RowMapper;
 import cn.obcc.db.sqlite.utils.ConnUtils;
 import cn.obcc.db.utils.TypeUtil;
+import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +28,6 @@ public class DbOperator {
 
     //private Connection connection;
     private String dbFilePath;
-
 
     /**
      * 构造函数
@@ -59,9 +59,10 @@ public class DbOperator {
         List<T> rsList = new ArrayList<T>();
         ResultSet resultSet = null;
         Connection connection = null;
+        logger.debug("查询SQL:" + sql);
+        //System.out.println(sql);
         try {
             connection = this.openConn();
-            ;
             PreparedStatement statement = connection.prepareStatement(sql);
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -77,6 +78,8 @@ public class DbOperator {
 
     public <T> String queryForSingle(String sql)
             throws SQLException, ClassNotFoundException {
+        logger.debug("查询SQL:" + sql);
+        //System.out.println(sql);
         List<T> rsList = new ArrayList<T>();
         ResultSet resultSet = null;
         Connection connection = null;
@@ -117,13 +120,16 @@ public class DbOperator {
     }
 
     public <T> List<T> query(String sql, Object[] params, RowMapper<T> rm) throws SQLException, ClassNotFoundException {
+        logger.debug("查询SQL:" + sql);
+        logger.debug("查询参数:" + JSON.toJSONString(params));
+       // System.out.println(sql);
+        //System.out.println(JSON.toJSONString(params));
         List<T> rsList = new ArrayList<T>();
         ResultSet resultSet = null;
         Connection connection = null;
         PreparedStatement stmt = null;
         try {
             connection = this.openConn();
-            ;
             stmt = connection.prepareStatement(sql);
             holdParams(stmt, params);
             resultSet = stmt.executeQuery();
@@ -148,6 +154,8 @@ public class DbOperator {
      * @throws ClassNotFoundException
      */
     public int update(String sql) {
+        logger.debug("操作SQL:" + sql);
+        System.out.println(sql);
         Connection connection = null;
         try {
             connection = this.openConn();
@@ -166,7 +174,6 @@ public class DbOperator {
     private void holdParams(PreparedStatement stmt, Object[] params) throws SQLException {
         int i = 1;
         for (Object o : params) {
-
             if (TypeUtil.isString(o.getClass())) {
                 stmt.setString(i, (String) o);
             } else if (TypeUtil.isLong(o.getClass())) {
@@ -204,8 +211,14 @@ public class DbOperator {
     }
 
     public int update(String sql, Object[] params) {
+        logger.debug("操作SQL:" + sql);
+        logger.debug("操作参数:" + JSON.toJSONString(params));
+       // System.out.println(sql);
+        //System.out.println(JSON.toJSONString(params));
+
         Connection connection = null;
         PreparedStatement stmt = null;
+
         try {
             connection = this.openConn();
             stmt = connection.prepareStatement(sql);
@@ -213,9 +226,7 @@ public class DbOperator {
             int rows = stmt.executeUpdate(new String(sql.getBytes(), "utf8"));
             if (rows > 0) {
                 System.out.println("operate successfully!");
-
             }
-
             return rows;
         } catch (SQLException | ClassNotFoundException | UnsupportedEncodingException e) {
             e.printStackTrace();

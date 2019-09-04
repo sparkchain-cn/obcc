@@ -13,19 +13,18 @@ import org.slf4j.LoggerFactory;
 
 public abstract class BaseChainDriver<T> implements IChainDriver<T> {
     public static final Logger logger = LoggerFactory.getLogger(BaseChainDriver.class);
+
     protected ISpeedAdjuster speedAdjuster;
 
     protected DbFactory localDb;
+    protected ObccConfig obccConfig;
 
     public BaseChainDriver() {
 
     }
 
-    protected ObccConfig obccConfig;
-
-
-    protected String getChainClientName() {
-        return obccConfig.getClientId() + "_" + obccConfig.getChain().name();
+    public  String getChainClientName() {
+        return obccConfig.getClientId() + "-" + obccConfig.getChain().getName();
     }
 
     @Override
@@ -78,10 +77,14 @@ public abstract class BaseChainDriver<T> implements IChainDriver<T> {
     public ICallbackRegister getCallbackRegister() throws Exception {
         return new BaseCallbackRegister();
     }
+
     @Override
     public void destory() {
         // TODO Auto-generated method stub
 
     }
 
+    public ObccConfig getObccConfig() {
+        return obccConfig;
+    }
 }

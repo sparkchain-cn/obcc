@@ -17,8 +17,8 @@ public class TokenInfoDao extends JdbcTemplateDao<TokenInfo, Long> implements Jd
 
     ////todo:
     public String getCreateSql(){
-        return " CREATE TABLE account_info" +
-                " id bigint(80) NOT NULL," +
+        return " CREATE TABLE " + this.tableName() + " (" +
+                primaryKeyName() + "  bigint(80) NOT NULL," +
                 " biz_id varchar(200) DEFAULT NULL," +
                 " contract varchar(200) DEFAULT NULL," +
                 " code varchar(200) DEFAULT NULL," +
@@ -29,7 +29,7 @@ public class TokenInfoDao extends JdbcTemplateDao<TokenInfo, Long> implements Jd
                 " contract_abi varchar(200) DEFAULT NULL," +
                 " contract_address varchar(200) DEFAULT NULL," +
                 " state int DEFAULT NULL," +
-                " PRIMARY KEY (`id`) )";
+                " PRIMARY KEY (`" + primaryKeyName() + "`) )";
     }
 
     public String primaryKeyName() {

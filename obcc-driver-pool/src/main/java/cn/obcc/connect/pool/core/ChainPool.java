@@ -21,6 +21,7 @@ public class ChainPool<T> {
     public static final Logger logger = LoggerFactory.getLogger(ChainPool.class);
 
     public ConnPoolConfig config;
+
     public Class<? extends ChainClientBuilder<T>> clientBuilder;
 
     List<ClientWrapper<T>> pool = Collections.synchronizedList(new ArrayList<>());

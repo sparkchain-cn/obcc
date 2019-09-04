@@ -17,8 +17,8 @@ public class TxInfoDao extends JdbcTemplateDao<BlockTxInfo, Long> implements Jdb
 
     ////todo:
     public String getCreateSql(){
-        return " CREATE TABLE block_tx_info" +
-                " id bigint(80) NOT NULL," +
+        return " CREATE TABLE " + this.tableName() + " (" +
+                primaryKeyName() + "  bigint(80) NOT NULL," +
                 " tx_type int DEFAULT NULL," +
                 " chain_code varchar(200) DEFAULT NULL," +
                 " block_hash varchar(200) DEFAULT NULL," +
@@ -40,7 +40,7 @@ public class TxInfoDao extends JdbcTemplateDao<BlockTxInfo, Long> implements Jdb
                 " method varchar(2000) DEFAULT NULL," +
                 " method_params varchar(2000) DEFAULT NULL," +
                 " sharding_flag bigint(80) DEFAULT NULL," +
-                " PRIMARY KEY (`id`) )";
+                " PRIMARY KEY (`" + primaryKeyName() + "`) )";
     }
 
     public String primaryKeyName() {

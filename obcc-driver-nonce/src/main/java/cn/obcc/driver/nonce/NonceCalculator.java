@@ -23,12 +23,12 @@ import cn.obcc.vo.RetData;
 public abstract class NonceCalculator<T> extends BaseHandler<T> implements INonceCalculator<T> {
     @Override
     public RetData<Long> getNonce(String address, final ReqConfig<T> config) throws Exception {
-        String chainCode = getObccConfig().getChain().name();
+        String chainCode = getObccConfig().getChain().getName();
         return RetData.succuess(getNonceStrategy().computNonce(chainCode, address));
     }
 
     public RetData<Long> adjustNonce(String address, Long num, ReqConfig<T> config) throws Exception {
-        String chainCode = getObccConfig().getChain().name();
+        String chainCode = getObccConfig().getChain().getName();
         return RetData.succuess(getNonceStrategy().adjustNonce(chainCode, address, num));
     }
 

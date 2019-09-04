@@ -52,7 +52,7 @@ public class EthNewBlockMonitor {
         /**
          * 新交易监听 //
          */
-        newTransactionFilter(web3j, config.getChain().name());
+        newTransactionFilter(web3j, config.getChain().getName());
         /**
          * 遍历旧区块、交易
          */

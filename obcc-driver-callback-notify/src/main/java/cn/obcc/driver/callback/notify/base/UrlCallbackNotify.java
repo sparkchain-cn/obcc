@@ -14,6 +14,7 @@ import cn.obcc.vo.driver.BlockTxInfo;
  * @data 2019/9/3 14:48
  **/
 public class UrlCallbackNotify<T> extends BaseHandler<T> implements ICallBackNotify<T> {
+
     public void notify(BlockTxInfo txInfo) throws Exception {
 
     }

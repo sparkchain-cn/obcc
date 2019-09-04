@@ -5,11 +5,14 @@ import cn.obcc.config.ReqConfig;
 import cn.obcc.driver.IChainDriver;
 import cn.obcc.driver.IChainHandler;
 import cn.obcc.driver.contract.ContractHandler;
+import cn.obcc.driver.module.fn.IContractDeployFn;
+import cn.obcc.driver.vo.ContractExecRec;
+import cn.obcc.driver.vo.SrcAccount;
 import cn.obcc.exception.enums.EContractType;
 import cn.obcc.vo.RetData;
 import cn.obcc.vo.driver.ContractInfo;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -21,13 +24,24 @@ public class ContractHandlerTest {
 
     private String testSolContent = null;
 
-    @Before
-    public void before() {
+    @BeforeClass
+    public void before() throws Exception {
         handler = new ContractHandler() {
             @Override
-            protected ContractInfo deploy(String abi, String bin, ReqConfig config) {
+            public ContractInfo getContract(String contractAddr) throws Exception {
                 return null;
             }
+
+            @Override
+            public ContractExecRec parseExecRec(ContractInfo contractInfo, String input) throws Exception {
+                return null;
+            }
+
+            @Override
+            protected void deploy(SrcAccount srcAccount, ContractInfo contractInfo, IContractDeployFn fn, ReqConfig config) {
+
+            }
+
         };
         ObccConfig config = new ObccConfig();
         config.setContractType(EContractType.SOLC);

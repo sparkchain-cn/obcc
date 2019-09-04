@@ -11,4 +11,12 @@ public enum EChainType {
 		this.name = name;
 		this.token = token;
 	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getToken() {
+		return token;
+	}
 }

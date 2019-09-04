@@ -20,7 +20,6 @@ public class EthCallBackListener extends CallbackListener<Web3j> implements ICal
         super.initObccConfig(config, driver);
         subcribeList = new EthNewBlockMonitor().init(getClient(),driver, config);
         return this;
-
     }
 
     @Override

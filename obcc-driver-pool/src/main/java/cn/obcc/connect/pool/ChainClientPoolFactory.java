@@ -31,9 +31,9 @@ public class ChainClientPoolFactory {
 
 
 	public static <T> T getClient(ObccConfig config, Class<? extends ChainClientBuilder<T>> clz) throws Exception {
-		String name = config.getClientId() + "_" + config.getChain().name();
+		String name = config.getClientId() + "-" + config.getChain().getName();
 		if (!getChainPoolMap().containsKey(name)) {
-			ConnPoolConfig poolConfig = config.getPollconfig();
+			ConnPoolConfig poolConfig = config.getPoolConfig();
 			ChainPool chainPool = create(poolConfig, clz);
 			getChainPoolMap().put(name, chainPool);
 		}

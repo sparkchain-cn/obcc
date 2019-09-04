@@ -137,7 +137,7 @@ public class EthAccountHandler extends AccountBaseHandler<Web3j> implements IAcc
         try {
             Web3j web3j = config.getClient();
             Transaction tx;
-            String chaincode = getObccConfig().getChain().name();
+            String chaincode = getObccConfig().getChain().getName();
 
             tx = web3j.ethGetTransactionByHash(hash).send().getTransaction().get();
             BlockTxInfo txInfo = BlockTxInfoParser.parseTxInfo(web3j, chaincode, getDriver(), tx);

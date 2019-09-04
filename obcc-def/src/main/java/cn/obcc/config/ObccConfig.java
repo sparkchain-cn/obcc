@@ -3,25 +3,33 @@ package cn.obcc.config;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.obcc.config.conn.pool.ChainNodeWeight;
 import cn.obcc.config.conn.pool.ConnPoolConfig;
 import cn.obcc.exception.enums.*;
 
+import javax.validation.constraints.NotBlank;
+
 public class ObccConfig {
 
+    @NotBlank
     private String clientId = "obcc";
-
+    @NotBlank
     private String localDbName = "cn.obcc.db.SqliteDb";
+    @NotBlank
     private String speedAdjusterName = "cn.obcc.driver.adjuster.SpeedAdjuster";
+    @NotBlank
     private String jdbcTemplateName = "cn.obcc.db.sqlite.SqliteJdbcTemplate";
+    @NotBlank
     private String driverName = "cn.obcc.driver.eth.EthChainDriver";
-    private String callbackNotfyName="cn.obcc.driver.callback.notfy.ProcessCallbackNotify";
+    @NotBlank
+    private String callbackNotfyName = "cn.obcc.driver.callback.notify.base.ProcessCallbackNotify";
 
     private long callbackWaitTime = 20 * 60 * 1000;//20分钟
-
-    private ConnPoolConfig pollconfig;
+    @NotBlank
+    private ConnPoolConfig poolConfig = new ConnPoolConfig();
 
     private String nodeUrl = "localhost:8545";
-
+    @NotBlank
     private EChainType chain = EChainType.ETHER;
 
     private String dbConn = "d:/obcc/obcc.dbf";
@@ -64,6 +72,10 @@ public class ObccConfig {
 
     public void setNodeUrl(String nodeUrl) {
         this.nodeUrl = nodeUrl;
+        this.getPoolConfig().getNodeWeights().add(new ChainNodeWeight() {{
+            setUrl(nodeUrl);
+            setWeight(100);
+        }});
     }
 
     public EChainType getChain() {
@@ -82,12 +94,12 @@ public class ObccConfig {
         this.driverName = driverName;
     }
 
-    public ConnPoolConfig getPollconfig() {
-        return pollconfig;
+    public ConnPoolConfig getPoolConfig() {
+        return poolConfig;
     }
 
-    public void setPollconfig(ConnPoolConfig pollconfig) {
-        this.pollconfig = pollconfig;
+    public void setPoolConfig(ConnPoolConfig poolConfig) {
+        this.poolConfig = poolConfig;
     }
 
     public String getSpeedAdjusterName() {
