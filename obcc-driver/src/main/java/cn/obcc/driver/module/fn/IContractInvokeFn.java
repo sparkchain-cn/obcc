@@ -1,5 +1,8 @@
 package cn.obcc.driver.module.fn;
 
+import cn.obcc.vo.driver.BlockInfo;
+import cn.obcc.vo.driver.BlockTxInfo;
+
 import java.util.Map;
 
 /**
@@ -9,7 +12,6 @@ import java.util.Map;
  * @desc TODO
  * @date 2019/8/24 0024  16:59
  **/
-public interface IContractInvokeFn {
-    public void exec(String bizId, String hash, int state, Map<String, String> resp) throws Exception;
+public interface IContractInvokeFn extends IUpchainFn<BlockTxInfo> {
 
 }

@@ -9,7 +9,6 @@ import cn.obcc.driver.module.fn.IContractInvokeFn;
 import cn.obcc.driver.vo.ContractBin;
 import cn.obcc.driver.vo.ContractCompile;
 import cn.obcc.driver.vo.SrcAccount;
-import cn.obcc.exception.enums.EContractType;
 import cn.obcc.exception.enums.EExceptionCode;
 import cn.obcc.vo.RetData;
 import cn.obcc.vo.driver.ContractInfo;
@@ -91,10 +90,10 @@ public abstract class ContractHandler<T> extends BaseHandler<T> implements ICont
 
                 if (!compile.isSuccess()) {
                     RetData<ContractCompile> finalCompile = compile;
-                    fn.exec(bizId, null, -1, new HashMap<String, String>() {{
-                        put("message", finalCompile.getMessage());
-                        put("code", finalCompile.getCode());
-                    }});
+//                    fn.exec(bizId, null, -1, new HashMap<String, String>() {{
+//                        put("message", finalCompile.getMessage());
+//                        put("code", finalCompile.getCode());
+//                    }});
                     return;
                 }
                 //取出编译之后的合约
@@ -106,10 +105,10 @@ public abstract class ContractHandler<T> extends BaseHandler<T> implements ICont
                                 .collect(Collectors.toList());
 
                 if (collect.size() == 0) {
-                    fn.exec(bizId, null, -1, new HashMap<String, String>() {{
-                        put("message", String.format("找不到合约名为:%s 的合约", name));
-                        put("code", "1001");
-                    }});
+//                    fn.exec(bizId, null, -1, new HashMap<String, String>() {{
+//                        put("message", String.format("找不到合约名为:%s 的合约", name));
+//                        put("code", "1001");
+//                    }});
                     return;
                 }
                 ContractBin bin = collect.get(0);

@@ -50,7 +50,7 @@ public enum EExceptionCode {
 
     // 3000系，业务类
     TASK_FAILED("30001", "任务失败"),
-
+    KEY_REPEAT("30002", "存在重复的Key"),
 
     //App
     APPID_SECRET_FAIL("31001", "appid及appsecret验证失败"),

@@ -33,7 +33,7 @@ public class SpeedAdjuster<T> extends BaseHandler<T> implements ISpeedAdjuster<T
                     try {
                         getDriver().getAccountHandler().transfer((String) map.get("bizId"),
                                 (SrcAccount) map.get("account"),
-                                (BigInteger) map.get("amount"),
+                                (String) map.get("amount"),
                                 (String) map.get("destAddress"),
                                 (ReqConfig<T>) map.get("config"),
                                 (ITransferFn) map.get("callback")

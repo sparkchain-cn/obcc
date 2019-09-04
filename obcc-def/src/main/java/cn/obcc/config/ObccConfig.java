@@ -14,6 +14,7 @@ public class ObccConfig {
     private String speedAdjusterName = "cn.obcc.driver.adjuster.SpeedAdjuster";
     private String jdbcTemplateName = "cn.obcc.db.sqlite.SqliteJdbcTemplate";
     private String driverName = "cn.obcc.driver.eth.EthChainDriver";
+    private String callbackNotfyName="cn.obcc.driver.callback.notfy.ProcessCallbackNotify";
 
     private long callbackWaitTime = 20 * 60 * 1000;//20分钟
 
@@ -199,5 +200,13 @@ public class ObccConfig {
 
     public void setCallbackWaitTime(long callbackWaitTime) {
         this.callbackWaitTime = callbackWaitTime;
+    }
+
+    public String getCallbackNotfyName() {
+        return callbackNotfyName;
+    }
+
+    public void setCallbackNotfyName(String callbackNotfyName) {
+        this.callbackNotfyName = callbackNotfyName;
     }
 }

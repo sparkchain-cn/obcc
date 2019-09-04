@@ -83,20 +83,6 @@ public class ObccClient {
 
 
 
-    private Object newLocalDb() {
-
-        String clzName = config.getLocalDbName();
-        try {
-            return getClass().getClassLoader().loadClass(clzName).newInstance();
-        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-            e.printStackTrace();
-            logger.error("不能加载或实例化LocalDb:" + clzName + ",请引用对应的JAR,并设定好对应的LocalDbr类名。");
-        }
-
-        return null;
-
-    }
-
     private Object newDriver() {
 
         String clzName = config.getDriverName();

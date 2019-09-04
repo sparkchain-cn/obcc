@@ -6,6 +6,8 @@ import cn.obcc.db.DbFactory;
 import cn.obcc.db.base.JdbcDao;
 import cn.obcc.driver.IChainDriver;
 import cn.obcc.driver.tech.ISpeedAdjuster;
+import cn.obcc.driver.tech.register.BaseCallbackRegister;
+import cn.obcc.driver.tech.register.ICallbackRegister;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,6 +74,10 @@ public abstract class BaseChainDriver<T> implements IChainDriver<T> {
 
     }
 
+    @Override
+    public ICallbackRegister getCallbackRegister() throws Exception {
+        return new BaseCallbackRegister();
+    }
     @Override
     public void destory() {
         // TODO Auto-generated method stub

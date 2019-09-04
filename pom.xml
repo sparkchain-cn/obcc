@@ -13,7 +13,20 @@
 		<module>obcc-utils</module>
 		<module>obcc-driver</module>
 		<module>obcc-driver-pool</module>
+
+	      <module>obcc-driver-nonce</module>
+		<module>obcc-driver-memo</module>
+		<module>obcc-driver-adjuster</module>
+		<module>obcc-driver-callback</module>
+        <module>obcc-driver-contract-solc</module>
+
+		<module>obcc-driver-contract</module>
+		<module>obcc-driver-callback-pull</module>
+		<module>obcc-driver-callback-notify</module>
+		<module>obcc-driver-callback-notify-consul</module>
+
 		<module>obcc-driver-chain-eth</module>
+
 		<module>obcc-stmt</module>
 		<module>obcc-stmt-db</module>
 		<module>obcc-stmt-storage</module>
@@ -21,19 +34,14 @@
 		<module>obcc-client</module>
 		<module>obcc-client-examples</module>
 
-        <module>obcc-driver-nonce</module>
-		<module>obcc-driver-memo</module>
-		<module>obcc-driver-adjuster</module>
-		<module>obcc-driver-callback</module>
-        <module>obcc-driver-contract-solc</module>
-
-		<module>obcc-plaf</module>
-        <module>obcc-local-db</module>
+		<module>obcc-local-db</module>
 		<module>obcc-local-db-sqlite</module>
 		<module>obcc-local-db-mysql</module>
-        <module>obcc-driver-contract</module>
-        <module>obcc-driver-callback-pull</module>
-    </modules>
+
+		<module>obcc-plaf</module>
+
+
+	</modules>
 
 	<packaging>pom</packaging>
 

@@ -11,6 +11,18 @@
 
     <artifactId>obcc-driver-callback-notify</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>cn.obcc</groupId>
+            <artifactId>obcc-def</artifactId>
+            <version>${chain.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.obcc</groupId>
+            <artifactId>obcc-driver</artifactId>
+            <version>${chain.version}</version>
+        </dependency>
+    </dependencies>
     <build>
         <plugins>
             <plugin>

@@ -6,6 +6,7 @@ import cn.obcc.db.DbFactory;
 import cn.obcc.db.base.JdbcDao;
 import cn.obcc.driver.module.*;
 import cn.obcc.driver.tech.*;
+import cn.obcc.driver.tech.register.ICallbackRegister;
 
 /**
  * @author mgicode
@@ -60,6 +61,7 @@ public interface IChainDriver<T> {
 
     public ISpeedAdjuster<T> getSpeedAdjuster() throws Exception;
 
+    public ICallbackRegister getCallbackRegister() throws Exception;
     /*****************************************************************/
 
     public void destory();
