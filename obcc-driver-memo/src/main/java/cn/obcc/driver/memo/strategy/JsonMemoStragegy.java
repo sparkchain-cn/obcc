@@ -41,7 +41,7 @@ public abstract class JsonMemoStragegy implements IMemoStrategy {
     @Override
     public String hex(BcMemo memo) throws Exception {
         String json = JSON.toJSONString(memo);
-        return HexUtils.str2HexStr(json);
+        return HexUtils.str2Hex(json);
     }
 
     @Override

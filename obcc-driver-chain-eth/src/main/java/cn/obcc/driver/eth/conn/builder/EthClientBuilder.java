@@ -4,6 +4,9 @@ import java.net.ConnectException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import cn.obcc.driver.base.BaseChainDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.protocol.websocket.WebSocketClient;
@@ -21,39 +24,68 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 public class EthClientBuilder extends HttpAndWsClientBuilder<Web3j> implements ChainClientBuilder<Web3j> {
+    public static final Logger logger = LoggerFactory.getLogger(EthClientBuilder.class);
 
     private EthWebSocketClient ethWebSocketClient;
 
     private WebSocketService websocketService;
-    private HttpService httpService;
-    private String currentUrl;
+    private EthHttpService httpService;
+
     private Web3j chain3j;
 
 
     @Override
-    public Web3j newNativeClient(@NotBlank String url) throws Exception {
+    // public Web3j newNativeClient(@NotBlank String url) throws Exception {
+    public Web3j newNativeClient() throws Exception {
         if (StringUtils.isNullOrEmpty(url)) {
             throw new RuntimeException("连接url：{" + url + "} 为空，检查数据库或配置文件");
         }
 
         if (StringUtils.isHttp(url)) {
-            httpService = new HttpService(url);
+            httpService = new EthHttpService(url);
+            httpService.setClientBuilder(this);
             chain3j = Web3j.build(httpService);
-            currentUrl = url;
-        } else if (JunctionUtils.isWs(url)) {
-
-            this.ethWebSocketClient = new EthWebSocketClient(parseURI(url));
-            ethWebSocketClient.setClientBuilder(this);
-            websocketService = new WebSocketService(ethWebSocketClient, true);
+            return chain3j;
+        }
+        if (StringUtils.isWs(url)) {
             try {
+                this.ethWebSocketClient = new EthWebSocketClient(parseURI(url));
+                ethWebSocketClient.setClientBuilder(this);
+                websocketService = new WebSocketService(ethWebSocketClient, true);
+
                 websocketService.connect();
                 chain3j = Web3j.build(websocketService);
-                currentUrl = url;
             } catch (ConnectException e) {
                 e.printStackTrace();
             }
         }
         return chain3j;
+    }
+
+
+    @Override
+    public void close(Web3j client) {
+        client.shutdown();
+    }
+
+    @Override
+    public boolean open(Web3j client) throws Exception {
+        try {
+            if (websocketService != null) {
+                websocketService.close();
+            }
+            client.shutdown();
+        } catch (Exception e) {
+            logger.error("关闭已经存在的区块链客户端出错。");
+        }
+
+        Web3j newChain3j = newNativeClient();
+        if (newChain3j == null) {
+            return false;
+        } else {
+            chain3j = newChain3j;
+            return true;
+        }
     }
 
     private static URI parseURI(@NotBlank String serverUrl) {
@@ -66,7 +98,7 @@ public class EthClientBuilder extends HttpAndWsClientBuilder<Web3j> implements C
 
     // // NOT_YET_CONNECTED, CONNECTING, OPEN, CLOSING, CLOSED
     @Override
-    public boolean isWsDead(Web3j chain3j) {
+    protected boolean isWsDead(Web3j chain3j) {
         if (ethWebSocketClient.getReadyState() == WebSocketClient.READYSTATE.CLOSED
                 || ethWebSocketClient.getReadyState() == WebSocketClient.READYSTATE.CLOSING) {
             return true;
@@ -75,35 +107,12 @@ public class EthClientBuilder extends HttpAndWsClientBuilder<Web3j> implements C
     }
 
     @Override
-    public boolean isWsOpen(Web3j chain3j) {
+    protected boolean isWsOpen(Web3j chain3j) {
         if (ethWebSocketClient.getReadyState() == WebSocketClient.READYSTATE.OPEN) {
             return true;
         }
         return false;
     }
-
-    @Override
-    public void close(Web3j client) {
-        client.shutdown();
-    }
-
-    @Override
-    public boolean open(Web3j client) throws Exception {
-
-        Web3j newChain3j = newNativeClient(currentUrl);
-        if (newChain3j == null) {
-            return false;
-        } else {
-            chain3j = newChain3j;
-            return true;
-        }
-    }
-//
-//	@Override
-//	public void bizErrorCountInc() {
-//		// todo: filter the error
-//		//this.bizErrorCountInc();
-//	}
 
 
     public static Web3j getClient(@NotNull ObccConfig obccConfig) throws Exception {

@@ -1,4 +1,4 @@
-package cn.obcc.driver.vo;
+package cn.obcc.driver.vo.params;
 
 import java.io.Serializable;
 import java.util.HashMap;

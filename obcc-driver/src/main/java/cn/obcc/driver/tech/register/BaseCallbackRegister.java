@@ -17,7 +17,6 @@ public class BaseCallbackRegister implements ICallbackRegister {
     public ExpiringMap<String, IUpchainFn> map = ExpiringMap.builder()
             .variableExpiration()
             .build();
-
     @Override
     public void register(String bizId, IUpchainFn fn) throws Exception {
         if (map.containsKey(bizId)) {

@@ -3,7 +3,23 @@ package cn.obcc.utils;
 public class HexUtils {
 
 
-    public static String str2HexStr(String origin) {
+    public static Boolean isHex(String str) {
+        boolean flag = false;
+        for (int i = 0; i < str.length(); i++) {
+            char cc = str.charAt(i);
+            if (cc == '0' || cc == '1' || cc == '2' || cc == '3' || cc == '4' || cc == '5' || cc == '6' || cc == '7'
+                    || cc == '8' || cc == '9' || cc == 'A' || cc == 'B' || cc == 'C' || cc == 'D' || cc == 'E'
+                    || cc == 'F' || cc == 'a' || cc == 'b' || cc == 'c' || cc == 'c' || cc == 'd' || cc == 'e'
+                    || cc == 'f') {
+                flag = true;
+            } else {
+                return flag; // if there is one char is not hex char, then false.
+            }
+        }
+        return flag;
+    }
+
+    public static String str2Hex(String origin) {
         if (origin == null) {
             return "";
         }
@@ -36,7 +52,7 @@ public class HexUtils {
      */
     public static String strOrHexStr2HexStr(String origin) {
         if (!StringPackageUtils.isBase64(origin)) {
-            return HexUtils.str2HexStr(origin);
+            return HexUtils.str2Hex(origin);
         }
         return origin;
     }

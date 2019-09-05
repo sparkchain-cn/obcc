@@ -3,7 +3,6 @@ package cn.obcc.driver.module;
 import cn.obcc.driver.IChainHandler;
 import cn.obcc.vo.driver.BlockInfo;
 import cn.obcc.vo.driver.BlockTxInfo;
-import cn.obcc.driver.vo.DetailBlockInfo;
 import cn.obcc.config.ReqConfig;
 import cn.obcc.vo.RetData;
 
@@ -20,7 +19,7 @@ public interface IBlockHandler<T> extends IChainHandler<T> {
      *
      * @return
      */
-    public RetData<Long> getInterval(ReqConfig config) throws Exception;
+    public Long getInterval() throws Exception;
 
 
     /**
@@ -41,16 +40,6 @@ public interface IBlockHandler<T> extends IChainHandler<T> {
      */
     public RetData<BlockInfo> getBlockInfo(long blockHeight, ReqConfig<T> config) throws Exception;
 
-    /**
-     * 从区块中找到所有交易hash
-     *
-     * @param blockHeight
-     * @param config
-     * @return
-     * @throws Exception
-     */
-    public RetData<DetailBlockInfo> getDetailBlockInfo(long blockHeight, ReqConfig<T> config) throws Exception;
-
 
     /**
      * 给一个区块高度取得该区块所有流水
@@ -59,7 +48,7 @@ public interface IBlockHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public RetData<BlockTxInfo> pull(String hash) throws Exception;
+    public RetData<BlockTxInfo> pull(String hash, ReqConfig<T> config) throws Exception;
 
 
     /**
@@ -68,7 +57,7 @@ public interface IBlockHandler<T> extends IChainHandler<T> {
      * @param txInfo
      * @return
      */
-   // public boolean writeToDb(BlockTxInfo txInfo, ReqConfig<T> config) throws Exception;
+    // public boolean writeToDb(BlockTxInfo txInfo, ReqConfig<T> config) throws Exception;
 
     /**
      * CbBlockInfo，分库分表写到数据库中， 如果存在就抛弃，这时也返回true 保存
@@ -76,7 +65,7 @@ public interface IBlockHandler<T> extends IChainHandler<T> {
      * @param blockInfo
      * @return
      */
-   // boolean writeToDb(BlockInfo blockInfo, ReqConfig<T> config) throws Exception;
+    // boolean writeToDb(BlockInfo blockInfo, ReqConfig<T> config) throws Exception;
 
 
 }

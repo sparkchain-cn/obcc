@@ -3,17 +3,17 @@ package cn.obcc.driver.module.base;
 import cn.obcc.driver.base.BaseHandler;
 import cn.obcc.driver.module.IAccountHandler;
 import cn.obcc.driver.module.fn.ITransferFn;
-import cn.obcc.driver.module.fn.ITransferInfoFn;
+import cn.obcc.driver.module.fn.IUpchainFn;
 import cn.obcc.driver.utils.JunctionUtils;
 import cn.obcc.driver.vo.Account;
-import cn.obcc.driver.vo.BizTransactionInfo;
+import cn.obcc.driver.vo.BizTxInfo;
+import cn.obcc.driver.vo.ChainPipe;
 import cn.obcc.driver.vo.SrcAccount;
-import cn.obcc.driver.vo.TransactionInfo;
+
 import cn.obcc.exception.ObccException;
 import cn.obcc.exception.enums.EExceptionCode;
 import cn.obcc.exception.enums.ETransferStatus;
 import cn.obcc.exception.enums.EUpchainType;
-import cn.obcc.exception.enums.StateEnum;
 import cn.obcc.uuid.UuidUtils;
 import cn.obcc.vo.driver.AccountInfo;
 import cn.obcc.utils.base.StringUtils;
@@ -36,52 +36,52 @@ public abstract class AccountBaseHandler<T> extends BaseHandler<T> implements IA
 
 
     public abstract RetData<String> onTransfer(String bizId, SrcAccount account, String amount,
-                                               String destAddress, ReqConfig<T> config, ITransferFn callback) throws Exception;
+                                               String destAddr, ReqConfig<T> config, ITransferFn callback) throws Exception;
+
 
     @Override
     public RetData<AccountInfo> createAccount(String bizId, String username, String pwd) throws Exception {
         //创建完成调用 db保存
         RetData<Account> ret = this.createAccount();
-        if (ret.isSuccess()) {
-            Account ac = (Account) ret.getData();
-            AccountInfo acInfo = new AccountInfo();
-            acInfo.setId(UuidUtils.get());
-            acInfo.setBizId(bizId);
-            acInfo.setUserName(username);
-            acInfo.setPassword(pwd);
-            acInfo.setAddress(ac.getAddress());
-            acInfo.setSecret(ac.getSecret());
-            acInfo.setState(0);
-            getDriver().getLocalDb().getAccountInfoDao().add(acInfo);
+        if (!ret.isSuccess()) {
+            throw ObccException.create(EExceptionCode.CREATE_ACCOUNT_FAIL, ret.getCode() + ret.getMessage());
         }
-        throw ObccException.create(EExceptionCode.CREATE_ACCOUNT_FAIL, ret.getCode() + ret.getMessage());
 
+        Account ac = (Account) ret.getData();
+        AccountInfo acInfo = new AccountInfo();
+        acInfo.setId(UuidUtils.get());
+        acInfo.setBizId(bizId);
+        acInfo.setUserName(username);
+        acInfo.setPassword(pwd);
+        acInfo.setAddress(ac.getAddress());
+        acInfo.setSecret(ac.getSecret());
+        acInfo.setState(0);
+        getDriver().getLocalDb().getAccountInfoDao().add(acInfo);
+        return RetData.succuess(ac);
     }
 
     @Override
-    public RetData<String> asyncTransfer(String bizId, SrcAccount account, BigInteger amount,
-                                         String destAddress, ReqConfig<T> config, ITransferFn callback) throws Exception {
-        //4、adjuster
-
-        Map map = new HashMap<String, Object>() {
-            {
-                put("bizId", bizId);
-                put("account", account);
-                put("callback", callback);
-                put("type", "transfer");
-                put("amount", amount);
-                put("destAddress", destAddress);
-            }
-        };
-        getDriver().getSpeedAdjuster().offer(map);
-
-        return RetData.succuess(map.hashCode());
+    public RetData<String> transfer(String bizId, SrcAccount account, BigInteger amount,
+                                    String destAddr, ReqConfig<T> config, ITransferFn callback) throws Exception {
+        ChainPipe pipe = new ChainPipe();
+        pipe.setBizId(bizId);
+        pipe.setAccount(account);
+        pipe.setDestAddr(destAddr);
+        pipe.setAmount(amount);
+        pipe.setConfig(config);
+        pipe.setFn(callback);
+        getDriver().getSpeedAdjuster().offer(pipe);
+        return RetData.succuess(pipe.hashCode());
     }
 
-    @Override
-    public RetData<String> transfer(String bizId, SrcAccount account, String amount,
-                                    String destAddress, ReqConfig<T> config, ITransferFn callback) throws Exception {
+    public RetData<String> doTransfer(ChainPipe pipe) throws Exception {
         String hashStrs = null;
+        SrcAccount account = pipe.getAccount();
+        String bizId = pipe.getBizId();
+        String amount = pipe.getAmount().toString(10);
+        String destAddress = pipe.getDestAddr();
+        ITransferFn callback = (ITransferFn) pipe.getFn();
+        ReqConfig config = pipe.getConfig();
         try {
             //区块回调的处理
             getDriver().getCallbackRegister().register(bizId, callback);
@@ -132,32 +132,30 @@ public abstract class AccountBaseHandler<T> extends BaseHandler<T> implements IA
         }
 
         return RetData.succuess(hashStrs);
-
-        // 7 wait to the block callback
     }
 
 
-    public RetData<BizTransactionInfo> getTransactionByBizId(String bizId, ReqConfig<T> config) throws Exception {
+    public RetData<BizTxInfo> getTxByBizId(String bizId, ReqConfig<T> config) throws Exception {
         RecordInfo recordInfo = getDriver().getLocalDb().getRecordInfoDao().findOne("biz_id=?", new Object[]{bizId});
         if (recordInfo == null) {
             return RetData.error("根据BizId:" + bizId + "不能找到对应的hash");
         }
-        RetData<BizTransactionInfo> bizInfos = getTransactionByHashs(recordInfo.getHashs(), config);
+        RetData<BizTxInfo> bizInfos = getTxByHashs(recordInfo.getHashs(), config);
         return bizInfos;
     }
 
 
     @Override
-    public RetData<BizTransactionInfo> getTransactionByHashs(String hashs, ReqConfig<T> config) throws Exception {
+    public RetData<BizTxInfo> getTxByHashs(String hashs, ReqConfig<T> config) throws Exception {
         if (StringUtils.isNullOrEmpty(hashs)) return RetData.error("参数Hash is null.");
         List<BlockTxInfo> list = new ArrayList<>();
 
-        BizTransactionInfo bizTx = new BizTransactionInfo();
+        BizTxInfo bizTx = new BizTxInfo();
         bizTx.setHashs(hashs);
         StringBuffer sb = new StringBuffer();
         Arrays.stream(hashs.split("[,，]")).forEach((s) -> {
             try {
-                RetData<BlockTxInfo> ret = getTransactionByHash(hashs, config);
+                RetData<BlockTxInfo> ret = getTxByHash(hashs, config);
                 BlockTxInfo tx = (BlockTxInfo) ret.getData();
                 sb.append(tx.getMemosObj().getData());
                 //todo:判断多个hash的流水的bizid是否相同

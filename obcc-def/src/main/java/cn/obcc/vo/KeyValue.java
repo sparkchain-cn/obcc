@@ -13,6 +13,10 @@ public class KeyValue<T>  implements Serializable{
         this.val = val;
     }
 
+    public KeyValue() {
+
+    }
+
     public String getKey() {
         return key;
     }

@@ -27,10 +27,9 @@ public interface IContractHandler<T> extends IChainHandler<T> {
 
     public ContractInfo getContract(String bizId,String contractName) throws Exception;
 
-
     public ContractInfo getContract(String contractAddr) throws Exception;
 
-    public RetData<Boolean> addContract(String bizId, ContractInfo params) throws Exception;
+    public Boolean addContract(String bizId, ContractInfo params) throws Exception;
 
     /**
      * 返回区块链的hash
@@ -57,6 +56,7 @@ public interface IContractHandler<T> extends IChainHandler<T> {
      */
     public RetData<String> deploy(String bizId, SrcAccount srcAccount, String contract,  String name,
                                   IContractDeployFn fn, ReqConfig<T> config) throws Exception;
+
 
 
     public RetData<Object> query(ContractInfo contractInfo, ReqConfig<T> config, String methodName, Object... params) throws Exception;

@@ -3,18 +3,8 @@ package cn.obcc.driver.eth.module.tech.callback;
 import cn.obcc.config.ObccConfig;
 import cn.obcc.driver.IChainDriver;
 import cn.obcc.driver.eth.module.tech.common.BlockTxInfoParser;
-import cn.obcc.driver.eth.utils.EthUtils;
-import cn.obcc.driver.module.IContractHandler;
-import cn.obcc.driver.module.ITokenHandler;
 import cn.obcc.utils.HexUtils;
-import cn.obcc.utils.base.StringUtils;
 import cn.obcc.vo.driver.BlockTxInfo;
-import cn.obcc.driver.vo.ContractExecRec;
-import cn.obcc.driver.vo.TokenRec;
-import cn.obcc.exception.enums.EChainTxType;
-import cn.obcc.vo.driver.ContractInfo;
-import cn.obcc.vo.driver.TokenInfo;
-import com.alibaba.fastjson.JSON;
 import io.reactivex.Flowable;
 import io.reactivex.disposables.Disposable;
 import org.slf4j.Logger;
@@ -22,11 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.Transaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
-import org.web3j.utils.Convert;
-import org.web3j.utils.Convert.Unit;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,7 +70,7 @@ public class EthNewBlockMonitor {
                 if (isContract) {
                     //todo:是我们的合约，我们的合约需要加上标识，或者从数据库取出进行比较
                 } else {
-                    if (!t.getInput().startsWith(HexUtils.str2HexStr(config.getMemoPre()))) {
+                    if (!t.getInput().startsWith(HexUtils.str2Hex(config.getMemoPre()))) {
                         return;
                     }
                 }

@@ -2,32 +2,17 @@ package cn.obcc.driver.utils;
 
 import java.math.BigInteger;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 
-import cn.obcc.config.conn.pool.ChainNodeWeight;
-import cn.obcc.config.conn.pool.ConnPoolConfig;
 import cn.obcc.utils.HexUtils;
-import cn.obcc.utils.base.MapUtils;
 import cn.obcc.utils.base.StringUtils;
 
 
 public class JunctionUtils {
-
-    public static String joinErrorMap(Map<String, String> errorMap) {
-        StringBuilder sb = new StringBuilder();
-        for (String s : errorMap.values()) {
-            sb.append(s);
-            sb.append("/n");
-        }
-
-        return sb.toString();
-    }
 
     public static BigInteger toBigInteger(Long num, Long _default) {
         if (num != null) {
@@ -47,9 +32,6 @@ public class JunctionUtils {
         return addr;
     }
 
-    public static String calFreezed(String chianCode, Integer currencyCount) {
-        return (20 + currencyCount * 5) + "";
-    }
 
     public static String formatDot(Double v, Integer dotSize) {
 
@@ -69,29 +51,12 @@ public class JunctionUtils {
     public static String hexData(String data) {
 
         if (StringUtils.isNotNullOrEmpty(data)) {
-            data = HexUtils.str2HexStr(data);
+            data = HexUtils.str2Hex(data);
         } else {
             data = "";
         }
         return data;
     }
-
-    public static String getBizId(Map<String, Object> otherParams) {
-        String bizId = MapUtils.getIfNullDefault(otherParams, "bizId", "");
-        return bizId;
-    }
-
-    public static String getAbi(Map<String, Object> otherParams) {
-        String abi = MapUtils.getIfNullDefault(otherParams, "abi", "");
-        return abi;
-    }
-
-    public static String getContractAddress(Map<String, Object> otherParams) {
-        String contractAddress = MapUtils.getIfNullDefault(otherParams,
-                "contractAddress", "");
-        return contractAddress;
-    }
-
 
 
     /**
@@ -126,56 +91,7 @@ public class JunctionUtils {
 
     }
 
-    public static boolean isHttp(String url) {
-        if (url.startsWith("http://") || url.startsWith("https://")) {
-            return true;
-        }
-        return false;
-    }
 
-    public static boolean isWs(String url) {
-        if (url.startsWith("ws://") || url.startsWith("wss://")) {
-            return true;
-        }
-        return false;
-    }
-
-    public static void sleep(long l) {
-        try {
-            Thread.sleep(l);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public static ConnPoolConfig getPoolConfig(Map<String, String> chainConfigMap) {
-        String poolSize = chainConfigMap.get("corePoolSize");
-        String maximumPoolSize = chainConfigMap.get("maximumPoolSize");
-        String remoteNodeWeights = chainConfigMap.get("remoteNodeWeights");
-        List<ChainNodeWeight> nodes = new ArrayList<ChainNodeWeight>();
-        if (!StringUtils.isNullOrEmpty(remoteNodeWeights)) {
-            JSONArray array = JSONArray.parseArray(remoteNodeWeights);
-            for (int i = 0; i < array.size(); i++) {
-                ChainNodeWeight node = array.getObject(i, ChainNodeWeight.class);
-                nodes.add(node);
-            }
-        }
-
-        ConnPoolConfig poolConfig = new ConnPoolConfig();
-        if (nodes.isEmpty() || StringUtils.isNullOrEmpty(remoteNodeWeights)) {
-            throw new NullPointerException("无法获取到远程连接地址配置");
-        }
-        if (!StringUtils.isNullOrEmpty(poolSize)) {
-            poolConfig.setPoolSize(Integer.parseInt(poolSize));
-        }
-        if (!StringUtils.isNullOrEmpty(maximumPoolSize)) {
-            poolConfig.setMaxPoolSize(Integer.parseInt(maximumPoolSize));
-        }
-        poolConfig.setNodeWeights(nodes);
-
-        return poolConfig;
-    }
 
     public static String rvZeroAndDot(String s) {
         if (StringUtils.isNullOrEmpty(s)) {
@@ -189,9 +105,6 @@ public class JunctionUtils {
     }
 
 
-
-
-
-    }
+}
 
 

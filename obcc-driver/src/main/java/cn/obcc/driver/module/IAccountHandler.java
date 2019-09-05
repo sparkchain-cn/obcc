@@ -2,7 +2,6 @@ package cn.obcc.driver.module;
 
 import cn.obcc.driver.IChainHandler;
 import cn.obcc.driver.module.fn.ITransferFn;
-import cn.obcc.driver.module.fn.ITransferInfoFn;
 import cn.obcc.driver.vo.*;
 import cn.obcc.config.ReqConfig;
 import cn.obcc.vo.driver.AccountInfo;
@@ -39,17 +38,14 @@ public interface IAccountHandler<T> extends IChainHandler<T> {
     public RetData<AccountInfo> createAccount(String bizId, String username, String pwd) throws Exception;
 
     /**
-     * @param account 参数
-     * @param config  系统配置,在这中间配置是否需要拆分
+     * @param pipe 参数
+     *             //@param config  系统配置,在这中间配置是否需要拆分
      * @return hash:交易的返回的hashs,其它参数每个链不一样,如果memo的过大，会自动拆分成多条上链。
      * @throws Exception
      */
-    public RetData<String> transfer(String bizId, SrcAccount account, String amount,
-                                    String destAddress, ReqConfig<T> config, ITransferFn callback) throws Exception;
-
+    public RetData<String> doTransfer(ChainPipe pipe) throws Exception;
 
     /**
-     *
      * @param account
      * @param amount
      * @param destAddress
@@ -57,18 +53,18 @@ public interface IAccountHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public Long[] calGas( SrcAccount account, String amount,
-                          String destAddress, ReqConfig<T> config)throws Exception;
+    public Long[] calGas(SrcAccount account, String amount,
+                         String destAddress, ReqConfig<T> config) throws Exception;
 
 
     /**
-     *
      * @param account
      * @param config
      * @return
      * @throws Exception
      */
-    public boolean checkAccount( SrcAccount account, ReqConfig<T> config)throws Exception;
+    public boolean checkAccount(SrcAccount account, ReqConfig<T> config) throws Exception;
+
     /**
      * @param bizId
      * @param account
@@ -79,7 +75,7 @@ public interface IAccountHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public RetData<String> asyncTransfer(String bizId, SrcAccount account, BigInteger amount,
+    public RetData<String> transfer(String bizId, SrcAccount account, BigInteger amount,
                                          String destAddress, ReqConfig<T> config, ITransferFn callback) throws Exception;
 
     /**
@@ -91,16 +87,17 @@ public interface IAccountHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public RetData<BizTransactionInfo> getTransactionByBizId(String bizId, ReqConfig<T> config) throws Exception;
+    public RetData<BizTxInfo> getTxByBizId(String bizId, ReqConfig<T> config) throws Exception;
 
     /**
      * 异步取，特别是文件上链，其可能有几千个，最好采用异步。
+     *
      * @param hashs
      * @param config
      * @return
      * @throws Exception
      */
-    public RetData<BizTransactionInfo> getTransactionByHashs(String hashs, ReqConfig<T> config) throws Exception;
+    public RetData<BizTxInfo> getTxByHashs(String hashs, ReqConfig<T> config) throws Exception;
 
 
     /**
@@ -111,7 +108,7 @@ public interface IAccountHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public RetData<BlockTxInfo> getTransactionByHash(String hash, ReqConfig<T> config) throws Exception;
+    public RetData<BlockTxInfo> getTxByHash(String hash, ReqConfig<T> config) throws Exception;
 
 
     /**

@@ -5,6 +5,8 @@ import cn.obcc.driver.module.ITokenHandler;
 import cn.obcc.driver.module.fn.ITokenCreateFn;
 import cn.obcc.driver.module.fn.ITokenOperateFn;
 import cn.obcc.driver.vo.*;
+import cn.obcc.driver.vo.params.TokenParams;
+import cn.obcc.vo.driver.BlockTxInfo;
 import cn.obcc.vo.driver.TokenInfo;
 import cn.obcc.config.ReqConfig;
 import cn.obcc.vo.RetData;
@@ -67,7 +69,7 @@ public class EthTokenHandler extends BaseHandler<Web3j> implements ITokenHandler
     }
 
     @Override
-    public RetData<TransactionInfo> operateInfo(TokenInfo token, String hash, ReqConfig<Web3j> config) throws Exception {
+    public RetData<BlockTxInfo> operateInfo(TokenInfo token, String hash, ReqConfig<Web3j> config) throws Exception {
         return null;
     }
 

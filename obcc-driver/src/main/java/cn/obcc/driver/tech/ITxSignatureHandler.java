@@ -2,8 +2,8 @@ package cn.obcc.driver.tech;
 
 import cn.obcc.driver.IChainHandler;
 import cn.obcc.driver.module.fn.ITransferFn;
-import cn.obcc.driver.vo.SignTxParams;
-import cn.obcc.driver.vo.TxParams;
+import cn.obcc.driver.vo.params.SignTxParams;
+import cn.obcc.driver.vo.params.TxParams;
 import cn.obcc.driver.vo.SignTxData;
 import cn.obcc.config.ReqConfig;
 import cn.obcc.vo.RetData;

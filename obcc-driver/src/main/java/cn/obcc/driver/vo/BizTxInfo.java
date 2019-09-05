@@ -6,7 +6,7 @@ import cn.obcc.vo.driver.BlockTxInfo;
 
 import java.util.List;
 
-public class BizTransactionInfo {
+public class BizTxInfo {
 
     private String bizId;
     private String hashs;

@@ -5,6 +5,7 @@ import java.util.Random;
 
 import cn.obcc.config.conn.pool.ChainNodeWeight;
 import cn.obcc.connect.builder.ChainClientBuilder;
+import cn.obcc.connect.pool.fn.ClientAdviceFn;
 
 public class ClientWrapper<T> {
 
@@ -44,14 +45,35 @@ public class ClientWrapper<T> {
      */
     private Date lastUseTime;
 
+
+    ClientAdviceFn fn = new ClientAdviceFn() {
+        @Override
+        public void ioErrorCountInc() {
+            ClientWrapper.this.ioExceptionCount = ClientWrapper.this.ioExceptionCount + 1;
+            ClientWrapper.this.chainNode.ioExceptionCountInc();
+        }
+
+        @Override
+        public void requestCountInc() {
+            ClientWrapper.this.requestCount = ClientWrapper.this.requestCount + 1;
+            ClientWrapper.this.chainNode.requestCountInc();
+        }
+
+        @Override
+        public void bizErrorCountInc() {
+            ClientWrapper.this.bizExceptionCount = ClientWrapper.this.bizExceptionCount + 1;
+            ClientWrapper.this.chainNode.bizExceptionCountInc();
+        }
+    };
+
     public ClientWrapper(ChainNodeWeight nodeWeight, ChainClientBuilder<T> clientBuilder, ChainNode chainNode) throws Exception {
         this.lastUseTime = new Date();
         this.nodeWeight = nodeWeight;
         this.clientBuilder = clientBuilder;
         this.chainNode = chainNode;
         this.name = this.chainNode.getUrl() + ":" + this.lastUseTime.getTime() + ":" + random.nextInt(100000000);
-        this.clientBuilder.init(nodeWeight.getUrl(), this, nodeWeight);
-
+        // this.clientBuilder.init(nodeWeight.getUrl(), this, nodeWeight);
+        this.clientBuilder.init(nodeWeight.getUrl(), fn);
         //   this.client = clientBuilder.newNativeClient(nodeWeight.getUrl());
         this.client = newNativeClient();
         if (client != null) {
@@ -61,7 +83,7 @@ public class ClientWrapper<T> {
     }
 
     public T newNativeClient() throws Exception {
-        this.client = clientBuilder.newNativeClient(nodeWeight.getUrl());
+        this.client = clientBuilder.newNativeClient();
         return client;
     }
 
@@ -136,21 +158,6 @@ public class ClientWrapper<T> {
         this.nodeWeight = nodeWeight;
     }
 
-
-    public void ioExceptionCountInc() {
-        this.ioExceptionCount = this.ioExceptionCount + 1;
-        this.chainNode.ioExceptionCountInc();
-    }
-
-    public void requestCountInc() {
-        this.requestCount = this.requestCount + 1;
-        this.chainNode.requestCountInc();
-    }
-
-    public void bizExceptionCountInc() {
-        this.bizExceptionCount = this.bizExceptionCount + 1;
-        this.chainNode.bizExceptionCountInc();
-    }
 
     public long getIoExceptionCount() {
         return ioExceptionCount;

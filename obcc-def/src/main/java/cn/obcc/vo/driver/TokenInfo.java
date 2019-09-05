@@ -14,7 +14,6 @@ public class TokenInfo extends Entity {
     private Long supply;
     private int precisions;
 
-
     private String contractAbi;
     private String contractAddress;
     private int state;

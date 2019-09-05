@@ -1,31 +1,36 @@
 package cn.obcc.connect.builder;
 
+import cn.obcc.connect.pool.core.ClientWrapper;
+import cn.obcc.connect.pool.fn.ClientAdviceFn;
+import cn.obcc.connect.utils.WeightUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import cn.obcc.config.conn.pool.ChainNodeWeight;
-import cn.obcc.connect.pool.core.ClientWrapper;
-import cn.obcc.connect.utils.WeightUtils;
 
 public abstract class HttpAndWsClientBuilder<T> implements ChainClientBuilder<T> {
 
     final static Logger logger = LoggerFactory.getLogger(HttpAndWsClientBuilder.class);
     protected String url;
-    protected ChainNodeWeight nodeWeight;
-    protected ClientWrapper<T> clientWrapper;
+    ClientAdviceFn callback;
 
     //type:1:http,type:2 :ws
     protected Integer type = 0;
 
 
-    public void init(String url, ClientWrapper clientWrapper, ChainNodeWeight weight) {
+    public ChainClientBuilder init(String url, ClientAdviceFn fn) {
         setUrl(url);
-        this.nodeWeight = weight;
-        this.clientWrapper = clientWrapper;
-
+        this.callback = fn;
+        return this;
     }
 
-    public void setUrl(String url) {
+    public ClientAdviceFn getCallback() {
+        return callback;
+    }
+
+    public void setCallback(ClientAdviceFn callback) {
+        this.callback = callback;
+    }
+
+    private void setUrl(String url) {
         this.url = url;
         if (WeightUtils.isHttp(url)) {
             this.type = 1;
@@ -33,9 +38,6 @@ public abstract class HttpAndWsClientBuilder<T> implements ChainClientBuilder<T>
             this.type = 2;
         }
     }
-
-    @Override
-    public abstract T newNativeClient(String url) throws Exception;
 
     @Override
     public boolean isDead(T client) {
@@ -46,13 +48,6 @@ public abstract class HttpAndWsClientBuilder<T> implements ChainClientBuilder<T>
         }
     }
 
-
-    public abstract boolean isWsDead(T client);
-
-    public boolean isHttpDead(T client) {
-        return false;
-    }
-
     @Override
     public boolean isOpen(T client) {
         if (this.type == 1) {
@@ -60,12 +55,6 @@ public abstract class HttpAndWsClientBuilder<T> implements ChainClientBuilder<T>
         } else {
             return isWsOpen(client);
         }
-    }
-
-    public abstract boolean isWsOpen(T client);
-
-    public boolean isHttpOpen(T client) {
-        return true;
     }
 
     @Override
@@ -78,16 +67,18 @@ public abstract class HttpAndWsClientBuilder<T> implements ChainClientBuilder<T>
     }
 
 
-    public void requestCountInc() {
-        clientWrapper.requestCountInc();
+    private boolean isHttpDead(T client) {
+        //每次都链接，不需要判断，
+        return false;
     }
 
-    public void ioErrorCountInc() {
-        clientWrapper.ioExceptionCountInc();
+    private boolean isHttpOpen(T client) {
+        //每次都链接，不需要判断，
+        return true;
     }
 
-    public void bizErrorCountInc() {
-        clientWrapper.bizExceptionCountInc();
-    }
+    protected abstract boolean isWsOpen(T client);
+
+    protected abstract boolean isWsDead(T client);
 
 }

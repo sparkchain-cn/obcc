@@ -13,13 +13,8 @@ import org.web3j.protocol.Web3j;
 public class EthContractHandler extends ContractHandler<Web3j> implements IContractHandler<Web3j> {
 
     @Override
-    protected void deploy(SrcAccount srcAccount, ContractInfo contractInfo, IContractDeployFn fn, ReqConfig<Web3j> config) {
+    public void onDeploy(SrcAccount srcAccount, ContractInfo contractInfo, IContractDeployFn fn, ReqConfig<Web3j> config) {
 
-    }
-
-    @Override
-    public ContractInfo getContract(String contractAddr) throws Exception {
-        return null;
     }
 
     @Override

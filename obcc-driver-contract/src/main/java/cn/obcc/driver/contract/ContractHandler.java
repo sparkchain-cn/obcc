@@ -13,6 +13,8 @@ import cn.obcc.exception.enums.EExceptionCode;
 import cn.obcc.vo.RetData;
 import cn.obcc.vo.driver.ContractInfo;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +40,7 @@ public abstract class ContractHandler<T> extends BaseHandler<T> implements ICont
     }
 
     @Override
-    public void compile(String bizId, String contract, IContractCompileFn fn, ReqConfig<T> config) throws Exception {
+    public void compile(@NotEmpty String bizId, @NotEmpty String contract, IContractCompileFn fn, ReqConfig<T> config) throws Exception {
         new Thread(() -> {
             ContractCompile contractCompile = ContractCompiler.compile(contract, getObccConfig());
             contractCompile.setBizId(bizId);
@@ -49,18 +51,37 @@ public abstract class ContractHandler<T> extends BaseHandler<T> implements ICont
     }
 
     @Override
-    public ContractInfo getContract(String bizId, String contractName) throws Exception {
-       return getDriver().getLocalDb().getContractInfoDao().findOne("biz_id=?&&name=?",
-                new Object[]{bizId, contractName});
+    public ContractInfo getContract(@NotEmpty String bizId, @NotEmpty String contractName) throws Exception {
+        return getDriver()
+                .getLocalDb()
+                .getContractInfoDao()
+                .findOne(" biz_id=? && name=? ",
+                        new Object[]{bizId, contractName});
+    }
+
+
+    @Override
+    public ContractInfo getContract(@NotEmpty String contractAddr) throws Exception {
+        return getDriver()
+                .getLocalDb()
+                .getContractInfoDao()
+                .findOne(" contractAddr = ? ",
+                        new Object[]{contractAddr});
+    }
+
+
+    @Override
+    public Boolean addContract(@NotEmpty String bizId, @NotNull ContractInfo info) throws Exception {
+        info.setBin(bizId);
+        getDriver()
+                .getLocalDb()
+                .getContractInfoDao()
+                .add(info);
+        return true;
     }
 
     @Override
-    public RetData<Boolean> addContract(String bizId, ContractInfo params) throws Exception {
-        return null;
-    }
-
-    @Override
-    public RetData<String> deploy(String bizId, SrcAccount srcAccount, ContractInfo contract,
+    public RetData<String> deploy(@NotEmpty String bizId, @NotNull SrcAccount srcAccount, @NotNull ContractInfo contract,
                                   IContractDeployFn fn, ReqConfig<T> config) throws Exception {
         new Thread(() -> {
             ContractInfo contractInfo = null;
@@ -70,7 +91,7 @@ public abstract class ContractHandler<T> extends BaseHandler<T> implements ICont
                 e.printStackTrace();
             }
             contractInfo.setBizId(bizId);
-            deploy(srcAccount, contractInfo, fn, config);
+            onDeploy(srcAccount, contractInfo, fn, config);
 
         }).start();
 
@@ -79,7 +100,8 @@ public abstract class ContractHandler<T> extends BaseHandler<T> implements ICont
 
     //少一个name
     @Override
-    public RetData<String> deploy(String bizId, SrcAccount srcAccount, String contract, String name,
+    public RetData<String> deploy(@NotEmpty String bizId,
+                                  @NotNull SrcAccount srcAccount, @NotEmpty String contract, String name,
                                   IContractDeployFn fn, ReqConfig<T> config) throws Exception {
 
         new Thread(() -> {
@@ -118,7 +140,7 @@ public abstract class ContractHandler<T> extends BaseHandler<T> implements ICont
                 info.setBin(bin.getBinary());
                 info.setName(bin.getName());
                 //发布
-                deploy(srcAccount, info, fn, config);
+                onDeploy(srcAccount, info, fn, config);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -162,6 +184,6 @@ public abstract class ContractHandler<T> extends BaseHandler<T> implements ICont
     }
 
 
-    protected abstract void deploy(SrcAccount srcAccount, ContractInfo contractInfo, IContractDeployFn fn, ReqConfig<T> config);
+    protected abstract void onDeploy(SrcAccount srcAccount, ContractInfo contractInfo, IContractDeployFn fn, ReqConfig<T> config);
 
 }

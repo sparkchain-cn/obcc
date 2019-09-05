@@ -83,7 +83,6 @@ public class EthAccountHandler extends AccountBaseHandler<Web3j> implements IAcc
             gasLimitBInt = DefaultGasProvider.GAS_LIMIT;
             account.setGasLimit(gasLimitBInt.longValue());
         }
-
 //        if (!EthUtils.isNgDigit(gasTwo.getGasPrice()) || !EthUtils.isNgDigit(gasTwo.getGasLimit())) {
 //            Transaction tran = new Transaction(account.getAccount(), null,
 //                    null, null, destAddress, BigInteger.valueOf(0), account.getMemos());
@@ -132,7 +131,7 @@ public class EthAccountHandler extends AccountBaseHandler<Web3j> implements IAcc
 
 
     @Override
-    public RetData<BlockTxInfo> getTransactionByHash(String hash, ReqConfig<Web3j> config) throws Exception {
+    public RetData<BlockTxInfo> getTxByHash(String hash, ReqConfig<Web3j> config) throws Exception {
 
         try {
             Web3j web3j = config.getClient();
