@@ -19,28 +19,28 @@ import cn.obcc.vo.RetData;
  **/
 public abstract class NonceCalculator<T> extends BaseHandler<T> implements INonceCalculator<T> {
     @Override
-    public RetData<Long> getNonce(String address, final ExProps config) throws Exception {
+    public Long getNonce(String address, final ExProps config) throws Exception {
         String chainCode = getObccConfig().getChain().getName();
-        return RetData.succuess(getNonceStrategy().computNonce(chainCode, address));
+        return getNonceStrategy().computNonce(chainCode, address);
     }
 
-    public RetData<Long> adjustNonce(String address, Long num, ExProps config) throws Exception {
+    public Long adjustNonce(String address, Long num, ExProps config) throws Exception {
         String chainCode = getObccConfig().getChain().getName();
-        return RetData.succuess(getNonceStrategy().adjustNonce(chainCode, address, num));
+        return getNonceStrategy().adjustNonce(chainCode, address, num);
     }
 
 
     protected MemoryNonceStrategy memoryNonceStrategy = new MemoryNonceStrategy() {
         @Override
         public Long getNonceFromChain(String address) throws Exception {
-            return (Long) NonceCalculator.this.getNonceFromChain(address).getData();
+            return (Long) NonceCalculator.this.getNonceFromChain(address);
         }
     };
 
     protected ChainNonceStrategy chainNonceStrategy = new ChainNonceStrategy() {
         @Override
         public Long getNonceFromChain(String address) throws Exception {
-            return (Long) NonceCalculator.this.getNonceFromChain(address).getData();
+            return (Long) NonceCalculator.this.getNonceFromChain(address);
         }
     };
 

@@ -15,11 +15,11 @@ public interface INonceCalculator<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public RetData<Long> getNonce(String address, ExProps config) throws Exception;
+    public Long getNonce(String address, ExProps config) throws Exception;
 
 
-    public RetData<Long> adjustNonce(String address, Long num, ExProps config) throws Exception;
+    public Long adjustNonce(String address, Long num, ExProps config) throws Exception;
 
 
-    public RetData<Long> getNonceFromChain(String address) throws Exception;
+    public Long getNonceFromChain(String address) throws Exception;
 }

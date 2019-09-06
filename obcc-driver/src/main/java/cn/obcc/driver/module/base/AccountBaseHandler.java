@@ -97,8 +97,10 @@ public abstract class AccountBaseHandler<T> extends BaseHandler<T> implements IA
 
             //2、计算nonce,如果传入的没有，那么就直接计算
             if (StringUtils.isNullOrEmpty(account.getNonce())) {
-                account.setNonce((String) getDriver().getNonceCalculator()
-                        .getNonce(account.getAccount(), config).getData());
+                Long nonce = getDriver()
+                        .getNonceCalculator()
+                        .getNonce(account.getAccount(), config);
+                account.setNonce(nonce.toString());
             }
             //3、转换memo,多条返回多个hash
             List<String> memos = getDriver().getMemoParser().encode(bizId, account.getMemos());
@@ -144,7 +146,7 @@ public abstract class AccountBaseHandler<T> extends BaseHandler<T> implements IA
 
     @Override
     public BizTxInfo getTxByHashs(@NotEmpty String hashs, ExProps config) throws Exception {
-        //if (StringUtils.isNullOrEmpty(hashs)) return RetData.error("参数Hash is null.");
+        if (StringUtils.isNullOrEmpty(hashs)) return null;
         List<BlockTxInfo> list = new ArrayList<>();
 
         BizTxInfo bizTx = new BizTxInfo();

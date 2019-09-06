@@ -15,12 +15,13 @@ import java.math.BigInteger;
 public class EthNonceCalculator extends NonceCalculator<Web3j> implements INonceCalculator<Web3j> {
 
     @Override
-    public RetData<Long> getNonceFromChain(String address) throws Exception {
+    public Long getNonceFromChain(String address) throws Exception {
         BigInteger nonce = getTransactionNonce(getClient(), address);
         if (nonce == null) {
-            return RetData.error("get nonce is null!");
+            return null;
+            //  return RetData.error("get nonce is null!");
         }
-        return RetData.succuess(nonce.longValue());
+        return nonce.longValue();
     }
 
     /**
