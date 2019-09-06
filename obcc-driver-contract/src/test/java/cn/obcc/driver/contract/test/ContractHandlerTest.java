@@ -1,15 +1,15 @@
 package cn.obcc.driver.contract.test;
 
 import cn.obcc.config.ObccConfig;
-import cn.obcc.config.ReqConfig;
-import cn.obcc.driver.IChainDriver;
-import cn.obcc.driver.IChainHandler;
+import cn.obcc.config.ExProps;
 import cn.obcc.driver.contract.ContractHandler;
-import cn.obcc.driver.module.fn.IContractDeployFn;
+import cn.obcc.driver.module.fn.IUpchainFn;
+import cn.obcc.driver.vo.ChainPipe;
 import cn.obcc.driver.vo.ContractExecRec;
 import cn.obcc.driver.vo.SrcAccount;
 import cn.obcc.exception.enums.EContractType;
 import cn.obcc.vo.RetData;
+import cn.obcc.vo.driver.BlockTxInfo;
 import cn.obcc.vo.driver.ContractInfo;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -33,14 +33,26 @@ public class ContractHandlerTest {
             }
 
             @Override
-            public ContractExecRec parseExecRec(ContractInfo contractInfo, String input) throws Exception {
+            public String doDeploy(ChainPipe pipe) throws Exception {
                 return null;
             }
 
             @Override
-            protected void deploy(SrcAccount srcAccount, ContractInfo contractInfo, IContractDeployFn fn, ReqConfig config) {
+            public String doInvoke(ChainPipe pipe) throws Exception {
+                return null;
+            }
+
+            @Override
+            protected void onDeploy(SrcAccount srcAccount, ContractInfo contractInfo, IUpchainFn fn, ExProps config) {
 
             }
+
+            @Override
+            public ContractExecRec parseExecRec(ContractInfo contractInfo, String input) throws Exception {
+                return null;
+            }
+
+
 
         };
         ObccConfig config = new ObccConfig();
@@ -71,10 +83,10 @@ public class ContractHandlerTest {
 
     }
 
-    @Test
-    public void testCompiler() throws Exception {
-        RetData compile = handler.compile(System.currentTimeMillis() + "", testSolContent, new ReqConfig());
-        System.out.println(compile);
-    }
+//    @Test
+//    public void testCompiler() throws Exception {
+//         handler.compile(System.currentTimeMillis() + "", testSolContent, null,new ExProps());
+//        System.out.println(compile);
+//    }
 
 }

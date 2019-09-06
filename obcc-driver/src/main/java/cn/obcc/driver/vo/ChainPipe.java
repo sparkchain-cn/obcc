@@ -1,11 +1,9 @@
 package cn.obcc.driver.vo;
 
 
-import cn.obcc.config.ReqConfig;
+import cn.obcc.config.ExProps;
 import cn.obcc.driver.module.fn.IUpchainFn;
 import cn.obcc.exception.enums.EChainTxType;
-
-import java.math.BigInteger;
 
 /**
  * @author mgicode
@@ -23,11 +21,12 @@ public class ChainPipe {
 
     private String destAddr;
     private String contractAddr;
-    private BigInteger amount;
+    private String amount;
 
-    private ReqConfig config;
+    private ExProps config;
 
     private IUpchainFn fn;
+
     private String method;
     private Object[] params;
 
@@ -89,11 +88,11 @@ public class ChainPipe {
         this.params = params;
     }
 
-    public ReqConfig getConfig() {
+    public ExProps getConfig() {
         return config;
     }
 
-    public void setConfig(ReqConfig config) {
+    public void setConfig(ExProps config) {
         this.config = config;
     }
 
@@ -113,11 +112,11 @@ public class ChainPipe {
         this.txType = txType;
     }
 
-    public BigInteger getAmount() {
+    public String getAmount() {
         return amount;
     }
 
-    public void setAmount(BigInteger amount) {
+    public void setAmount(String amount) {
         this.amount = amount;
     }
 }

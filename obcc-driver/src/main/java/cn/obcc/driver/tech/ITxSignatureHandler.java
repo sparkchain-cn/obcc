@@ -1,12 +1,13 @@
 package cn.obcc.driver.tech;
 
 import cn.obcc.driver.IChainHandler;
-import cn.obcc.driver.module.fn.ITransferFn;
+import cn.obcc.driver.module.fn.IUpchainFn;
 import cn.obcc.driver.vo.params.SignTxParams;
 import cn.obcc.driver.vo.params.TxParams;
 import cn.obcc.driver.vo.SignTxData;
-import cn.obcc.config.ReqConfig;
+import cn.obcc.config.ExProps;
 import cn.obcc.vo.RetData;
+import cn.obcc.vo.driver.BlockTxInfo;
 
 /**
  * @author mgicode
@@ -25,8 +26,8 @@ public interface ITxSignatureHandler<T> extends IChainHandler<T> {
      * @param config
      * @return
      */
-    public RetData<SignTxParams> getParams(String sourceAddress, String destinationAddress, String currency,
-                                           String amount, ReqConfig<T> config) throws Exception;
+    public SignTxParams getParams(String sourceAddress, String destinationAddress, String currency,
+                                           String amount, ExProps config) throws Exception;
 
     /**
      * @param transInfo
@@ -34,7 +35,7 @@ public interface ITxSignatureHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public RetData<SignTxData> getData(TxParams transInfo, ReqConfig config) throws Exception;
+    public SignTxData getData(TxParams transInfo, ExProps config) throws Exception;
 
     /**
      * 签名的数据提交
@@ -45,7 +46,7 @@ public interface ITxSignatureHandler<T> extends IChainHandler<T> {
      * @param config
      * @return
      */
-    public RetData<String> sendData(String sourceAddress, String signedData, ReqConfig config)
+    public String sendData(String sourceAddress, String signedData, ExProps config)
             throws Exception;
 
     /**
@@ -56,7 +57,7 @@ public interface ITxSignatureHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public RetData<String> sendData(String sourceAddress, String signedData, ReqConfig config,
-                                    ITransferFn callback) throws Exception;
+    public String sendData(String sourceAddress, String signedData, ExProps config,
+                                    IUpchainFn<BlockTxInfo> callback) throws Exception;
 
 }

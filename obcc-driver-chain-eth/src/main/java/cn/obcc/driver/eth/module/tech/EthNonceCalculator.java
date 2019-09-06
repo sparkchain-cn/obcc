@@ -1,7 +1,5 @@
 package cn.obcc.driver.eth.module.tech;
 
-import cn.obcc.config.ReqConfig;
-import cn.obcc.driver.eth.utils.EthUtils;
 import cn.obcc.driver.nonce.NonceCalculator;
 import cn.obcc.driver.tech.INonceCalculator;
 import cn.obcc.exception.ObccException;

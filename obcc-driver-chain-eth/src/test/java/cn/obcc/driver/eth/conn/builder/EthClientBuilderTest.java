@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EthClientBuilderTest {
-    public static final Logger logger = LoggerFactory.getLogger(BaseChainDriver.class);
+    public static final Logger logger = LoggerFactory.getLogger(EthClientBuilderTest.class);
 
     //    0x5d8c773055adb77e277b009b513323ab092d004c
 //    f89eee0cb710893e3f4bf3a737ac633848c8652a479e32c54376ad3cffa9841

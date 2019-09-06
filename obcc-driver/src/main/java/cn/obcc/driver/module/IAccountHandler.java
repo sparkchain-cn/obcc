@@ -1,14 +1,12 @@
 package cn.obcc.driver.module;
 
 import cn.obcc.driver.IChainHandler;
-import cn.obcc.driver.module.fn.ITransferFn;
+import cn.obcc.driver.module.fn.IUpchainFn;
 import cn.obcc.driver.vo.*;
-import cn.obcc.config.ReqConfig;
+import cn.obcc.config.ExProps;
 import cn.obcc.vo.driver.AccountInfo;
 import cn.obcc.vo.RetData;
 import cn.obcc.vo.driver.BlockTxInfo;
-
-import java.math.BigInteger;
 
 /**
  * @author mgicode
@@ -25,7 +23,7 @@ public interface IAccountHandler<T> extends IChainHandler<T> {
      * @return address:钱包地址<br>
      * privateKey:钱包私钥<br>
      */
-    public RetData<Account> createAccount() throws Exception;
+    public Account createAccount() throws Exception;
 
 
     /**
@@ -35,7 +33,7 @@ public interface IAccountHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public RetData<AccountInfo> createAccount(String bizId, String username, String pwd) throws Exception;
+    public AccountInfo createAccount(String bizId, String username, String pwd) throws Exception;
 
     /**
      * @param pipe 参数
@@ -43,7 +41,7 @@ public interface IAccountHandler<T> extends IChainHandler<T> {
      * @return hash:交易的返回的hashs,其它参数每个链不一样,如果memo的过大，会自动拆分成多条上链。
      * @throws Exception
      */
-    public RetData<String> doTransfer(ChainPipe pipe) throws Exception;
+    public String doTransfer(ChainPipe pipe) throws Exception;
 
     /**
      * @param account
@@ -54,7 +52,7 @@ public interface IAccountHandler<T> extends IChainHandler<T> {
      * @throws Exception
      */
     public Long[] calGas(SrcAccount account, String amount,
-                         String destAddress, ReqConfig<T> config) throws Exception;
+                         String destAddress, ExProps config) throws Exception;
 
 
     /**
@@ -63,7 +61,7 @@ public interface IAccountHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public boolean checkAccount(SrcAccount account, ReqConfig<T> config) throws Exception;
+    public boolean checkAccount(SrcAccount account, ExProps config) throws Exception;
 
     /**
      * @param bizId
@@ -75,8 +73,8 @@ public interface IAccountHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public RetData<String> transfer(String bizId, SrcAccount account, BigInteger amount,
-                                         String destAddress, ReqConfig<T> config, ITransferFn callback) throws Exception;
+    public String transfer(String bizId, SrcAccount account, String amount,
+                                    String destAddress, ExProps config, IUpchainFn<BlockTxInfo> callback) throws Exception;
 
     /**
      * 根据 transfer返回的hash获取该次支付的相关信息;<br>
@@ -87,7 +85,7 @@ public interface IAccountHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public RetData<BizTxInfo> getTxByBizId(String bizId, ReqConfig<T> config) throws Exception;
+    public BizTxInfo getTxByBizId(String bizId, ExProps config) throws Exception;
 
     /**
      * 异步取，特别是文件上链，其可能有几千个，最好采用异步。
@@ -97,7 +95,7 @@ public interface IAccountHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public RetData<BizTxInfo> getTxByHashs(String hashs, ReqConfig<T> config) throws Exception;
+    public BizTxInfo getTxByHashs(String hashs, ExProps config) throws Exception;
 
 
     /**
@@ -108,7 +106,7 @@ public interface IAccountHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public RetData<BlockTxInfo> getTxByHash(String hash, ReqConfig<T> config) throws Exception;
+    public BlockTxInfo getTxByHash(String hash, ExProps config) throws Exception;
 
 
     /**
@@ -121,6 +119,6 @@ public interface IAccountHandler<T> extends IChainHandler<T> {
      * freezed:String 冻结金额<br>
      * currency:String 货币名称<br>
      */
-    public RetData<String> getBalance(String address, ReqConfig<T> config) throws Exception;
+    public String getBalance(String address, ExProps config) throws Exception;
 
 }

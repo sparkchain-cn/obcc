@@ -3,15 +3,10 @@ package cn.obcc.driver.contract;
 import cn.obcc.config.ObccConfig;
 import cn.obcc.driver.contract.solc.core.AbiParser;
 import cn.obcc.driver.contract.solc.core.SolcCompiler;
-import cn.obcc.driver.vo.ContractBin;
-import cn.obcc.driver.vo.ContractCompile;
+import cn.obcc.driver.vo.CompileResult;
 import cn.obcc.exception.enums.EContractType;
 import cn.obcc.utils.base.StringUtils;
-import cn.obcc.vo.RetData;
-import cn.obcc.vo.driver.ContractInfo;
 
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,7 +19,7 @@ import java.util.Map;
  */
 public class ContractCompiler {
 
-    public static ContractCompile compile(String contract, ObccConfig config) {
+    public static CompileResult compile(String contract, ObccConfig config) {
         if (config.getContractType() == EContractType.SOLC) {
             return solcCompile(contract, config);
         }
@@ -38,8 +33,8 @@ public class ContractCompiler {
      * @param config
      * @return
      */
-    public static ContractCompile solcCompile(String contract, ObccConfig config) {
-        ContractCompile contractInfo = new ContractCompile();
+    public static CompileResult solcCompile(String contract, ObccConfig config) {
+        CompileResult contractInfo = new CompileResult();
         cn.obcc.driver.contract.solc.vo.ContractInfo info;
         info = SolcCompiler.compile(contract, config.getSolcPath(), config.getTempPath(), true);
         if (StringUtils.isNotNullOrEmpty(info.getException())) {

@@ -1,16 +1,15 @@
 package cn.obcc.driver.module;
 
 import cn.obcc.driver.IChainHandler;
-import cn.obcc.driver.module.fn.IContractCompileFn;
-import cn.obcc.driver.module.fn.IContractDeployFn;
-import cn.obcc.driver.module.fn.IContractInvokeFn;
-import cn.obcc.driver.vo.ContractCompile;
+import cn.obcc.driver.module.fn.IUpchainFn;
+import cn.obcc.driver.vo.ChainPipe;
+import cn.obcc.driver.vo.CompileResult;
 import cn.obcc.driver.vo.ContractExecRec;
 import cn.obcc.driver.vo.SrcAccount;
+import cn.obcc.vo.driver.BlockTxInfo;
 import cn.obcc.vo.driver.ContractInfo;
-import cn.obcc.config.ReqConfig;
+import cn.obcc.config.ExProps;
 import cn.obcc.vo.RetData;
-import cn.obcc.vo.driver.TokenInfo;
 
 /**
  * @author mgicode
@@ -20,54 +19,37 @@ import cn.obcc.vo.driver.TokenInfo;
  */
 public interface IContractHandler<T> extends IChainHandler<T> {
 
-    public RetData<ContractCompile> compile(String bizId, String contract, ReqConfig<T> config) throws Exception;
+    public CompileResult doCompile(String code, String contract, ExProps config) throws Exception;
 
-    public void compile(String bizId, String contract, IContractCompileFn fn, ReqConfig<T> config) throws Exception;
+    public void compile(String code, String contract, IUpchainFn<CompileResult> fn, ExProps config) throws Exception;
 
-
-    public ContractInfo getContract(String bizId,String contractName) throws Exception;
+    public ContractInfo getContract(String code, String contractName) throws Exception;
 
     public ContractInfo getContract(String contractAddr) throws Exception;
 
-    public Boolean addContract(String bizId, ContractInfo params) throws Exception;
-
-    /**
-     * 返回区块链的hash
-     *
-     * @param bizId
-     * @param srcAccount
-     * @param contract
-     * @param fn
-     * @param config
-     * @return
-     * @throws Exception
-     */
-    public RetData<String> deploy(String bizId, SrcAccount srcAccount, ContractInfo contract,
-                                  IContractDeployFn fn, ReqConfig<T> config) throws Exception;
-
-    /**
-     * @param bizId
-     * @param srcAccount
-     * @param contract
-     * @param fn
-     * @param config
-     * @return
-     * @throws Exception
-     */
-    public RetData<String> deploy(String bizId, SrcAccount srcAccount, String contract,  String name,
-                                  IContractDeployFn fn, ReqConfig<T> config) throws Exception;
+    public Boolean addContract(String code, ContractInfo info) throws Exception;
 
 
+    public String deploy(String bizId, SrcAccount srcAccount, ContractInfo contract,
+                                  IUpchainFn<BlockTxInfo> fn, ExProps config) throws Exception;
 
-    public RetData<Object> query(ContractInfo contractInfo, ReqConfig<T> config, String methodName, Object... params) throws Exception;
+
+    public String doDeploy(ChainPipe pipe) throws Exception;
 
 
-    public RetData<String> invoke(String bizId, ContractInfo contractInfo, SrcAccount srcAccount, ReqConfig<T> config,
-                                  IContractInvokeFn fn, Object... params) throws Exception;
+    public Object query(ContractInfo contractInfo, ExProps config,
+                                 String methodName, Object... params) throws Exception;
 
+
+    public String invoke(String bizId, ContractInfo contractInfo, SrcAccount srcAccount,
+                                  ExProps config, IUpchainFn<BlockTxInfo> fn, Object... params) throws Exception;
+
+
+    public String doInvoke(ChainPipe pipe) throws Exception;
 
     /**
      * 根据区块的记录解析出来其方法名和参数
+     *
      * @param input
      * @return
      * @throws Exception

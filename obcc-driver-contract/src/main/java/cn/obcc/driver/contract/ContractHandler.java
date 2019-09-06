@@ -1,24 +1,20 @@
 package cn.obcc.driver.contract;
 
-import cn.obcc.config.ReqConfig;
+import cn.obcc.config.ExProps;
 import cn.obcc.driver.base.BaseHandler;
 import cn.obcc.driver.module.IContractHandler;
-import cn.obcc.driver.module.fn.IContractCompileFn;
-import cn.obcc.driver.module.fn.IContractDeployFn;
-import cn.obcc.driver.module.fn.IContractInvokeFn;
-import cn.obcc.driver.vo.ContractBin;
-import cn.obcc.driver.vo.ContractCompile;
+import cn.obcc.driver.module.fn.IUpchainFn;
+import cn.obcc.driver.vo.CompileResult;
 import cn.obcc.driver.vo.SrcAccount;
 import cn.obcc.exception.enums.EExceptionCode;
+import cn.obcc.utils.base.StringUtils;
 import cn.obcc.vo.RetData;
+import cn.obcc.vo.driver.BlockTxInfo;
 import cn.obcc.vo.driver.ContractInfo;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author pengrk
@@ -30,22 +26,20 @@ import java.util.stream.Collectors;
 public abstract class ContractHandler<T> extends BaseHandler<T> implements IContractHandler<T> {
 
     @Override
-    public RetData<ContractCompile> compile(String bizId, String contract, ReqConfig<T> config) throws Exception {
-        ContractCompile contractCompile = ContractCompiler.compile(contract, getObccConfig());
+    public CompileResult doCompile(String bizId, String contract, ExProps config) throws Exception {
+        CompileResult contractCompile = ContractCompiler.compile(contract, getObccConfig());
         contractCompile.setBizId(bizId);
         //getDriver().getLocalDb().getContractInfoDao().
-        return contractCompile.getState() == -1 ?
-                RetData.error(EExceptionCode.CONTRACT_COMPILE_ERROR, contractCompile)
-                : RetData.succuess(contractCompile);
+        return contractCompile;
     }
 
     @Override
-    public void compile(@NotEmpty String bizId, @NotEmpty String contract, IContractCompileFn fn, ReqConfig<T> config) throws Exception {
+    public void compile(@NotEmpty String bizId, @NotEmpty String contract, IUpchainFn<CompileResult> fn, ExProps config) throws Exception {
         new Thread(() -> {
-            ContractCompile contractCompile = ContractCompiler.compile(contract, getObccConfig());
+            CompileResult contractCompile = ContractCompiler.compile(contract, getObccConfig());
             contractCompile.setBizId(bizId);
             if (fn != null) {
-                fn.exec(bizId, null, contractCompile);
+                // fn.exec(bizId, null, contractCompile);
             }
         }).start();
     }
@@ -62,10 +56,11 @@ public abstract class ContractHandler<T> extends BaseHandler<T> implements ICont
 
     @Override
     public ContractInfo getContract(@NotEmpty String contractAddr) throws Exception {
+        if(StringUtils.isNullOrEmpty(contractAddr)) return null;
         return getDriver()
                 .getLocalDb()
                 .getContractInfoDao()
-                .findOne(" contractAddr = ? ",
+                .findOne(" contract_addr = ? ",
                         new Object[]{contractAddr});
     }
 
@@ -81,8 +76,8 @@ public abstract class ContractHandler<T> extends BaseHandler<T> implements ICont
     }
 
     @Override
-    public RetData<String> deploy(@NotEmpty String bizId, @NotNull SrcAccount srcAccount, @NotNull ContractInfo contract,
-                                  IContractDeployFn fn, ReqConfig<T> config) throws Exception {
+    public String deploy(@NotEmpty String bizId, @NotNull SrcAccount srcAccount, @NotNull ContractInfo contract,
+                                  IUpchainFn<BlockTxInfo> fn, ExProps config) throws Exception {
         new Thread(() -> {
             ContractInfo contractInfo = null;
             try {
@@ -95,63 +90,12 @@ public abstract class ContractHandler<T> extends BaseHandler<T> implements ICont
 
         }).start();
 
-        return RetData.succuess(config.getSparkHash());
+        return config.getSparkHash();
     }
 
-    //少一个name
-    @Override
-    public RetData<String> deploy(@NotEmpty String bizId,
-                                  @NotNull SrcAccount srcAccount, @NotEmpty String contract, String name,
-                                  IContractDeployFn fn, ReqConfig<T> config) throws Exception {
-
-        new Thread(() -> {
-            //1.compiler contract
-            RetData<ContractCompile> compile = null;
-            try {
-                compile = compile(bizId, contract, config);
-
-                if (!compile.isSuccess()) {
-                    RetData<ContractCompile> finalCompile = compile;
-//                    fn.exec(bizId, null, -1, new HashMap<String, String>() {{
-//                        put("message", finalCompile.getMessage());
-//                        put("code", finalCompile.getCode());
-//                    }});
-                    return;
-                }
-                //取出编译之后的合约
-                ContractCompile data = (ContractCompile) compile.getData();
-                List<ContractBin> collect =
-                        data.getContractBinList()
-                                .stream()
-                                .filter(i -> i.getName().equals(name))
-                                .collect(Collectors.toList());
-
-                if (collect.size() == 0) {
-//                    fn.exec(bizId, null, -1, new HashMap<String, String>() {{
-//                        put("message", String.format("找不到合约名为:%s 的合约", name));
-//                        put("code", "1001");
-//                    }});
-                    return;
-                }
-                ContractBin bin = collect.get(0);
-                ContractInfo info = new ContractInfo();
-                info.setBizId(bizId);
-                info.setAbi(bin.getAbi());
-                info.setBin(bin.getBinary());
-                info.setName(bin.getName());
-                //发布
-                onDeploy(srcAccount, info, fn, config);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }).start();
-
-        return RetData.succuess(config.getSparkHash());
-    }
 
     @Override
-    public RetData<Object> query(ContractInfo contractInfo, ReqConfig<T> config,
+    public RetData<Object> query(ContractInfo contractInfo, ExProps config,
                                  String methodName, Object... params) throws Exception {
 
         ContractInfo contract = getContract(contractInfo.getBizId(), contractInfo.getName());
@@ -165,25 +109,25 @@ public abstract class ContractHandler<T> extends BaseHandler<T> implements ICont
     }
 
     @Override
-    public RetData<String> invoke(String bizId, ContractInfo contractInfo,
-                                  SrcAccount srcAccount, ReqConfig<T> config, IContractInvokeFn fn, Object... params) throws Exception {
+    public String invoke(String bizId, ContractInfo contractInfo,
+                                  SrcAccount srcAccount, ExProps config, IUpchainFn<BlockTxInfo> fn, Object... params) throws Exception {
 
-        //4、adjuster
-        Map map = new HashMap<String, Object>() {
-            {
-                put("bizId", bizId);
-                put("account", srcAccount);
-                put("callback", fn);
-                put("type", "contractInvoke");
-                put("params", params);
-                put("contractInfo", contractInfo);
-            }
-        };
-        getDriver().getSpeedAdjuster().offer(map);
-        return RetData.succuess(map.hashCode());
+//        Map map = new HashMap<String, Object>() {
+//            {
+//                put("bizId", bizId);
+//                put("account", srcAccount);
+//                put("callback", fn);
+//                put("type", "contractInvoke");
+//                put("params", params);
+//                put("contractInfo", contractInfo);
+//            }
+//        };
+//        getDriver().getSpeedAdjuster().offer(map);
+//        return RetData.succuess(map.hashCode());
+        return null;
     }
 
 
-    protected abstract void onDeploy(SrcAccount srcAccount, ContractInfo contractInfo, IContractDeployFn fn, ReqConfig<T> config);
+    protected abstract void onDeploy(SrcAccount srcAccount, ContractInfo contractInfo, IUpchainFn<BlockTxInfo> fn, ExProps config);
 
 }

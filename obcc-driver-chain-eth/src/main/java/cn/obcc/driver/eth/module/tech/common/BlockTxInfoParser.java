@@ -91,6 +91,7 @@ public class BlockTxInfoParser {
             Exception {
         IContractHandler contractHandler = driver.getContractHandler();
         ITokenHandler tokenHandler = driver.getTokenHandler();
+
         ContractInfo contractInfo = contractHandler.getContract(t.getTo());
         if (contractInfo == null) {
             logger.debug("Contract " + t.getTo() + "is not  Contract  registed in this system.");
@@ -99,8 +100,12 @@ public class BlockTxInfoParser {
 
         tx.setTxType(EChainTxType.Contract);
         tx.setContractAddress(t.getTo());
-        tx.setMethod(rec.getMethod());
-        tx.setMethodParams(JSON.toJSONString(rec.getParams()));
+        if(rec!=null) {
+            tx.setMethod(rec.getMethod());
+            tx.setMethodParams(JSON.toJSONString(rec.getParams()));
+        }else{
+            logger.warn("can not parse the  ");
+        }
 
         if (tokenHandler.isToken(t.getTo())) {
             TokenInfo tokenInfo = tokenHandler.getToken(t.getTo());

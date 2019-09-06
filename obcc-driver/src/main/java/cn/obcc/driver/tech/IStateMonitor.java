@@ -1,7 +1,7 @@
 package cn.obcc.driver.tech;
 
 import cn.obcc.driver.IChainHandler;
-import cn.obcc.config.ReqConfig;
+import cn.obcc.config.ExProps;
 import cn.obcc.vo.RetData;
 
 /**
@@ -25,5 +25,5 @@ public interface IStateMonitor<T>  extends IChainHandler<T>{
 	 * @throws Exception
 	 *
 	 */
-	public RetData<Long> getBlockHeight(ReqConfig<T> config) throws Exception;
+	public Long getBlockHeight(ExProps config) throws Exception;
 }

@@ -1,13 +1,12 @@
 package cn.obcc.driver.module;
 
 import cn.obcc.driver.IChainHandler;
-import cn.obcc.driver.module.fn.ITokenCreateFn;
-import cn.obcc.driver.module.fn.ITokenOperateFn;
+import cn.obcc.driver.module.fn.IUpchainFn;
 import cn.obcc.driver.vo.*;
 import cn.obcc.driver.vo.params.TokenParams;
 import cn.obcc.vo.driver.BlockTxInfo;
 import cn.obcc.vo.driver.TokenInfo;
-import cn.obcc.config.ReqConfig;
+import cn.obcc.config.ExProps;
 import cn.obcc.vo.RetData;
 
 import java.math.BigInteger;
@@ -28,7 +27,7 @@ public interface ITokenHandler<T> extends IChainHandler<T> {
      * @throws Exception
      */
     public void createToken(String bizId, SrcAccount account, TokenParams params,
-                            ITokenCreateFn fn, ReqConfig<T> config) throws Exception;
+                            IUpchainFn<BlockTxInfo> fn, ExProps config) throws Exception;
 
     /**
      * 已经存在的token，add上去
@@ -41,7 +40,7 @@ public interface ITokenHandler<T> extends IChainHandler<T> {
      * @throws Exception
      */
     public RetData<String> addToken(String bizId, TokenInfo params,
-                                    ITokenCreateFn fn, ReqConfig<T> config) throws Exception;
+                                    IUpchainFn<BlockTxInfo> fn, ExProps config) throws Exception;
 
     /**
      * 根据合约地址判断是否为token
@@ -95,60 +94,35 @@ public interface ITokenHandler<T> extends IChainHandler<T> {
     public TokenInfo getToken(String tokenCodeOrContractAddr) throws Exception;
 
 
-    public RetData<String> balanceOf(TokenInfo token, String address, ReqConfig<T> config) throws Exception;
+    public String balanceOf(TokenInfo token, String address, ExProps config) throws Exception;
 
-    public RetData<String> freezeOf(TokenInfo token, String address, ReqConfig<T> config) throws Exception;
+    public String freezeOf(TokenInfo token, String address, ExProps config) throws Exception;
 
-    public RetData<BlockTxInfo> operateInfo(TokenInfo token, String hash, ReqConfig<T> config) throws Exception;
+    public BlockTxInfo operateInfo(TokenInfo token, String hash, ExProps config) throws Exception;
 
     /**********************************************************************************************************/
-    public RetData<String> transfer(String bizId, SrcAccount account, TokenInfo token,
-                                    String destAccount, ReqConfig<T> config, ITokenOperateFn fn) throws Exception;
+    public String transfer(String bizId, SrcAccount account, TokenInfo token,
+                                    String destAccount, ExProps config, IUpchainFn<BlockTxInfo> fn) throws Exception;
 
-    public RetData<String> freeze(String bizId, SrcAccount account, TokenInfo token,
-                                  BigInteger amount, ReqConfig<T> config, ITokenOperateFn fn) throws Exception;
+    public String freeze(String bizId, SrcAccount account, TokenInfo token,
+                                  BigInteger amount, ExProps config, IUpchainFn<BlockTxInfo> fn) throws Exception;
 
-    public RetData<String> unfreeze(String bizId, SrcAccount account, TokenInfo token,
-                                    BigInteger amount, ReqConfig<T> config, ITokenOperateFn fn) throws Exception;
+    public String unfreeze(String bizId, SrcAccount account, TokenInfo token,
+                                    BigInteger amount, ExProps config, IUpchainFn<BlockTxInfo> fn) throws Exception;
 
     /*********************************************************************************************/
-    public RetData<String> burn(String bizId, SrcAccount account, TokenInfo token,
-                                BigInteger amount, ReqConfig<T> config) throws Exception;
+    public String burn(String bizId, SrcAccount account, TokenInfo token,
+                                BigInteger amount, ExProps config) throws Exception;
 
-    public RetData<String> supply(String bizId, SrcAccount account, TokenInfo token,
-                                  BigInteger amount, ReqConfig<T> config) throws Exception;
+    public String supply(String bizId, SrcAccount account, TokenInfo token,
+                                  BigInteger amount, ExProps config) throws Exception;
 
     /*************************************************************************************************************/
-    public RetData<String> approve(String bizId, SrcAccount account, TokenInfo token,
-                                   String destAccount, BigInteger amount, ReqConfig<T> config) throws Exception;
+    public String approve(String bizId, SrcAccount account, TokenInfo token,
+                                   String destAccount, BigInteger amount, ExProps config) throws Exception;
 
-    public RetData<String> transferFrom(String bizId, SrcAccount account, TokenInfo token,
-                                        BigInteger amount, ReqConfig<T> config) throws Exception;
+    public String transferFrom(String bizId, SrcAccount account, TokenInfo token,
+                                        BigInteger amount, ExProps config) throws Exception;
     /**************************************************************************************************/
-
-
-
-
-    /**
-     * 在解析区块流水时，从区块流水取出Token的目标地址，原来的目标是合约地址<br>
-     * 需要转换出来
-     *
-     * @param input
-     * @return
-     * @throws Exception
-     */
-    // public String getDestAddr(TokenInfo token,String input) throws Exception;
-
-
-    /**
-     * 根据操作的方法,解析方法操作时带的备注，每种不同的合约，其操作不同<b>
-     * 如果没有，那么就没有，本应用发的token，应该都带有说明
-     *
-     * @param input
-     * @return
-     * @throws Exception
-     */
-    //  public String getMemo(TokenInfo token,String method, String input) throws Exception;
-
 
 }

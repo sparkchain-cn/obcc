@@ -61,4 +61,17 @@ public class GasFeeUtils {
 
         return gasFeeStr;
     }
+
+    //        if (!EthUtils.isNgDigit(gasTwo.getGasPrice()) || !EthUtils.isNgDigit(gasTwo.getGasLimit())) {
+//            Transaction tran = new Transaction(account.getAccount(), null,
+//                    null, null, destAddress, BigInteger.valueOf(0), account.getMemos());
+//
+//            // 不是必须的 可以使用默认值
+//            BigInteger gasLimit = EthUtils.getGasLimit(web3j, tran);
+//            gasLimit = BigInteger.valueOf(gasLimit.longValue() * EthConstants.SafeFactor);
+//
+//            BigInteger gasPrice = EthUtils.getGasPrice(web3j);
+//            return new StaticGasProvider(gasPrice, gasLimit);
+//
+//        }
 }

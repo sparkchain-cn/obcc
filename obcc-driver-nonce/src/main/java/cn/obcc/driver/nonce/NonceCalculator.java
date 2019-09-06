@@ -1,9 +1,6 @@
 package cn.obcc.driver.nonce;
 
-import cn.obcc.config.ObccConfig;
-import cn.obcc.config.ReqConfig;
-import cn.obcc.driver.IChainDriver;
-import cn.obcc.driver.IChainHandler;
+import cn.obcc.config.ExProps;
 import cn.obcc.driver.base.BaseHandler;
 import cn.obcc.driver.nonce.strategy.BizNonceStrategy;
 import cn.obcc.driver.nonce.strategy.ChainNonceStrategy;
@@ -22,12 +19,12 @@ import cn.obcc.vo.RetData;
  **/
 public abstract class NonceCalculator<T> extends BaseHandler<T> implements INonceCalculator<T> {
     @Override
-    public RetData<Long> getNonce(String address, final ReqConfig<T> config) throws Exception {
+    public RetData<Long> getNonce(String address, final ExProps config) throws Exception {
         String chainCode = getObccConfig().getChain().getName();
         return RetData.succuess(getNonceStrategy().computNonce(chainCode, address));
     }
 
-    public RetData<Long> adjustNonce(String address, Long num, ReqConfig<T> config) throws Exception {
+    public RetData<Long> adjustNonce(String address, Long num, ExProps config) throws Exception {
         String chainCode = getObccConfig().getChain().getName();
         return RetData.succuess(getNonceStrategy().adjustNonce(chainCode, address, num));
     }

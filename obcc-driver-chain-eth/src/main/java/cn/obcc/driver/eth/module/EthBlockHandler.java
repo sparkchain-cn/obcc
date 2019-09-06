@@ -7,7 +7,7 @@ import cn.obcc.exception.ObccException;
 import cn.obcc.exception.enums.EExceptionCode;
 import cn.obcc.vo.driver.BlockInfo;
 import cn.obcc.vo.driver.BlockTxInfo;
-import cn.obcc.config.ReqConfig;
+import cn.obcc.config.ExProps;
 import cn.obcc.vo.RetData;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
@@ -27,18 +27,18 @@ public class EthBlockHandler extends BaseHandler<Web3j> implements IBlockHandler
     }
 
     @Override
-    public RetData<Long> getBlockHeight(ReqConfig<Web3j> config) throws Exception {
-        Web3j web3j = config.getClient();
+    public Long getBlockHeight() throws Exception {
+        Web3j web3j = getClient();
         BigInteger num = web3j.ethBlockNumber().send().getBlockNumber();
         if (num != null) {
-            return RetData.succuess(num.longValue());
+            return num.longValue();
         }
-        return RetData.error(EExceptionCode.RETURN_NULL_OR_EMPTY, "getBlockHeight can get value.");
+        return null;
     }
 
     @Override
-    public RetData<BlockInfo> getBlockInfo(long blockHeight, ReqConfig<Web3j> config) throws Exception {
-        Web3j web3j = config.getClient();
+    public BlockInfo getBlockInfo(long blockHeight, ExProps config) throws Exception {
+        Web3j web3j = getClient();//config.getClient();
         EthBlock.Block block = web3j.ethGetBlockByNumber(
                 DefaultBlockParameter.valueOf(BigInteger.valueOf(blockHeight)), false).send().getBlock();
 
@@ -48,32 +48,31 @@ public class EthBlockHandler extends BaseHandler<Web3j> implements IBlockHandler
 
         List<String> txHashs = new ArrayList<String>();
         for (EthBlock.TransactionResult t : block.getTransactions()) {
-            Transaction transaction = (Transaction) t.get();
-            txHashs.add(transaction.getHash());
+            String hash = (String) t.get();
+            txHashs.add(hash);
         }
         blockInfo.setTransactions(txHashs);
         blockInfo.setTradeTime(Long.parseLong(block.getTimestamp().toString()));
 
-        return RetData.succuess(blockInfo);
+        return blockInfo;
     }
 
 
-
     @Override
-    public RetData<BlockTxInfo> pull(String hash, ReqConfig<Web3j> config) throws Exception {
+    public BlockTxInfo getBlockTxInfo(String hash, ExProps config) throws Exception {
         try {
-            Web3j web3j = config.getClient();
+            Web3j web3j = getClient();//config.getClient();
             Transaction tx;
             String chaincode = getObccConfig().getChain().getName();
             tx = web3j.ethGetTransactionByHash(hash).send().getTransaction().get();
             BlockTxInfo txInfo = BlockTxInfoParser.parseTxInfo(web3j, chaincode, getDriver(), tx);
             if (txInfo != null) {
-                return RetData.succuess(txInfo);
+                return txInfo;
             }
         } catch (Exception e) {
             throw ObccException.create(EExceptionCode.FETCH_TX_FAIL, e.getMessage());
         }
-        return RetData.error("没有找到返回的结果");
+        return null;
     }
 
 }

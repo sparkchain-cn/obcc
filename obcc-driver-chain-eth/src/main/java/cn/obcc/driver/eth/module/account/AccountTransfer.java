@@ -1,10 +1,8 @@
 package cn.obcc.driver.eth.module.account;
 
-import cn.obcc.config.ReqConfig;
+import cn.obcc.config.ExProps;
 import cn.obcc.driver.eth.EthConstants;
-import cn.obcc.driver.eth.utils.EthUtils;
 import cn.obcc.driver.tech.INonceCalculator;
-import cn.obcc.driver.utils.JunctionUtils;
 import cn.obcc.driver.vo.SrcAccount;
 import cn.obcc.exception.ObccException;
 import cn.obcc.exception.enums.EExceptionCode;
@@ -17,7 +15,6 @@ import org.web3j.crypto.TransactionEncoder;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.Response;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
-import org.web3j.tx.gas.StaticGasProvider;
 import org.web3j.utils.Numeric;
 
 import java.io.IOException;
@@ -36,13 +33,13 @@ public class AccountTransfer {
 
 
     public static EthSendTransaction trySendTx(SrcAccount account, BigInteger amount, String destAddress,
-                                               INonceCalculator nonceCalculator, ReqConfig<Web3j> config) throws Exception {
+                                               INonceCalculator nonceCalculator, ExProps config, Web3j web3j) throws Exception {
         EthSendTransaction result = null;
         int i = 0;
         BigInteger nowSeq = BigInteger.valueOf(Long.parseLong(account.getNonce()));
         while (i <= 20) {
             i++;
-            result = sendTx(config.getClient(), account, amount, destAddress);
+            result = sendTx(web3j, account, amount, destAddress);
             if (result == null) {
                 throw ObccException.create(EExceptionCode.RETURN_NULL_OR_EMPTY,
                         "web3j mcSendRawTransaction return null object(McSendTransaction).");

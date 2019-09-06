@@ -3,7 +3,7 @@ package cn.obcc.driver.module;
 import cn.obcc.driver.IChainHandler;
 import cn.obcc.vo.driver.BlockInfo;
 import cn.obcc.vo.driver.BlockTxInfo;
-import cn.obcc.config.ReqConfig;
+import cn.obcc.config.ExProps;
 import cn.obcc.vo.RetData;
 
 /**
@@ -28,7 +28,7 @@ public interface IBlockHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public RetData<Long> getBlockHeight(ReqConfig<T> config) throws Exception;
+    public Long getBlockHeight() throws Exception;
 
     /**
      * 从区块中找到所有交易hash
@@ -38,7 +38,7 @@ public interface IBlockHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public RetData<BlockInfo> getBlockInfo(long blockHeight, ReqConfig<T> config) throws Exception;
+    public BlockInfo getBlockInfo(long blockHeight, ExProps config) throws Exception;
 
 
     /**
@@ -48,7 +48,7 @@ public interface IBlockHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public RetData<BlockTxInfo> pull(String hash, ReqConfig<T> config) throws Exception;
+    public BlockTxInfo getBlockTxInfo(String hash, ExProps config) throws Exception;
 
 
     /**

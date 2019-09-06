@@ -10,7 +10,7 @@ import java.util.List;
  * @desc TODO
  * @date 2019/8/28 0028  9:42
  **/
-public class ContractCompile {
+public class CompileResult {
 
     private String bizId; //unique
 

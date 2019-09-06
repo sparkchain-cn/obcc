@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ReqConfig<T> {
+public class ExProps {
 
 	public static final String INIT_TYPE = "1";
 	public static final String DYNC_TYPE = "2";
@@ -28,9 +28,9 @@ public class ReqConfig<T> {
 	private boolean needSplit;
 
 	// 关联的连接对象
-	private T client;
+	//private T client;
 
-	public ReqConfig() {
+	public ExProps() {
 	}
 
 	public String getAppid() {
@@ -65,13 +65,13 @@ public class ReqConfig<T> {
 		this.uuids = uuids;
 	}
 
-	public T getClient() {
-		return client;
-	}
-
-	public void setClient(T client) {
-		this.client = client;
-	}
+//	public T getClient() {
+//		return client;
+//	}
+//
+//	public void setClient(T client) {
+//		this.client = client;
+//	}
 
 	public boolean isNeedSplit() {
 		return needSplit;

@@ -150,7 +150,10 @@ public abstract class JdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java.io.
 
     public T findOne(String conditionSql, Object[] params) {
         List<T> list = query(conditionSql, params);
-        if (list == null) return null;
+        if (list == null || list.isEmpty()) {
+            return null;
+        }
+        ;
         return list.get(0);
     }
 
