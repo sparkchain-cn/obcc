@@ -28,7 +28,7 @@ public interface IMemoParser<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public List<BcMemo> parse(String bizId,String memo) throws Exception;
+    public List<BcMemo> parse(String bizId, String memo) throws Exception;
 
     /**
      * 把长度合适的BcMemo对象转为十六进制的memo
@@ -46,7 +46,7 @@ public interface IMemoParser<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public List<String> encode(String bizId,String memo) throws Exception;
+    public List<String> encode(String bizId,  String memo) throws Exception;
 
     /**
      * 把原始的字符串memo解析一条长度合适的十六进制的memo，超过长度报错
@@ -57,12 +57,13 @@ public interface IMemoParser<T> extends IChainHandler<T> {
      */
     public String encodeOne(String bizId,String memo) throws Exception;
 
-	/**
-	 * 从链取回的hex转成原始的字符串
-	 * @param hex
-	 * @return
-	 * @throws Exception
-	 */
+    /**
+     * 从链取回的hex转成原始的字符串
+     *
+     * @param hex
+     * @return
+     * @throws Exception
+     */
     public BcMemo decode(String hex) throws Exception;
 
 }

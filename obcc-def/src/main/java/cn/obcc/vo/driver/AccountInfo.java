@@ -3,6 +3,7 @@ package cn.obcc.vo.driver;
 import cn.obcc.vo.Entity;
 
 import javax.persistence.Column;
+import javax.persistence.Table;
 
 /**
  * @author pengrk
@@ -11,7 +12,8 @@ import javax.persistence.Column;
  * @desc TODO
  * @date 2019/8/27 0027  16:06
  **/
-//@Table()
+
+@Table(name = "account_info")
 public class AccountInfo extends Entity {
 
     private String bizId;

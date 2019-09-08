@@ -3,11 +3,13 @@ package cn.obcc.vo.driver;
 import cn.obcc.vo.Entity;
 
 import javax.persistence.Column;
+import javax.persistence.Table;
 import java.util.List;
 
 /**
  * 回调区块信息
  */
+@Table(name = "block_info")
 public class BlockInfo extends Entity {
     private List<String> transactions;// 该账本里的交易列表
     private String blockHash;

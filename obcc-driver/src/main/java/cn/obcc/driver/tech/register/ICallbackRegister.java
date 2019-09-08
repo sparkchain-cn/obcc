@@ -20,6 +20,12 @@ public interface ICallbackRegister {
      */
     public void register(String bizId, IUpchainFn fn) throws Exception;
 
+    /**
+     *
+     * @param bizId
+     * @return
+     * @throws Exception
+     */
     public boolean exist(String bizId) throws Exception;
 
     /**
@@ -28,7 +34,7 @@ public interface ICallbackRegister {
      * @param bizId
      * @return
      */
-    public IUpchainFn getFn(String bizId);
+    public IUpchainFn getCallbackFn(String bizId);
 
     /**
      * @param bizId

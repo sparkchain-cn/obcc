@@ -23,8 +23,7 @@ public class CallbackListener<T> extends BaseHandler<T> implements ICallbackList
 
     @Override
     public IChainHandler initObccConfig(ObccConfig config, IChainDriver<T> driver) throws Exception {
-        this.config = config;
-        this.driver = driver;
+        super.initObccConfig(config, driver);
         callBackNotify = (ICallBackNotify) BeanUtils.instance(config.getCallbackNotfyName());
         callBackNotify.initObccConfig(config, driver);
         return this;

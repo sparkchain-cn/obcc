@@ -46,6 +46,11 @@ public class ObccConfig {
 
 
     private String memoPre = "&&spc";
+    private String memoPreHex = "0x2626737063";
+    // HexUtils.str2Hex(config.getMemoPre())
+
+
+    private ECallBackLevel callBackLevel = ECallBackLevel.SupportUpchain;
 
     private List<String> uuids = new ArrayList<>();
 
@@ -220,5 +225,17 @@ public class ObccConfig {
 
     public void setCallbackNotfyName(String callbackNotfyName) {
         this.callbackNotfyName = callbackNotfyName;
+    }
+
+    public String getMemoPreHex() {
+        return memoPreHex;
+    }
+
+    public ECallBackLevel getCallBackLevel() {
+        return callBackLevel;
+    }
+
+    public void setCallBackLevel(ECallBackLevel callBackLevel) {
+        this.callBackLevel = callBackLevel;
     }
 }

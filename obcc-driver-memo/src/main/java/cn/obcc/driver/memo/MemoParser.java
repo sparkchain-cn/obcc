@@ -31,12 +31,14 @@ public abstract class MemoParser<T> extends BaseHandler<T> implements IMemoParse
 
     @Override
     public List<String> encode(String bizId, String memo) throws Exception {
-        return getMemoStrategy().encode(bizId, memo);
+        String preHex = getObccConfig().getMemoPreHex();
+        return getMemoStrategy().encode(bizId, preHex, memo);
     }
 
     @Override
     public String encodeOne(String bizId, String memo) throws Exception {
-        return getMemoStrategy().encodeOne(bizId, memo);
+        String preHex = getObccConfig().getMemoPreHex();
+        return getMemoStrategy().encodeOne(bizId, preHex, memo);
     }
 
     @Override
@@ -59,7 +61,7 @@ public abstract class MemoParser<T> extends BaseHandler<T> implements IMemoParse
     protected JsonMemoStragegy jsonStragegy = new JsonMemoStragegy() {
         @Override
         public Long getMaxSize() throws Exception {
-            return this.getMaxSize();
+            return MemoParser.this.getMaxSize();
         }
     };
 

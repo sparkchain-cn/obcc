@@ -3,9 +3,7 @@ package cn.obcc.driver.eth.module;
 import cn.obcc.config.ExProps;
 import cn.obcc.config.ObccConfig;
 import cn.obcc.db.DbFactory;
-import cn.obcc.db.utils.BeanUtil;
 import cn.obcc.driver.eth.EthChainDriver;
-import cn.obcc.driver.eth.conn.builder.EthClientBuilderTest;
 import cn.obcc.driver.module.fn.IUpchainFn;
 import cn.obcc.driver.vo.Account;
 import cn.obcc.driver.vo.BizTxInfo;
@@ -19,13 +17,10 @@ import cn.obcc.uuid.UuidUtils;
 import cn.obcc.vo.driver.AccountInfo;
 import cn.obcc.vo.driver.BlockTxInfo;
 import com.alibaba.fastjson.JSON;
-import com.fasterxml.jackson.databind.deser.std.UUIDDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.*;
-
-import static org.testng.Assert.*;
 
 public class EthAccountHandlerTest {
     public static final Logger logger = LoggerFactory.getLogger(EthAccountHandlerTest.class);
@@ -67,86 +62,83 @@ public class EthAccountHandlerTest {
         Assert.assertNotNull(destAddr);
         Assert.assertNotNull(destSecret);
         boolean f1 = ethAccountHandler.checkAccount(new SrcAccount() {{
-            setAccount(destAddr);
+            setSrcAddr(destAddr);
             setSecret(destSecret);
         }}, new ExProps());
         Assert.assertTrue(f1);
     }
+
+
+    @Test(dependsOnMethods = {"testCreateAccount"})
+    public void testDoTransfer() throws Exception {
+
+        ChainPipe pipe = new ChainPipe();
+
+        pipe.setChainCode(ethAccountHandler.getObccConfig().getChain().getName());
+        pipe.setBizId(UuidUtils.get() + "");
+        pipe.setChainTxType(EChainTxType.Orign);
+        pipe.setSrcAccount(new SrcAccount() {{
+            setSrcAddr(srcAddr);
+            setSecret(secret);
+        }});
+
+        pipe.setDestAddr(this.destAddr);
+        pipe.setAmount("0.0000001");
+
+        pipe.setCallbackFn((bizId, hash, upchainType, state, resp) -> {
+            Assert.assertNotNull(bizId);
+            Assert.assertNotNull(hash);
+            logger.debug(bizId + "," + hash + "," + JSON.toJSONString(resp));
+            if (ETransferStatus.STATE_CHAIN_CONSENSUS == state) {
+                Assert.assertEquals(ethAccountHandler.getBalance(pipe.getDestAddr(), new ExProps()), pipe.getAmount());
+            }
+        });
+
+        String hash = ethAccountHandler.doTransfer(pipe);
+        Assert.assertNotNull(hash);
+
+        DateUtils.sleep(250 * 20 * 1000);
+        BlockTxInfo txInfo = ethAccountHandler.getTxByHash(hash, new ExProps());
+        Assert.assertNotNull(txInfo);
+        Assert.assertEquals(ethAccountHandler.getBalance(destAddr, new ExProps()), pipe.getAmount());
+        Assert.assertEquals(txInfo.getAmount(), pipe.getAmount());
+    }
+
 
     @Test(dependsOnMethods = {"testCreateAccount"})
     public void testTransfer() throws Exception {
 
         String bizId = UuidUtils.get() + "";
         SrcAccount account = new SrcAccount() {{
-            setAccount(srcAddr);
+            setSrcAddr(srcAddr);
             setSecret(secret);
         }};
         String amount = "0.0000001";
         String destAddr = this.destAddr;
         ExProps config = new ExProps();
+
         IUpchainFn<BlockTxInfo> callback = new IUpchainFn<BlockTxInfo>() {
             @Override
             public void exec(String bizId, String hash, EUpchainType upchainType, ETransferStatus state, BlockTxInfo resp) throws Exception {
                 Assert.assertNotNull(bizId);
                 logger.debug(bizId + "," + JSON.toJSONString(resp));
-                Assert.assertEquals(ethAccountHandler.getBalance(destAddr, new ExProps()), amount);
+                String balance = ethAccountHandler.getBalance(destAddr, new ExProps());
+                logger.debug(balance);
+                Assert.assertEquals(balance, amount);
                 hash2 = hash;
+
             }
         };
         String sphash = ethAccountHandler.transfer(bizId, account, amount, destAddr, config, callback);
         logger.debug(sphash);
         Assert.assertNotNull(sphash);
 
-
-        DateUtils.sleep(40 * 1000);
-        Assert.assertEquals(ethAccountHandler.getBalance(destAddr, new ExProps()), amount);
+        DateUtils.sleep(250 * 1000);
+        String balance = ethAccountHandler.getBalance(destAddr, new ExProps());
+        logger.debug(balance);
+        Assert.assertEquals(balance, amount);
     }
 
-    @Test
-    public void testDoTransfer() throws Exception {
-
-        String bizId = UuidUtils.get() + "";
-        this.bizId = bizId;
-        SrcAccount account = new SrcAccount() {{
-            setAccount(srcAddr);
-            setSecret(secret);
-        }};
-        String amount = "0.0000001";
-        String destAddr = this.destAddr;
-        ExProps config = new ExProps();
-        IUpchainFn<BlockTxInfo> callback = new IUpchainFn<BlockTxInfo>() {
-            @Override
-            public void exec(String bizId, String hash, EUpchainType upchainType, ETransferStatus state, BlockTxInfo resp) throws Exception {
-                Assert.assertNotNull(bizId);
-                logger.debug(bizId + "," + JSON.toJSONString(resp));
-                Assert.assertEquals(ethAccountHandler.getBalance(destAddr, new ExProps()), amount);
-            }
-        };
-
-        ChainPipe pipe = new ChainPipe();
-
-        pipe.setChainCode(ethAccountHandler.getObccConfig().getChain().getName());
-        pipe.setBizId(bizId);
-        pipe.setTxType(EChainTxType.Orign);
-        pipe.setAccount(account);
-
-        pipe.setDestAddr(destAddr);
-        pipe.setAmount(amount);
-        pipe.setConfig(new ExProps());
-        pipe.setFn(callback);
-
-        String hash = ethAccountHandler.doTransfer(pipe);
-        this.hash = hash;
-        logger.debug(hash);
-        Assert.assertNotNull(hash);
-
-        DateUtils.sleep(40 * 1000);
-        BlockTxInfo txInfo = ethAccountHandler.getTxByHash(hash, new ExProps());
-        this.txInfo = txInfo;
-        Assert.assertNotNull(txInfo);
-        Assert.assertEquals(ethAccountHandler.getBalance(destAddr, new ExProps()), amount);
-        Assert.assertEquals(txInfo.getAmount(), amount);
-    }
 
     @Test(dependsOnMethods = {"testDoTransfer"})
     public void testGetTxByBizId() throws Exception {
@@ -198,14 +190,14 @@ public class EthAccountHandlerTest {
     @Test
     public void testCheckAccount() throws Exception {
         boolean f1 = ethAccountHandler.checkAccount(new SrcAccount() {{
-            setAccount(destAddr);
+            setSrcAddr(destAddr);
             setSecret(destSecret);
         }}, new ExProps());
 
         Assert.assertTrue(f1);
 
         boolean f2 = ethAccountHandler.checkAccount(new SrcAccount() {{
-            setAccount(destAddr);
+            setSrcAddr(destAddr);
             setSecret(secret);
         }}, new ExProps());
 
@@ -215,7 +207,8 @@ public class EthAccountHandlerTest {
 
     @AfterClass
     public void tearDown() {
-        chainDriver.destory();
+
+        //chainDriver.destory();
     }
 
 }

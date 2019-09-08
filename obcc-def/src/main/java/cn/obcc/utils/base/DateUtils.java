@@ -30,25 +30,25 @@ public class DateUtils {
     /**
      * 标准时间格式
      */
-    private static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat(
+    public static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat(
             "MM/dd/yyyy HH:mm");
     /** */
     /**
      * 带时分秒的标准时间格式
      */
-    private static final SimpleDateFormat DATE_TIME_EXTENDED_FORMAT = new SimpleDateFormat(
+    public  static final SimpleDateFormat DATE_TIME_EXTENDED_FORMAT = new SimpleDateFormat(
             "MM/dd/yyyy HH:mm:ss");
     /** */
     /**
      * ORA标准日期格式
      */
-    private static final SimpleDateFormat ORA_DATE_FORMAT = new SimpleDateFormat(
+    public static final SimpleDateFormat ORA_DATE_FORMAT = new SimpleDateFormat(
             "yyyyMMdd");
     /** */
     /**
      * ORA标准时间格式
      */
-    private static final SimpleDateFormat ORA_DATE_TIME_FORMAT = new SimpleDateFormat(
+    public static final SimpleDateFormat ORA_DATE_TIME_FORMAT = new SimpleDateFormat(
             "yyyyMMddHHmm");
     /** */
     /**

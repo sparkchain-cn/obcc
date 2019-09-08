@@ -11,7 +11,9 @@ import cn.obcc.driver.vo.ContractExecRec;
 import cn.obcc.driver.vo.TokenRec;
 import cn.obcc.exception.enums.EChainTxType;
 import cn.obcc.exception.enums.ETransferStatus;
+import cn.obcc.utils.base.DateUtils;
 import cn.obcc.utils.base.StringUtils;
+import cn.obcc.vo.BcMemo;
 import cn.obcc.vo.driver.BlockTxInfo;
 import cn.obcc.vo.driver.ContractInfo;
 import cn.obcc.vo.driver.TokenInfo;
@@ -26,6 +28,7 @@ import org.web3j.utils.Convert;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Date;
 
 /**
  * @author mgicode
@@ -48,7 +51,8 @@ public class BlockTxInfoParser {
     }
 
 
-    public static BlockTxInfo parseTxInfo(Web3j web3j, String chainCode, IChainDriver driver, Transaction t, boolean isContract) throws Exception {
+    public static BlockTxInfo parseTxInfo(Web3j web3j, String chainCode,
+                                          IChainDriver driver, Transaction t, boolean isContract) throws Exception {
         try {
             BlockTxInfo txInfo = new BlockTxInfo();
             txInfo.setChainCode(chainCode);
@@ -72,11 +76,18 @@ public class BlockTxInfoParser {
 
             if (isContract) {
                 parseContract(web3j, driver, t, txInfo);
+            } else {
+                txInfo.setMemos(t.getInput());
             }
             parseStatus(web3j, hash, gasPrice, txInfo);
             txInfo.setBlockTime(getTradeTime(web3j, blockHash));
             if (!StringUtils.isNullOrEmpty(txInfo.getMemos())) {
-                txInfo.setMemosObj(driver.getMemoParser().decode(txInfo.getMemos()));
+                String preHex = driver.getObccConfig().getMemoPreHex();
+               // if (txInfo.getMemos().startsWith(preHex)) {
+                  //  int preHexLen = preHex.length();
+                    BcMemo memo = driver.getMemoParser().decode(txInfo.getMemos());
+                    txInfo.setMemosObj(memo);
+               // }
             }
             return txInfo;
 
@@ -100,10 +111,10 @@ public class BlockTxInfoParser {
 
         tx.setTxType(EChainTxType.Contract);
         tx.setContractAddress(t.getTo());
-        if(rec!=null) {
+        if (rec != null) {
             tx.setMethod(rec.getMethod());
             tx.setMethodParams(JSON.toJSONString(rec.getParams()));
-        }else{
+        } else {
             logger.warn("can not parse the  ");
         }
 
@@ -161,13 +172,15 @@ public class BlockTxInfoParser {
 
 
     // todo:取不到就是当前的时间
-    public static long getTradeTime(Web3j web3j, String blockHash) {
+    public static String getTradeTime(Web3j web3j, String blockHash) {
         try {
             BigInteger timeStamp = null;
             if (!StringUtils.isNullOrEmpty(blockHash)) {
                 timeStamp = web3j.ethGetBlockByHash(blockHash, false).send().getBlock().getTimestamp();
             }
-            return timeStamp == null ? (System.currentTimeMillis() / 1000) : timeStamp.longValue();
+            if (timeStamp == null) return null;
+            return DateUtils.getDateFormat(new Date(timeStamp.longValue()), "MM/dd/yyyy HH:mm:ss");
+            //return timeStamp == null ? (System.currentTimeMillis() / 1000) : timeStamp.longValue();
         } catch (IOException e) {
             logger.error(
                     "chain3j io exception mcGetBlockByHash error for:" + blockHash + "," + StringUtils.exception(e));
@@ -176,7 +189,8 @@ public class BlockTxInfoParser {
                     "chain3j io exception mcGetBlockByHash error for:" + blockHash + "," + StringUtils.exception(ex));
         }
 
-        return (0L);
+        return null;
+        // return (0L);
     }
 
 }

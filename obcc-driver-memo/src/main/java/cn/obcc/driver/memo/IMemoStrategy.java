@@ -23,10 +23,10 @@ public interface IMemoStrategy {
     public String hex(BcMemo memo) throws Exception;
 
     //  @Override
-    public List<String> encode(String bizId, String memo) throws Exception;
+    public List<String> encode(String bizId, String preHex, String memo) throws Exception;
 
     // @Override
-    public String encodeOne(String bizId, String memo) throws Exception;
+    public String encodeOne(String bizId, String preHex, String memo) throws Exception;
 
-    public BcMemo decode(String memoPre,String hex) throws Exception;
+    public BcMemo decode(String memoPre, String hex) throws Exception;
 }

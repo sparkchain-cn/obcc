@@ -4,6 +4,8 @@ import cn.obcc.driver.memo.IMemoStrategy;
 import cn.obcc.vo.BcMemo;
 import cn.obcc.utils.HexUtils;
 import com.alibaba.fastjson.JSON;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,16 +18,27 @@ import java.util.List;
  * @date 2019/8/27 0027  9:15
  **/
 public abstract class JsonMemoStragegy implements IMemoStrategy {
+    public static Logger logger = LoggerFactory.getLogger(JsonMemoStragegy.class);
 
     @Override
     public abstract Long getMaxSize() throws Exception;
 
     @Override
     public List<BcMemo> parse(String bizId, String memo) throws Exception {
+        if (memo == null) {
+            memo = "";
+        }
         Long len = memo.getBytes().length * 2L;
         long duanshu = new Double(Math.ceil(len / getMaxSize())).longValue();//总段数
 
         List<BcMemo> result = new ArrayList<>();
+        //空的memo也需要返回对象
+        if (duanshu == 0) {
+            BcMemo vo = new BcMemo(bizId, "");
+            result.add(vo);
+            return result;
+        }
+
         int duan = Math.round(memo.length() / duanshu);//每段字数
 
         for (int i = 0; i < duanshu; i++) {
@@ -45,28 +58,29 @@ public abstract class JsonMemoStragegy implements IMemoStrategy {
     }
 
     @Override
-    public List<String> encode(String bizId, String memo) throws Exception {
+    public List<String> encode(String bizId, String preHex, String memo) throws Exception {
         List<BcMemo> list = parse(bizId, memo);
         List<String> ret = new ArrayList<>();
         for (BcMemo m : list) {
-            ret.add(hex(m));
+            ret.add(preHex + hex(m));
         }
         return ret;
     }
 
-    public String encodeOne(String bizId, String memo) throws Exception {
+    public String encodeOne(String bizId, String preHex, String memo) throws Exception {
         Long len = memo.getBytes().length * 2L;
         //todo:200 must测算一下
         if (len + 200 > getMaxSize()) {
             throw new RuntimeException("bizid:" + bizId + "的memo长度过大，其长度为:" + len);
         }
-        List<String> list = encode(bizId, memo);
+        List<String> list = encode(bizId, preHex,memo);
         return list.get(0);
     }
 
     @Override
     public BcMemo decode(String memoPre, String hex) throws Exception {
         String orig = HexUtils.hexStr2Str(hex);
+        logger.debug("decode memo:" + orig);
         if (orig.startsWith(memoPre)) {
             orig = orig.substring(memoPre.length());
             BcMemo memo = JSON.parseObject(orig, BcMemo.class);

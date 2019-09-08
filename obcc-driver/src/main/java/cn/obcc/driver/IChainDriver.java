@@ -20,6 +20,8 @@ public interface IChainDriver<T> {
      */
     public IChainDriver<T> init(ObccConfig config, DbFactory db) throws Exception;
 
+    public ObccConfig getObccConfig() throws  Exception;
+
     public DbFactory getLocalDb() throws Exception;
     /*********************************************************************/
     /**

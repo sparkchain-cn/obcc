@@ -3,8 +3,10 @@ package cn.obcc.vo.driver;
 import cn.obcc.vo.Entity;
 
 import javax.persistence.Column;
+import javax.persistence.Table;
 import java.math.BigInteger;
 
+@Table(name = "token_info")
 public class TokenInfo extends Entity {
 
     private String bizId;//unique
@@ -18,7 +20,7 @@ public class TokenInfo extends Entity {
     private String contractAddress;
     private int state;
 
-//转币的方法名
+    //转币的方法名
     private String transferName;
     //private String chainCode;
 

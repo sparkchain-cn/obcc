@@ -11,7 +11,6 @@ import cn.obcc.driver.vo.ChainPipe;
 import cn.obcc.driver.vo.SrcAccount;
 import cn.obcc.exception.ObccException;
 import cn.obcc.exception.enums.EExceptionCode;
-import cn.obcc.vo.RetData;
 import cn.obcc.vo.driver.BlockTxInfo;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.ECKeyPair;
@@ -90,7 +89,7 @@ public class EthAccountHandler extends AccountBaseHandler<Web3j> implements IAcc
 
     public boolean checkAccount(SrcAccount account, ExProps config) throws Exception {
         Credentials credentials = Credentials.create(account.getSecret());
-        if (account.getAccount().equalsIgnoreCase(credentials.getAddress())) {
+        if (account.getSrcAddr().equalsIgnoreCase(credentials.getAddress())) {
             return true;
         }
         return false;
@@ -98,11 +97,11 @@ public class EthAccountHandler extends AccountBaseHandler<Web3j> implements IAcc
     }
 
     @Override
-    public RetData<String> onTransfer(ChainPipe pipe) throws Exception {
+    public String onTransfer(ChainPipe pipe) throws Exception {
         // 把十进制的转换成ETH的Wei, 1ETH = 10^18 Wei
         BigInteger amountBInt = Convert.toWei(pipe.getAmount(), Convert.Unit.ETHER).toBigInteger();
         EthSendTransaction est = AccountTransfer.trySendTx(
-                pipe.getAccount(), amountBInt, pipe.getDestAddr(), driver.getNonceCalculator(), pipe.getConfig(),getClient());
+                pipe.getSrcAccount(), amountBInt, pipe.getDestAddr(), driver.getNonceCalculator(), pipe.getConfig(),getClient());
 
         Response.Error err = est.getError();
         if (err != null) {
@@ -110,7 +109,7 @@ public class EthAccountHandler extends AccountBaseHandler<Web3j> implements IAcc
                     err.getMessage() + "", err.getData() + "");
         }
 
-        return RetData.succuess(est.getTransactionHash());
+        return est.getTransactionHash();
     }
 
 

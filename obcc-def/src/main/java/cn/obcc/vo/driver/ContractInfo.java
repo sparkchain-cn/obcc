@@ -3,7 +3,9 @@ package cn.obcc.vo.driver;
 import cn.obcc.vo.Entity;
 
 import javax.persistence.Column;
+import javax.persistence.Table;
 
+@Table(name = "contract_info")
 public class ContractInfo  extends Entity {
 
     private String bizId; //unique

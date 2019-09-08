@@ -10,6 +10,7 @@ package cn.obcc.exception.enums;
  */
 public enum ETransferStatus {
 
+    STATE_NONE("spc_none", -100),
     /**
      * 接入已受理
      */

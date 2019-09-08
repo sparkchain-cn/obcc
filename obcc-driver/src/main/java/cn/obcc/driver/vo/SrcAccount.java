@@ -11,7 +11,7 @@ import java.io.Serializable;
  **/
 public class SrcAccount implements Serializable {
 
-    private String account;
+    private String srcAddr;
     private String secret;
 
     private String nonce;
@@ -24,12 +24,12 @@ public class SrcAccount implements Serializable {
     //  private String amount;
 
 
-    public String getAccount() {
-        return account;
+    public String getSrcAddr() {
+        return srcAddr;
     }
 
-    public void setAccount(String account) {
-        this.account = account;
+    public void setSrcAddr(String srcAddr) {
+        this.srcAddr = srcAddr;
     }
 
     public String getSecret() {

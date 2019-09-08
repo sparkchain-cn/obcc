@@ -1,5 +1,8 @@
 package cn.obcc.driver.adjuster;
 
+import cn.obcc.config.ObccConfig;
+import cn.obcc.driver.IChainDriver;
+import cn.obcc.driver.IChainHandler;
 import cn.obcc.driver.base.BaseHandler;
 import cn.obcc.driver.tech.ISpeedAdjuster;
 import cn.obcc.driver.vo.ChainPipe;
@@ -31,6 +34,13 @@ public class SpeedAdjuster<T> extends BaseHandler<T> implements ISpeedAdjuster<T
             .variableExpiration()
             .build();
 
+    @Override
+    public IChainHandler initObccConfig(ObccConfig config, IChainDriver<T> driver) throws Exception {
+        super.initObccConfig(config, driver);
+        start();
+        return this;
+    }
+
     Runnable runnable = () -> {
         while (flag) {
             try {
@@ -47,7 +57,7 @@ public class SpeedAdjuster<T> extends BaseHandler<T> implements ISpeedAdjuster<T
             }
 
             try {
-                Thread.sleep(100);
+                Thread.sleep(300);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -67,7 +77,7 @@ public class SpeedAdjuster<T> extends BaseHandler<T> implements ISpeedAdjuster<T
 
     private void invoke(ChainPipe pipe) throws Exception {
         logger.debug("排队出列：" + JSON.toJSONString(pipe));
-        if (pipe.getTxType() == EChainTxType.Orign) {
+        if (pipe.getChainTxType() == EChainTxType.Orign) {
             getDriver().getAccountHandler().doTransfer(pipe);
         }
     }
@@ -79,17 +89,20 @@ public class SpeedAdjuster<T> extends BaseHandler<T> implements ISpeedAdjuster<T
 
     @Override
     public void offer(ChainPipe pipe) throws Exception {
-        String account = pipe.getAccount().getAccount();
-        //构建bizId-->account的队列
-        queues.offer(new KeyValue<String>() {{
-            setKey(pipe.getBizId());
-            setVal(account);
-        }});
+        String account = pipe.getSrcAccount().getSrcAddr();
+
         //每个account中多次交易进行队列排序
         if (!map.containsKey(account)) {
             map.put(account, new LinkedList<ChainPipe>());
         }
         map.get(account).offer(pipe);
+
+        //不然会有时间差导致queues出队时，map中还没有写入
+        //构建bizId-->account的队列
+        queues.offer(new KeyValue<String>() {{
+            setKey(pipe.getBizId());
+            setVal(account);
+        }});
     }
 
 

@@ -52,12 +52,12 @@ public class AccountTransfer {
             if (isNouceLowError(err.getMessage())) {
                 //"nonce too low";//在区块上，
                 nowSeq = nowSeq.add(BigInteger.valueOf(1L));
-                nonceCalculator.adjustNonce(account.getAccount(), nowSeq.longValue(), config);
+                nonceCalculator.adjustNonce(account.getSrcAddr(), nowSeq.longValue(), config);
                 continue;
             } else if (isInNouceQueueError(err.getMessage())) {
                 // known transaction";//在队列中，nonce存在，参数不同，说明不是冲掉
                 nowSeq = nowSeq.add(BigInteger.valueOf(1L));
-                nonceCalculator.adjustNonce(account.getAccount(), nowSeq.longValue(), config);
+                nonceCalculator.adjustNonce(account.getSrcAddr(), nowSeq.longValue(), config);
                 continue;
             } else if (isUnderPriceError(err.getMessage())) {
                 // "replacement transaction underpriced";

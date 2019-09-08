@@ -5,6 +5,8 @@ import cn.obcc.config.ExProps;
 import cn.obcc.driver.module.fn.IUpchainFn;
 import cn.obcc.exception.enums.EChainTxType;
 
+import java.util.Arrays;
+
 /**
  * @author mgicode
  * @version 1.0
@@ -15,17 +17,17 @@ import cn.obcc.exception.enums.EChainTxType;
 public class ChainPipe {
 
     private String chainCode;
-    private EChainTxType txType;
+    private EChainTxType chainTxType = EChainTxType.Orign;
     private String bizId;
-    private SrcAccount account;
+    private SrcAccount srcAccount;
 
     private String destAddr;
     private String contractAddr;
     private String amount;
 
-    private ExProps config;
+    private ExProps config=new ExProps();
 
-    private IUpchainFn fn;
+    private IUpchainFn callbackFn;
 
     private String method;
     private Object[] params;
@@ -39,12 +41,12 @@ public class ChainPipe {
         this.bizId = bizId;
     }
 
-    public SrcAccount getAccount() {
-        return account;
+    public SrcAccount getSrcAccount() {
+        return srcAccount;
     }
 
-    public void setAccount(SrcAccount account) {
-        this.account = account;
+    public void setSrcAccount(SrcAccount srcAccount) {
+        this.srcAccount = srcAccount;
     }
 
     public String getDestAddr() {
@@ -96,20 +98,20 @@ public class ChainPipe {
         this.config = config;
     }
 
-    public IUpchainFn getFn() {
-        return fn;
+    public IUpchainFn getCallbackFn() {
+        return callbackFn;
     }
 
-    public void setFn(IUpchainFn fn) {
-        this.fn = fn;
+    public void setCallbackFn(IUpchainFn callbackFn) {
+        this.callbackFn = callbackFn;
     }
 
-    public EChainTxType getTxType() {
-        return txType;
+    public EChainTxType getChainTxType() {
+        return chainTxType;
     }
 
-    public void setTxType(EChainTxType txType) {
-        this.txType = txType;
+    public void setChainTxType(EChainTxType chainTxType) {
+        this.chainTxType = chainTxType;
     }
 
     public String getAmount() {
@@ -118,5 +120,33 @@ public class ChainPipe {
 
     public void setAmount(String amount) {
         this.amount = amount;
+    }
+
+
+    public ChainPipe copy() {
+
+        ChainPipe pipe = new ChainPipe();
+        pipe.setChainCode(this.getChainCode());
+        pipe.setChainTxType(this.getChainTxType());
+        pipe.setBizId(this.getBizId());
+        pipe.setSrcAccount(new SrcAccount() {{
+            SrcAccount now = ChainPipe.this.getSrcAccount();
+            setSrcAddr(now.getSrcAddr());
+            setSecret(now.getSecret());
+            setNonce(now.getNonce());
+            setMemos(now.getMemos());
+            setGasLimit(now.getGasLimit());
+            setGasPrice(now.getGasPrice());
+        }});
+        pipe.setDestAddr(destAddr);
+        pipe.setContractAddr(contractAddr);
+        pipe.setAmount(amount);
+        pipe.setConfig(config); //没变
+        pipe.setCallbackFn(callbackFn); //没变
+        pipe.setMethod(method);
+        if (params != null)
+            pipe.setParams(Arrays.copyOf(params, params.length));
+
+        return pipe;
     }
 }
