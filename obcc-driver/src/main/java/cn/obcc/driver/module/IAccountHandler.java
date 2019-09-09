@@ -44,6 +44,13 @@ public interface IAccountHandler<T> extends IChainHandler<T> {
     public String doTransfer(ChainPipe pipe) throws Exception;
 
     /**
+     * @param pipe
+     * @return
+     * @throws Exception
+     */
+    public String transfer(ChainPipe pipe) throws Exception;
+
+    /**
      * @param account
      * @param amount
      * @param destAddress
@@ -74,7 +81,7 @@ public interface IAccountHandler<T> extends IChainHandler<T> {
      * @throws Exception
      */
     public String transfer(String bizId, SrcAccount account, String amount,
-                                    String destAddress, ExProps config, IUpchainFn<BlockTxInfo> callback) throws Exception;
+                           String destAddress, ExProps config, IUpchainFn<BlockTxInfo> callback) throws Exception;
 
     /**
      * 根据 transfer返回的hash获取该次支付的相关信息;<br>

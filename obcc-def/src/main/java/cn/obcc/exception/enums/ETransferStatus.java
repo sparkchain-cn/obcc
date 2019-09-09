@@ -23,6 +23,11 @@ public enum ETransferStatus {
      * 写链
      */
     STATE_WRITE_CHAIN("write_chain", 3),
+
+    /**
+     * 多条时部分接收
+     */
+    STATE_CHAIN_ACCEPT_HALF("chain_accept", 35),
     /**
      * 区块链已受理
      */

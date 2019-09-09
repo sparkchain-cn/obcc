@@ -11,7 +11,10 @@ import cn.obcc.driver.vo.SrcAccount;
 import cn.obcc.exception.ObccException;
 import cn.obcc.exception.enums.EChainTxType;
 import cn.obcc.exception.enums.EExceptionCode;
+import cn.obcc.exception.enums.ETransferStatus;
+import cn.obcc.exception.enums.EUpchainType;
 import cn.obcc.uuid.UuidUtils;
+import cn.obcc.vo.BizState;
 import cn.obcc.vo.driver.AccountInfo;
 import cn.obcc.utils.base.StringUtils;
 import cn.obcc.config.ExProps;
@@ -61,11 +64,29 @@ public abstract class AccountBaseHandler<T> extends BaseHandler<T> implements IA
                            String destAddr, ExProps config, IUpchainFn<BlockTxInfo> callback) throws Exception {
         ChainPipe pipe = AcountBaseTrans.toChainPipe(getObccConfig().getChain().getName(),
                 bizId, account, amount, destAddr, config, callback);
+        return transfer(pipe);
+    }
+
+    @Override
+    public String transfer(ChainPipe pipe) throws Exception {
+
         getDriver().getSpeedAdjuster().offer(pipe);
+
+        getDriver().getStateMonitor().setBizState(pipe.getBizId(),
+                new BizState(pipe.getBizId(), null, ETransferStatus.STATE_SPC_QUEUE));
+        //状态回调
+        pipe.getCallbackFn().exec(pipe.getBizId(), null,
+                pipe.getConfig().getUpchainType(), ETransferStatus.STATE_SPC_QUEUE, null);
+
         return UuidUtils.get() + "";
     }
 
     public String doTransfer(ChainPipe pipe) throws Exception {
+
+        getDriver().getStateMonitor().setBizState(pipe.getBizId(), new BizState(pipe.getBizId(), null, ETransferStatus.STATE_WRITE_CHAIN));
+        //状态回调
+        pipe.getCallbackFn().exec(pipe.getBizId(), null,   pipe.getConfig().getUpchainType(), ETransferStatus.STATE_WRITE_CHAIN, null);
+
         return AcountBaseTrans.multiTransfer(pipe, getDriver(), this);
     }
 

@@ -5,6 +5,7 @@ import cn.obcc.config.ExProps;
 import cn.obcc.driver.contract.ContractHandler;
 import cn.obcc.driver.module.fn.IUpchainFn;
 import cn.obcc.driver.vo.ChainPipe;
+import cn.obcc.driver.vo.CompileResult;
 import cn.obcc.driver.vo.ContractExecRec;
 import cn.obcc.driver.vo.SrcAccount;
 import cn.obcc.exception.enums.EContractType;
@@ -44,16 +45,12 @@ public class ContractHandlerTest {
 
             @Override
             protected void onDeploy(SrcAccount srcAccount, ContractInfo contractInfo, IUpchainFn fn, ExProps config) {
-
             }
 
             @Override
             public ContractExecRec parseExecRec(ContractInfo contractInfo, String input) throws Exception {
                 return null;
             }
-
-
-
         };
         ObccConfig config = new ObccConfig();
         config.setContractType(EContractType.SOLC);
@@ -83,10 +80,10 @@ public class ContractHandlerTest {
 
     }
 
-//    @Test
-//    public void testCompiler() throws Exception {
-//         handler.compile(System.currentTimeMillis() + "", testSolContent, null,new ExProps());
-//        System.out.println(compile);
-//    }
+    @Test
+    public void testCompiler() throws Exception {
+        CompileResult compile = handler.doCompile(System.currentTimeMillis() + "", testSolContent, new ExProps());
+        System.out.println(compile);
+    }
 
 }

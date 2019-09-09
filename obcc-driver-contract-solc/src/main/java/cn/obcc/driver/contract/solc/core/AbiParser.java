@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONArray;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class AbiParser {
     //region example
@@ -78,6 +79,87 @@ public class AbiParser {
         }
         return null;
     }
+
+
+    //    {
+    //        "payable": false,
+    //            "inputs": [],
+    //        "stateMutability": "nonpayable",
+    //            "type": "constructor"
+    //    },
+    public static Map<String, Object> getConstructor(String abi) {
+        if (StringUtils.isNullOrEmpty(abi)) {
+            return null;
+        }
+        try {
+            JSONArray array = JSON.parseArray(abi);
+            for (Object object : array) {
+                Map<String, Object> function = (Map<String, Object>) object;
+
+                if ("constructor".equals(function.get("type"))) {
+                    return function;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    //"inputs": [
+//    {
+//        "indexed": true,
+//            "name": "_from",
+//            "type": "address"
+//    },
+//    {
+//        "indexed": true,
+//            "name": "_to",
+//            "type": "address"
+//    },
+//    {
+//        "indexed": false,
+//            "name": "_value",
+//            "type": "uint256"
+//    }
+//    ],
+    public static LinkedHashMap<String, String> getConstructorInputs(String abi) {
+        Map<String, Object> function = getConstructor(abi);
+        List<Object> elements = (List<Object>) function.get("inputs");
+        return convertToMap(elements);
+    }
+
+    public static List<String> getConstructorInputTypes(String abi) {
+        Map<String, Object> function = getConstructor(abi);
+        List<Map<String, Object>> elements = (List<Map<String, Object>>) function.get("inputs");
+        List<String> ret = elements.stream().map((e) -> {
+            return (String) e.get("type");
+        }).collect(Collectors.toList());
+
+        return ret;
+    }
+
+    public static List<String> getFunctionInputTypes(String abi, String functionName) {
+        Map<String, Object> function = getFunction(abi, functionName);
+        List<Map<String, Object>> elements = (List<Map<String, Object>>) function.get("inputs");
+        List<String> ret = elements.stream().map((e) -> {
+            return (String) e.get("type");
+        }).collect(Collectors.toList());
+
+        return ret;
+    }
+
+
+    public static List<String> getFunctionOutputTypes(String abi, String functionName) {
+        Map<String, Object> function = getFunction(abi, functionName);
+        List<Map<String, Object>> elements = (List<Map<String, Object>>) function.get("outputs");
+        List<String> ret = elements.stream().map((e) -> {
+            return (String) e.get("type");
+        }).collect(Collectors.toList());
+
+        return ret;
+    }
+
 
     private static LinkedHashMap<String, String> convertToMap(List<Object> list) {
         LinkedHashMap<String, String> inputsMap = new LinkedHashMap<>();

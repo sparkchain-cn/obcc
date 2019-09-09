@@ -69,13 +69,17 @@ public class EthAccountHandlerTest {
     }
 
 
-    @Test(dependsOnMethods = {"testCreateAccount"})
+    @Test//(dependsOnMethods = {"testCreateAccount"})
     public void testDoTransfer() throws Exception {
+        Account account = ethAccountHandler.createAccount();
+        destAddr = account.getAddress();
+        destSecret = account.getSecret();
 
         ChainPipe pipe = new ChainPipe();
 
         pipe.setChainCode(ethAccountHandler.getObccConfig().getChain().getName());
         pipe.setBizId(UuidUtils.get() + "");
+        this.bizId = pipe.getBizId();
         pipe.setChainTxType(EChainTxType.Orign);
         pipe.setSrcAccount(new SrcAccount() {{
             setSrcAddr(srcAddr);
@@ -87,18 +91,25 @@ public class EthAccountHandlerTest {
 
         pipe.setCallbackFn((bizId, hash, upchainType, state, resp) -> {
             Assert.assertNotNull(bizId);
-            Assert.assertNotNull(hash);
             logger.debug(bizId + "," + hash + "," + JSON.toJSONString(resp));
+
+
+            if (ETransferStatus.STATE_CHAIN_ACCEPT == state) {
+                Assert.assertNotNull(hash);
+            }
             if (ETransferStatus.STATE_CHAIN_CONSENSUS == state) {
                 Assert.assertEquals(ethAccountHandler.getBalance(pipe.getDestAddr(), new ExProps()), pipe.getAmount());
             }
         });
 
         String hash = ethAccountHandler.doTransfer(pipe);
+        this.hash = hash;
         Assert.assertNotNull(hash);
 
-        DateUtils.sleep(250 * 20 * 1000);
+        DateUtils.sleep(1 * 60 * 1000);
+        System.out.println(hash);
         BlockTxInfo txInfo = ethAccountHandler.getTxByHash(hash, new ExProps());
+
         Assert.assertNotNull(txInfo);
         Assert.assertEquals(ethAccountHandler.getBalance(destAddr, new ExProps()), pipe.getAmount());
         Assert.assertEquals(txInfo.getAmount(), pipe.getAmount());
@@ -107,7 +118,6 @@ public class EthAccountHandlerTest {
 
     @Test(dependsOnMethods = {"testCreateAccount"})
     public void testTransfer() throws Exception {
-
         String bizId = UuidUtils.get() + "";
         SrcAccount account = new SrcAccount() {{
             setSrcAddr(srcAddr);
@@ -121,10 +131,14 @@ public class EthAccountHandlerTest {
             @Override
             public void exec(String bizId, String hash, EUpchainType upchainType, ETransferStatus state, BlockTxInfo resp) throws Exception {
                 Assert.assertNotNull(bizId);
-                logger.debug(bizId + "," + JSON.toJSONString(resp));
-                String balance = ethAccountHandler.getBalance(destAddr, new ExProps());
-                logger.debug(balance);
-                Assert.assertEquals(balance, amount);
+                logger.debug(bizId + "," + hash + "," + JSON.toJSONString(resp));
+
+                if (ETransferStatus.STATE_CHAIN_ACCEPT == state) {
+                    Assert.assertNotNull(hash);
+                }
+                if (ETransferStatus.STATE_CHAIN_CONSENSUS == state) {
+                    Assert.assertEquals(ethAccountHandler.getBalance(destAddr, new ExProps()), amount);
+                }
                 hash2 = hash;
 
             }
@@ -133,7 +147,7 @@ public class EthAccountHandlerTest {
         logger.debug(sphash);
         Assert.assertNotNull(sphash);
 
-        DateUtils.sleep(250 * 1000);
+        DateUtils.sleep(1 * 60 * 1000);
         String balance = ethAccountHandler.getBalance(destAddr, new ExProps());
         logger.debug(balance);
         Assert.assertEquals(balance, amount);
@@ -187,12 +201,13 @@ public class EthAccountHandlerTest {
     public void testCalGas() {
     }
 
-    @Test
+    @Test(dependsOnMethods = {"testCreateAccount"})
     public void testCheckAccount() throws Exception {
-        boolean f1 = ethAccountHandler.checkAccount(new SrcAccount() {{
+        SrcAccount srcAccount = new SrcAccount() {{
             setSrcAddr(destAddr);
             setSecret(destSecret);
-        }}, new ExProps());
+        }};
+        boolean f1 = ethAccountHandler.checkAccount(srcAccount, new ExProps());
 
         Assert.assertTrue(f1);
 

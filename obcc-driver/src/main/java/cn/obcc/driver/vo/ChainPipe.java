@@ -4,6 +4,8 @@ package cn.obcc.driver.vo;
 import cn.obcc.config.ExProps;
 import cn.obcc.driver.module.fn.IUpchainFn;
 import cn.obcc.exception.enums.EChainTxType;
+import cn.obcc.exception.enums.ETransferStatus;
+import cn.obcc.exception.enums.EUpchainType;
 
 import java.util.Arrays;
 
@@ -25,9 +27,14 @@ public class ChainPipe {
     private String contractAddr;
     private String amount;
 
-    private ExProps config=new ExProps();
+    private ExProps config = new ExProps();
 
-    private IUpchainFn callbackFn;
+    private IUpchainFn callbackFn = new IUpchainFn() {
+        @Override
+        public void exec(String bizId, String hash, EUpchainType upchainType, ETransferStatus state, Object resp) throws Exception {
+
+        }
+    };
 
     private String method;
     private Object[] params;

@@ -14,27 +14,12 @@ import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.utils.Convert;
 
+import static cn.obcc.driver.eth.module.contract.ContractEncoder.genFnEncodeData;
+
 public class TokenContract {
 
-//	以太坊普通交易参数
-//	to //对方地址
-//	gasLimit //gas上限
-//	gasPrice //gas价格
-//	value //eth转账数量(单位 wei)
-//	data //0x 普通转账用不到这个字段
-//
-//	以太坊合约调用交易参数
-//	to //合约地址
-//	gasLimit //gas上限
-//	gasPrice //gas价格
-//	value //eth转账数量(单位 wei)
-//	data //0x***  合约方法ABI及参数
-//	--------------------- 
-
-	// https://blog.csdn.net/u011181222/article/details/81281029
-
 	// transfer(address _to, uint256 _value)
-	public static String getContractTransferData(String destAddr, String amount) {
+	public static String getContractTransferData_2(String destAddr, String amount) {
 		// token转账参数即data字段
 		String methodName = "transfer";
 
@@ -65,7 +50,7 @@ public class TokenContract {
 	}
 
 	// transfer(address _to, uint256 _value)
-	public static String getContractTransferData(String destAddr, String amount, String memos) {
+	public static String getContractTransferData_2(String destAddr, String amount, String memos) {
 		// token转账参数即data字段
 		String methodName = "transfer";
 
@@ -101,7 +86,7 @@ public class TokenContract {
 
 	// function balanceOf(address _owner) public view returns (uint256 balance)
 
-	public static Function getContractBalanceData(String owner) {
+	public static Function getContractBalanceData_2(String owner) {
 
 		// token转账参数即data字段
 		String methodName = "balanceOf";
@@ -125,36 +110,52 @@ public class TokenContract {
 		// return data;
 
 	}
-//	public void invoke(){
-//        //token转账参数即data字段
-//        String methodName = "transfer";
-//        List<Type> inputParameters = new ArrayList<>();
-//        List<TypeReference<?>> outputParameters = new ArrayList<>();
-//        Address tAddress = new Address(toAddress);
-//        Uint256 tokenValue = new Uint256(BigDecimal.valueOf(amount).multiply(BigDecimal.TEN.pow(decimals)).toBigInteger());
-//        inputParameters.add(tAddress);
-//        inputParameters.add(tokenValue);
-//        TypeReference<Bool> typeReference = new TypeReference<Bool>() {
-//        };
-//        outputParameters.add(typeReference);
-//        Function function = new Function(methodName, inputParameters, outputParameters);
-//        String data = FunctionEncoder.encode(function);
-//
-//
-//        RawTransaction rawTransaction = RawTransaction.createTransaction(
-//                nonce,
-//                gasPrice,
-//                gasLimit,
-//                to,
-//                value,
-//                data);
-//        ECKeyPair ecKeyPair = ECKeyPair.create(new BigInteger(privateKey, 16));
-//        Credentials credentials = Credentials.create(ecKeyPair);
-//        byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials;
-//        String hexValue = Numeric.toHexString(signedMessage);
-//        EthSendTransaction ethSendTransaction = web3j.ethSendRawTransaction(signedData).send();
-//        System.out.println(ethSendTransaction.getTransactionHash());
+	//endregion
 
-//    }
+	//region new methods
+	public static String getContractTransferData(String destAddr, String amount) {
+		List<String> inputTypes = new ArrayList<>();
+		List<String> inputValues = new ArrayList<>();
+		inputTypes.add("address");
+		inputValues.add(destAddr);
+		inputTypes.add("uint256");
+		inputValues.add(Convert.toWei(amount, Convert.Unit.ETHER).toPlainString());
 
+		List<String> outputTypes = new ArrayList<>();
+		outputTypes.add("bool");
+
+		Function function = genFnEncodeData("transfer", inputTypes, inputValues, outputTypes);
+		return FunctionEncoder.encode(function);
+	}
+
+	public static String getContractTransferData(String destAddr, String amount, String memos) {
+		List<String> inputTypes = new ArrayList<>();
+		List<String> inputValues = new ArrayList<>();
+		inputTypes.add("address");
+		inputValues.add(destAddr);
+		inputTypes.add("uint256");
+		inputValues.add(Convert.toWei(amount, Convert.Unit.ETHER).toPlainString());
+		inputTypes.add("string");
+		inputValues.add(memos);
+
+		List<String> outputTypes = new ArrayList<>();
+		outputTypes.add("bool");
+
+		Function function = genFnEncodeData("transfer", inputTypes, inputValues, outputTypes);
+		return FunctionEncoder.encode(function);
+	}
+
+	public static String getContractBalanceData(String owner) {
+		List<String> inputTypes = new ArrayList<>();
+		List<String> inputValues = new ArrayList<>();
+		inputTypes.add("address");
+		inputValues.add(owner);
+
+		List<String> outputTypes = new ArrayList<>();
+		outputTypes.add("uint256");
+
+		Function function = genFnEncodeData("balanceOf", inputTypes, inputValues, outputTypes);
+		return FunctionEncoder.encode(function);
+	}
+	//endregion
 }

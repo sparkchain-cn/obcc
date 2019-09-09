@@ -116,7 +116,7 @@ public enum EExceptionCode {
     MEMO_PARSE_ERROR("4019","解析Memo出错"),
 
     CONTRACT_COMPILE_ERROR("4020","合约编译失败"),
-
+    CONTRACT_TYPE_NO_SUPPORT("4021","合约类型不支持"),
     //6000系，加密解密类
     NO_SUCH_ALGORITHM_EXCEPTION("6001",""),
 

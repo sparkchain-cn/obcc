@@ -14,6 +14,7 @@ import cn.obcc.exception.enums.ETransferStatus;
 import cn.obcc.exception.enums.EUpchainType;
 import cn.obcc.utils.base.StringUtils;
 import cn.obcc.vo.BcMemo;
+import cn.obcc.vo.BizState;
 import cn.obcc.vo.driver.BlockTxInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,11 +55,41 @@ public class AcountBaseTrans {
 
     private static void transferOne(String memo, ChainPipe pipe, List<String> hashs,
                                     IChainDriver driver, AccountBaseHandler accountHandler) {
+        ChainPipe p1 = pipe.copy();
+        p1.getSrcAccount().setMemos(memo);
+        String hash = transferOne(pipe, driver, accountHandler);
+        hashs.add(hash);
+//
+//        try {
+//            ChainPipe p1 = pipe.copy();
+//            p1.getSrcAccount().setMemos(memo);
+//            //2、计算nonce,如果传入的没有，那么就直接计算
+//            if (StringUtils.isNullOrEmpty(p1.getSrcAccount().getNonce())) {
+//                Long nonce = driver.getNonceCalculator()
+//                        .getNonce(p1.getSrcAccount().getSrcAddr(), p1.getConfig());
+//                p1.getSrcAccount().setNonce(nonce.toString());
+//            }
+//            //4、计算 gas
+//            accountHandler.calGas(p1.getSrcAccount(), p1.getAmount(), p1.getDestAddr(), p1.getConfig());
+//            // 5、transfer
+//            String hash = accountHandler.onTransfer(p1);
+//            //6、hash deal
+//            if (StringUtils.isNotNullOrEmpty(hash)) {
+//                // register into state
+//                driver.getStateMonitor().setState(hash, new BizState(p1.getBizId(), hash, ETransferStatus.STATE_CHAIN_ACCEPT));
+//                //状态回调
+//                pipe.getCallbackFn().exec(pipe.getBizId(), hash, pipe.getConfig().getUpchainType(), ETransferStatus.STATE_CHAIN_ACCEPT_HALF, pipe);
+//                hashs.add(hash);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+    }
+
+
+    private static String transferOne(ChainPipe pipe, IChainDriver driver, AccountBaseHandler accountHandler) {
         try {
-            ChainPipe p1 = pipe.copy();
-            //String pre = accountHandler.getObccConfig().getMemoPreHex();
-            //   p1.getSrcAccount().setMemos(pre + memo);
-            p1.getSrcAccount().setMemos(memo);
+            ChainPipe p1 = pipe;
             //2、计算nonce,如果传入的没有，那么就直接计算
             if (StringUtils.isNullOrEmpty(p1.getSrcAccount().getNonce())) {
                 Long nonce = driver.getNonceCalculator()
@@ -69,45 +100,61 @@ public class AcountBaseTrans {
             accountHandler.calGas(p1.getSrcAccount(), p1.getAmount(), p1.getDestAddr(), p1.getConfig());
             // 5、transfer
             String hash = accountHandler.onTransfer(p1);
-            // register into state
-            driver.getStateMonitor().setState(hash, ETransferStatus.STATE_CHAIN_ACCEPT);
             //6、hash deal
             if (StringUtils.isNotNullOrEmpty(hash)) {
-                hashs.add(hash);
+                // register into state
+                driver.getStateMonitor().setState(hash, new BizState(p1.getBizId(), hash, ETransferStatus.STATE_CHAIN_ACCEPT));
+                //状态回调
+                pipe.getCallbackFn().exec(pipe.getBizId(), hash, pipe.getConfig().getUpchainType(), ETransferStatus.STATE_CHAIN_ACCEPT_HALF, pipe);
             }
+            return hash;
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
 
-
     public static String multiTransfer(ChainPipe pipe, IChainDriver driver, AccountBaseHandler accountHandler) throws Exception {
+        String hashStrs = null;
         try {
             //1.check
             checkTransfer(pipe, driver, accountHandler);
             //2.区块回调的处理
             driver.getCallbackRegister().register(pipe.getBizId(), pipe.getCallbackFn());
 
-            //3、转换memo,多条返回多个hash
-            List<String> memos = driver.getMemoParser().encode(pipe.getBizId(), pipe.getSrcAccount().getMemos());
 
-            List<String> hashs = new ArrayList<>();
-            //每个memo的记录执行
-            memos.stream().forEach((memo) -> {
-                transferOne(memo, pipe, hashs, driver, accountHandler);
-            });
-            //合并
-            String hashStrs = StringUtils.join(hashs, ",");
-            if (pipe.getCallbackFn() != null) {
-                //分发的bizid是相同的
-                pipe.getCallbackFn().exec(pipe.getBizId(), hashStrs, EUpchainType.Transfer, ETransferStatus.STATE_CHAIN_RECEIPT, null);
+            if (!pipe.getConfig().isNeedSplit()) {
+                //一般是需要编码，但是对于合约等不需要，因为已经编码好了
+                if (pipe.getConfig().isNeedHandleMemo()) {
+                    pipe.getSrcAccount().setMemos(driver.getMemoParser().encodeOne(pipe.getBizId(), pipe.getSrcAccount().getMemos()));
+                }
+                hashStrs = transferOne(pipe, driver, accountHandler);
+            } else {
+                //3、转换memo,多条返回多个hash
+                List<String> memos = driver.getMemoParser().encode(pipe.getBizId(), pipe.getSrcAccount().getMemos());
+                List<String> hashs = new ArrayList<>();
+                //每个memo的记录执行
+                memos.stream().forEach((memo) -> {
+                    transferOne(memo, pipe, hashs, driver, accountHandler);
+                });
+                //合并
+                hashStrs = StringUtils.join(hashs, ",");
             }
+
+            driver.getStateMonitor().setBizState(pipe.getBizId(),
+                    new BizState(pipe.getBizId(), hashStrs, ETransferStatus.STATE_CHAIN_ACCEPT));
+            //状态回调
+            pipe.getCallbackFn().exec(pipe.getBizId(), hashStrs, pipe.getConfig().getUpchainType(), ETransferStatus.STATE_CHAIN_ACCEPT, null);
+
             return hashStrs;
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("上链出错", e);
             //todo:分情况：明确的错误
             driver.getCallbackRegister().unRegister(pipe.getBizId());
+            //todo:分情况设状态，状态超时写入数据库
+            driver.getStateMonitor().setBizState(pipe.getBizId(),
+                    new BizState(pipe.getBizId(), hashStrs, ETransferStatus.STATE_CHAIN_DEFINITE_FAILURE));
         }
 
         return null;

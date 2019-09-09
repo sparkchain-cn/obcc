@@ -9,12 +9,14 @@ import cn.obcc.driver.vo.ChainPipe;
 import cn.obcc.exception.enums.EChainTxType;
 import cn.obcc.vo.KeyValue;
 import com.alibaba.fastjson.JSON;
+import net.jodah.expiringmap.ExpirationPolicy;
 import net.jodah.expiringmap.ExpiringMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author pengrk
@@ -45,20 +47,15 @@ public class SpeedAdjuster<T> extends BaseHandler<T> implements ISpeedAdjuster<T
         while (flag) {
             try {
                 KeyValue<String> bizIdAccount = (KeyValue<String>) queues.poll();
-                if (bizIdAccount == null) {
-                    continue;
+                if (bizIdAccount != null) {
+                    String account = bizIdAccount.getVal();
+                    ChainPipe pipe = poll(account);
+                    if (pipe != null) {
+                        invoke(pipe);
+                    }
                 }
-
-                String account = bizIdAccount.getVal();
-                ChainPipe pipe = poll(account);
-                invoke(pipe);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            try {
                 Thread.sleep(300);
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -90,10 +87,9 @@ public class SpeedAdjuster<T> extends BaseHandler<T> implements ISpeedAdjuster<T
     @Override
     public void offer(ChainPipe pipe) throws Exception {
         String account = pipe.getSrcAccount().getSrcAddr();
-
         //每个account中多次交易进行队列排序
         if (!map.containsKey(account)) {
-            map.put(account, new LinkedList<ChainPipe>());
+            map.put(account, new LinkedList<ChainPipe>(), ExpirationPolicy.ACCESSED, 20, TimeUnit.MINUTES);
         }
         map.get(account).offer(pipe);
 

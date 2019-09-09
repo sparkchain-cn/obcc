@@ -4,6 +4,7 @@ import cn.obcc.driver.IChainHandler;
 import cn.obcc.config.ExProps;
 import cn.obcc.driver.module.fn.IUpchainFn;
 import cn.obcc.exception.enums.ETransferStatus;
+import cn.obcc.vo.BizState;
 import cn.obcc.vo.RetData;
 import net.jodah.expiringmap.ExpiringMap;
 
@@ -18,13 +19,25 @@ import net.jodah.expiringmap.ExpiringMap;
 public interface IStateMonitor<T> extends IChainHandler<T> {
 
     //hash->state
-    public static ExpiringMap<String, ETransferStatus> StateMap = ExpiringMap.builder()
+    public static ExpiringMap<String, BizState> StateMap = ExpiringMap.builder()
             .variableExpiration()
             .build();
 
-    public void setState(String hash,ETransferStatus status) throws Exception;
+    public static ExpiringMap<String, BizState> BizStateMap = ExpiringMap.builder()
+            .variableExpiration()
+            .build();
 
-    public ETransferStatus getState(String hash) throws Exception;
+    public void setBizState(String bizId, BizState bizState) throws Exception;
+
+    public BizState getBizState(String bizId) throws Exception;
+
+    public boolean existBizState(String bizId) throws Exception;
+
+    public void delBizState(String bizId) throws Exception;
+
+    public void setState(String hash, BizState status) throws Exception;
+
+    public BizState getState(String hash) throws Exception;
 
     public boolean exist(String hash) throws Exception;
 

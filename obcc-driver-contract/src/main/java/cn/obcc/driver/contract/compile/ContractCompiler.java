@@ -1,11 +1,15 @@
-package cn.obcc.driver.contract;
+package cn.obcc.driver.contract.compile;
 
 import cn.obcc.config.ObccConfig;
 import cn.obcc.driver.contract.solc.core.AbiParser;
 import cn.obcc.driver.contract.solc.core.SolcCompiler;
 import cn.obcc.driver.vo.CompileResult;
+import cn.obcc.exception.ObccException;
 import cn.obcc.exception.enums.EContractType;
+import cn.obcc.exception.enums.EExceptionCode;
 import cn.obcc.utils.base.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -18,12 +22,18 @@ import java.util.Map;
  * @details 合约编译器
  */
 public class ContractCompiler {
+    public static final Logger logger = LoggerFactory.getLogger(ContractCompiler.class);
 
-    public static CompileResult compile(String contract, ObccConfig config) {
+
+
+
+    public static CompileResult compile(String contract, ObccConfig config) throws Exception {
         if (config.getContractType() == EContractType.SOLC) {
             return solcCompile(contract, config);
         }
-        return null;
+        logger.error("合约类型{}不支持", config.getContractType());
+        throw ObccException.create(EExceptionCode.CONTRACT_TYPE_NO_SUPPORT, "合约类型不支持");
+        //return null;
     }
 
     /**

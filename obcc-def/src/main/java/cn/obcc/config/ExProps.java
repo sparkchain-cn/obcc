@@ -1,5 +1,7 @@
 package cn.obcc.config;
 
+import cn.obcc.exception.enums.EUpchainType;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,77 +9,85 @@ import java.util.Map;
 
 public class ExProps {
 
-	public static final String INIT_TYPE = "1";
-	public static final String DYNC_TYPE = "2";
-	public static final String MANUL_TYPE = "4";
+    public static final String INIT_TYPE = "1";
+    public static final String DYNC_TYPE = "2";
+    public static final String MANUL_TYPE = "4";
 
-	/**
-	 * 调用的应用系统的ID
-	 */
-	private String appid;
+    private String appid;
 
-	private String sparkHash;
+    private String sparkHash;
 
-	Map<String, Object> params;
+    Map<String, Object> params;
 
-	private List<String> uuids = new ArrayList<>();
+    private List<String> uuids = new ArrayList<>();
 
-	private String type;
+    private String type;
 
-	//是否是需要拆分
-	private boolean needSplit;
+    //是否是需要拆分
+    private boolean needSplit = true;
+    //是需要encode memo
+    private boolean needHandleMemo = true;
 
-	// 关联的连接对象
-	//private T client;
+    EUpchainType upchainType = EUpchainType.Transfer;
 
-	public ExProps() {
-	}
 
-	public String getAppid() {
-		return appid;
-	}
+    public ExProps() {
+    }
 
-	public void setAppid(String appid) {
-		this.appid = appid;
-	}
+    public String getAppid() {
+        return appid;
+    }
 
-	public String getSparkHash() {
-		return sparkHash;
-	}
+    public void setAppid(String appid) {
+        this.appid = appid;
+    }
 
-	public void setSparkHash(String sparkHash) {
-		this.sparkHash = sparkHash;
-	}
+    public String getSparkHash() {
+        return sparkHash;
+    }
 
-	public Map<String, Object> getParams() {
-		return params;
-	}
+    public void setSparkHash(String sparkHash) {
+        this.sparkHash = sparkHash;
+    }
 
-	public void setParams(Map<String, Object> params) {
-		this.params = params;
-	}
+    public Map<String, Object> getParams() {
+        return params;
+    }
 
-	public List<String> getUuids() {
-		return uuids;
-	}
+    public void setParams(Map<String, Object> params) {
+        this.params = params;
+    }
 
-	public void setUuids(List<String> uuids) {
-		this.uuids = uuids;
-	}
+    public List<String> getUuids() {
+        return uuids;
+    }
 
-//	public T getClient() {
-//		return client;
-//	}
-//
-//	public void setClient(T client) {
-//		this.client = client;
-//	}
+    public void setUuids(List<String> uuids) {
+        this.uuids = uuids;
+    }
 
-	public boolean isNeedSplit() {
-		return needSplit;
-	}
+    public boolean isNeedSplit() {
+        return needSplit;
+    }
 
-	public void setNeedSplit(boolean needSplit) {
-		this.needSplit = needSplit;
-	}
+    public void setNeedSplit(boolean needSplit) {
+        this.needSplit = needSplit;
+    }
+
+
+    public EUpchainType getUpchainType() {
+        return upchainType;
+    }
+
+    public void setUpchainType(EUpchainType upchainType) {
+        this.upchainType = upchainType;
+    }
+
+    public boolean isNeedHandleMemo() {
+        return needHandleMemo;
+    }
+
+    public void setNeedHandleMemo(boolean needHandleMemo) {
+        this.needHandleMemo = needHandleMemo;
+    }
 }
