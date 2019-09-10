@@ -2,14 +2,12 @@ package cn.obcc.driver.module;
 
 import cn.obcc.driver.IChainHandler;
 import cn.obcc.driver.module.fn.IUpchainFn;
-import cn.obcc.driver.vo.ChainPipe;
 import cn.obcc.driver.vo.CompileResult;
-import cn.obcc.driver.vo.ContractExecRec;
+import cn.obcc.driver.vo.ContractRec;
 import cn.obcc.driver.vo.SrcAccount;
 import cn.obcc.vo.driver.BlockTxInfo;
 import cn.obcc.vo.driver.ContractInfo;
 import cn.obcc.config.ExProps;
-import cn.obcc.vo.RetData;
 
 import java.util.List;
 
@@ -21,11 +19,11 @@ import java.util.List;
  */
 public interface IContractHandler<T> extends IChainHandler<T> {
 
-    public CompileResult compile(String code, String contract, ExProps config) throws Exception;
+    public CompileResult compile(String bizId, String contract, ExProps config) throws Exception;
 
 
+    public ContractInfo getContract(String bizId, String contractName) throws Exception;
 
-    public ContractInfo getContract(String code, String contractName) throws Exception;
 
     public ContractInfo getContract(String contractAddr) throws Exception;
 
@@ -51,7 +49,7 @@ public interface IContractHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public ContractExecRec parseExecRec(ContractInfo contractInfo, String input) throws Exception;
+    public ContractRec parseTxInfo(ContractInfo contractInfo, String input) throws Exception;
 
 
     /**

@@ -3,13 +3,13 @@ package cn.obcc.driver.module;
 import cn.obcc.driver.IChainHandler;
 import cn.obcc.driver.module.fn.IUpchainFn;
 import cn.obcc.driver.vo.*;
-import cn.obcc.driver.vo.params.TokenParams;
 import cn.obcc.vo.driver.BlockTxInfo;
+import cn.obcc.vo.driver.ContractInfo;
 import cn.obcc.vo.driver.TokenInfo;
 import cn.obcc.config.ExProps;
-import cn.obcc.vo.RetData;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 
 /**
  * @author mgicode
@@ -26,21 +26,18 @@ public interface ITokenHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public void createToken(String bizId, SrcAccount account, TokenParams params,
-                            IUpchainFn<BlockTxInfo> fn, ExProps config) throws Exception;
+    void createToken(String bizId, SrcAccount account, String contract, String contractName,
+                     String tokenName, String tokenCode, Long tokenSupply,
+                     IUpchainFn<BlockTxInfo> fn, ExProps config) throws Exception;
 
     /**
      * 已经存在的token，add上去
      *
-     * @param bizId
-     * @param params
-     * @param fn
-     * @param config
+     * @param info
      * @return
      * @throws Exception
      */
-    public RetData<String> addToken(String bizId, TokenInfo params,
-                                    IUpchainFn<BlockTxInfo> fn, ExProps config) throws Exception;
+    public void addToken(TokenInfo info) throws Exception;
 
     /**
      * 根据合约地址判断是否为token
@@ -48,8 +45,15 @@ public interface ITokenHandler<T> extends IChainHandler<T> {
      * @param contractAddr
      * @return
      */
-    public boolean isToken(String contractAddr) throws Exception;
+    public boolean isExistToken(String contractAddr) throws Exception;
 
+
+    /**
+     * @param contractAddr
+     * @return
+     * @throws Exception
+     */
+    public TokenInfo getToken(String contractAddr) throws Exception;
 
     /**
      * 根据区块的记录解析出来其方法名和参数
@@ -58,71 +62,79 @@ public interface ITokenHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public ContractExecRec parseExecRec(TokenInfo info, String input) throws Exception;
-
-
-    public default boolean isToken(TokenInfo info, ContractExecRec rec) {
-        if (info.getTransferName() != null && info.getTransferName().equals(rec.getMethod())) {
-            return true;
-        }
-        return false;
-    }
-
-    public default TokenRec parseExecRec(TokenInfo info, ContractExecRec rec) throws Exception {
-
-        if (rec == null) return null;
-
-        if (info.getTransferName() != null && info.getTransferName().equals(rec.getMethod())) {
-            TokenRec tokenRec = new TokenRec();
-            if (rec.getParams().size() == 3) {
-                tokenRec.setDestAddr(rec.getParams().get(0).getVal());
-                tokenRec.setAmount(rec.getParams().get(1).getVal());
-                tokenRec.setMemo(rec.getParams().get(2).getVal());
-            } else if (rec.getParams().size() == 2) {
-                tokenRec.setDestAddr(rec.getParams().get(0).getVal());
-                tokenRec.setAmount(rec.getParams().get(1).getVal());
-            }
-        }
-        return null;
-    }
-
     /**
-     * @param tokenCodeOrContractAddr
+     * 主要用来处理精度问题
+     *
+     * @param contractAddr
+     * @param rec
      * @return
      * @throws Exception
      */
-    public TokenInfo getToken(String tokenCodeOrContractAddr) throws Exception;
+    public TokenRec parseTxInfo(String contractAddr, ContractRec rec) throws Exception;
 
 
     public String balanceOf(TokenInfo token, String address, ExProps config) throws Exception;
 
-    public String freezeOf(TokenInfo token, String address, ExProps config) throws Exception;
 
-    public BlockTxInfo operateInfo(TokenInfo token, String hash, ExProps config) throws Exception;
-
-    /**********************************************************************************************************/
     public String transfer(String bizId, SrcAccount account, TokenInfo token,
-                                    String destAccount, ExProps config, IUpchainFn<BlockTxInfo> fn) throws Exception;
+                           String destAccount, String amount, ExProps config, IUpchainFn<BlockTxInfo> fn) throws Exception;
 
-    public String freeze(String bizId, SrcAccount account, TokenInfo token,
-                                  BigInteger amount, ExProps config, IUpchainFn<BlockTxInfo> fn) throws Exception;
 
-    public String unfreeze(String bizId, SrcAccount account, TokenInfo token,
-                                    BigInteger amount, ExProps config, IUpchainFn<BlockTxInfo> fn) throws Exception;
-
-    /*********************************************************************************************/
+    /**
+     * burn(uint256 _value)
+     *
+     * @param bizId
+     * @param account
+     * @param token
+     * @param amount
+     * @param config
+     * @param fn
+     * @return
+     * @throws Exception
+     */
     public String burn(String bizId, SrcAccount account, TokenInfo token,
-                                BigInteger amount, ExProps config) throws Exception;
+                       String amount, ExProps config, IUpchainFn<BlockTxInfo> fn) throws Exception;
 
+    /**
+     * @param bizId
+     * @param account
+     * @param token
+     * @param amount
+     * @param config
+     * @return
+     * @throws Exception
+     */
     public String supply(String bizId, SrcAccount account, TokenInfo token,
-                                  BigInteger amount, ExProps config) throws Exception;
+                         String amount, ExProps config, IUpchainFn<BlockTxInfo> fn) throws Exception;
 
-    /*************************************************************************************************************/
-    public String approve(String bizId, SrcAccount account, TokenInfo token,
-                                   String destAccount, BigInteger amount, ExProps config) throws Exception;
+    /**
+     * approve(address _spender, uint256 _value)
+     *
+     * @param bizId
+     * @param account
+     * @param token
+     * @param spenderAddr
+     * @param amount
+     * @param config
+     * @return
+     * @throws Exception
+     */
+    public String approve(String bizId, SrcAccount account, TokenInfo token, String spenderAddr, String
+            amount, ExProps config, IUpchainFn<BlockTxInfo> fn) throws Exception;
 
-    public String transferFrom(String bizId, SrcAccount account, TokenInfo token,
-                                        BigInteger amount, ExProps config) throws Exception;
-    /**************************************************************************************************/
+    /**
+     * transferFrom(address _from, address _to, uint256 _value)
+     *
+     * @param bizId
+     * @param account
+     * @param token
+     * @param amount
+     * @param config
+     * @return
+     * @throws Exception
+     */
+    public String transferFrom(String bizId, SrcAccount account, TokenInfo token, String srcAddr,
+                               String toAddr, String amount, ExProps config, IUpchainFn<BlockTxInfo> fn) throws Exception;
+
 
 }

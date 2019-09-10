@@ -2,22 +2,20 @@ package cn.obcc.driver.eth.module;
 
 import cn.obcc.config.ExProps;
 import cn.obcc.driver.contract.ContractHandler;
-import cn.obcc.driver.contract.compile.ContractCompiler;
 import cn.obcc.driver.contract.solc.core.AbiParser;
 import cn.obcc.driver.eth.module.contract.ContractEncoder;
 import cn.obcc.driver.module.IContractHandler;
 import cn.obcc.driver.module.fn.IUpchainFn;
 import cn.obcc.driver.vo.ChainPipe;
-import cn.obcc.driver.vo.ContractExecRec;
+import cn.obcc.driver.vo.ContractRec;
 import cn.obcc.driver.vo.SrcAccount;
 import cn.obcc.exception.ObccException;
 import cn.obcc.exception.enums.EChainTxType;
 import cn.obcc.exception.enums.EExceptionCode;
-import cn.obcc.exception.enums.ETransferStatus;
 import cn.obcc.exception.enums.EUpchainType;
 import cn.obcc.utils.base.StringUtils;
 import cn.obcc.uuid.UuidUtils;
-import cn.obcc.vo.RetData;
+import cn.obcc.vo.KeyValue;
 import cn.obcc.vo.driver.BlockTxInfo;
 import cn.obcc.vo.driver.ContractInfo;
 import org.web3j.abi.FunctionEncoder;
@@ -28,6 +26,7 @@ import org.web3j.protocol.core.methods.request.Transaction;
 import org.web3j.protocol.core.methods.response.EthCall;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,8 +35,22 @@ public class EthContractHandler extends ContractHandler<Web3j> implements IContr
 
 
     @Override
-    public ContractExecRec parseExecRec(ContractInfo contractInfo, String input) throws Exception {
-        return null;
+    public ContractRec parseTxInfo(ContractInfo contractInfo, String input) throws Exception {
+
+        //methodId->methodName
+        Map<String, String> idNameMap = contractInfo.getMethodIdNameMap();
+        String methodName = idNameMap.get(input.substring(0, 12));
+
+        ContractRec rec = new ContractRec();
+        rec.setMethod(methodName);
+
+        List<String> inputNames = AbiParser.getFunctionInputNames(contractInfo.getAbi(), methodName);
+        List<String> inputTypes = AbiParser.getFunctionInputTypes(contractInfo.getAbi(), methodName);
+        //name->values
+        List<KeyValue> values = ContractEncoder.decodeParameters(input.substring(12), inputNames, ContractEncoder.genInputParamTypes(inputTypes));
+
+        rec.setParams(values);
+        return rec;
     }
 
     @Override
@@ -61,8 +74,20 @@ public class EthContractHandler extends ContractHandler<Web3j> implements IContr
 
 
     @Override
-    public String invoke(String bizId, ContractInfo contractInfo,
-                         SrcAccount srcAccount, ExProps config, IUpchainFn<BlockTxInfo> fn, String methodName, List<String> params) throws Exception {
+    protected Map<String, String> buildMethodNameIdMap(ContractInfo contractInfo) {
+        List<String> names = AbiParser.getMethodNames(contractInfo.getAbi());
+        Map<String, String> map = new HashMap<>();
+        for (String name : names) {
+            List<String> inputTypes = AbiParser.getFunctionInputTypes(contractInfo.getAbi(), name);
+            String methodId = ContractEncoder.buildMethodId(name, inputTypes);
+            map.put(methodId, name);
+        }
+        return map;
+    }
+
+    @Override
+    public String invoke(String bizId, ContractInfo contractInfo, SrcAccount srcAccount,
+                         ExProps config, IUpchainFn<BlockTxInfo> fn, String methodName, List<String> params) throws Exception {
 
         try {
             String hex = getInvokeHexData(contractInfo.getAbi(), methodName, params);

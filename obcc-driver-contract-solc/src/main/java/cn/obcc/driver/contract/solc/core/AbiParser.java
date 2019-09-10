@@ -4,6 +4,7 @@ import cn.obcc.utils.base.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,6 +81,24 @@ public class AbiParser {
         return null;
     }
 
+    public static boolean exist(String abi, String functionName) {
+        if (StringUtils.isNullOrEmpty(abi) || StringUtils.isNullOrEmpty(functionName)) {
+            return false;
+        }
+        try {
+            JSONArray array = JSON.parseArray(abi);
+            for (Object object : array) {
+                Map<String, Object> function = (Map<String, Object>) object;
+
+                if (functionName.equals(function.get("name"))) {
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     //    {
     //        "payable": false,
@@ -106,6 +125,35 @@ public class AbiParser {
         return null;
     }
 
+
+//        "name": "transfer",
+//         "stateMutability": "nonpayable",
+//          "type": "function"
+
+    public static List<String> getMethodNames(String abi) {
+        if (StringUtils.isNullOrEmpty(abi)) {
+            return null;
+        }
+//        JSON.parseArray(abi).stream().filter(((Map<String, Object>) x)->{
+//            return "function".equals(x.get("type")) && "nonpayable".equals(x.get("stateMutability"))
+//        })
+
+        List<String> ret = new ArrayList<>();
+        try {
+            JSONArray array = JSON.parseArray(abi);
+            for (Object object : array) {
+                Map<String, Object> function = (Map<String, Object>) object;
+
+                if ("function".equals(function.get("type")) && "nonpayable".equals(function.get("stateMutability"))) {
+                    ret.add((String) function.get("name"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ret;
+    }
+
     //"inputs": [
 //    {
 //        "indexed": true,
@@ -129,6 +177,7 @@ public class AbiParser {
         return convertToMap(elements);
     }
 
+
     public static List<String> getConstructorInputTypes(String abi) {
         Map<String, Object> function = getConstructor(abi);
         List<Map<String, Object>> elements = (List<Map<String, Object>>) function.get("inputs");
@@ -144,6 +193,16 @@ public class AbiParser {
         List<Map<String, Object>> elements = (List<Map<String, Object>>) function.get("inputs");
         List<String> ret = elements.stream().map((e) -> {
             return (String) e.get("type");
+        }).collect(Collectors.toList());
+
+        return ret;
+    }
+
+    public static List<String> getFunctionInputNames(String abi, String functionName) {
+        Map<String, Object> function = getFunction(abi, functionName);
+        List<Map<String, Object>> elements = (List<Map<String, Object>>) function.get("inputs");
+        List<String> ret = elements.stream().map((e) -> {
+            return (String) e.get("name");
         }).collect(Collectors.toList());
 
         return ret;
@@ -169,5 +228,6 @@ public class AbiParser {
         }
         return inputsMap;
     }
+
 
 }

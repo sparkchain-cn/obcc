@@ -1,13 +1,11 @@
 package cn.obcc.driver.eth.module.tech.common;
 
 import cn.obcc.driver.IChainDriver;
-import cn.obcc.driver.eth.module.tech.callback.EthNewBlockMonitor;
 import cn.obcc.driver.eth.utils.ContractUtils;
-import cn.obcc.driver.eth.utils.EthUtils;
 import cn.obcc.driver.eth.utils.GasFeeUtils;
 import cn.obcc.driver.module.IContractHandler;
 import cn.obcc.driver.module.ITokenHandler;
-import cn.obcc.driver.vo.ContractExecRec;
+import cn.obcc.driver.vo.ContractRec;
 import cn.obcc.driver.vo.TokenRec;
 import cn.obcc.exception.enums.EChainTxType;
 import cn.obcc.exception.enums.ETransferStatus;
@@ -16,7 +14,6 @@ import cn.obcc.utils.base.StringUtils;
 import cn.obcc.vo.BcMemo;
 import cn.obcc.vo.driver.BlockTxInfo;
 import cn.obcc.vo.driver.ContractInfo;
-import cn.obcc.vo.driver.TokenInfo;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,11 +80,11 @@ public class BlockTxInfoParser {
             txInfo.setBlockTime(getTradeTime(web3j, blockHash));
             if (!StringUtils.isNullOrEmpty(txInfo.getMemos())) {
                 String preHex = driver.getObccConfig().getMemoPreHex();
-               // if (txInfo.getMemos().startsWith(preHex)) {
-                  //  int preHexLen = preHex.length();
-                    BcMemo memo = driver.getMemoParser().decode(txInfo.getMemos());
-                    txInfo.setMemosObj(memo);
-               // }
+                // if (txInfo.getMemos().startsWith(preHex)) {
+                //  int preHexLen = preHex.length();
+                BcMemo memo = driver.getMemoParser().decode(txInfo.getMemos());
+                txInfo.setMemosObj(memo);
+                // }
             }
             return txInfo;
 
@@ -107,7 +104,7 @@ public class BlockTxInfoParser {
         if (contractInfo == null) {
             logger.debug("Contract " + t.getTo() + "is not  Contract  registed in this system.");
         }
-        ContractExecRec rec = contractHandler.parseExecRec(contractInfo, t.getInput());
+        ContractRec rec = contractHandler.parseTxInfo(contractInfo, t.getInput());
 
         tx.setTxType(EChainTxType.Contract);
         tx.setContractAddress(t.getTo());
@@ -118,9 +115,8 @@ public class BlockTxInfoParser {
             logger.warn("can not parse the  ");
         }
 
-        if (tokenHandler.isToken(t.getTo())) {
-            TokenInfo tokenInfo = tokenHandler.getToken(t.getTo());
-            TokenRec tokenRec = tokenHandler.parseExecRec(tokenInfo, rec);
+        if (tokenHandler.isExistToken(t.getTo())) {
+            TokenRec tokenRec = tokenHandler.parseTxInfo(t.getTo(), rec);
             tx.setDestAddr(tokenRec.getDestAddr());
             tx.setAmount(tokenRec.getAmount());
             tx.setMemos(tokenRec.getMemo());

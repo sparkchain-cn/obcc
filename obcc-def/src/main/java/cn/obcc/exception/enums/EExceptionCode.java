@@ -40,8 +40,8 @@ public enum EExceptionCode {
     SPRING_NOT_FINISH_INIT("1004", "Spring尚未初始化完成"),
     CAN_NOT_FIND_SERVER_INSTANCE_IP("1005", "Consul取不到实例的IP"),
 
-    INPUT_NOT_RIGHT("3007","The accessToken has not been inputed or the value has expired."),
-    VIEW_CHAIN_QUEUE_PENDING("5011","获取 penging or queue 队列失败"),
+    INPUT_NOT_RIGHT("3007", "The accessToken has not been inputed or the value has expired."),
+    VIEW_CHAIN_QUEUE_PENDING("5011", "获取 penging or queue 队列失败"),
 
     // 2000系，网络类
     IO_EXCEPTION("2000", "IO 异常"),
@@ -60,8 +60,8 @@ public enum EExceptionCode {
     PASSWORD_OR_KEY_NOT_MATCH("32038", "密码不匹配"),
     NOT_ENOUGH_MONEY("32039", "余额不足"),
     MEMO_TOO_LONG("32040", "备注信息过长"),
-    ACCOUNT_ACTIVATED("32041","钱包已经被激活"),
-    NOT_WALLET_REL_CHAIN("32042","钱包已经被激活"),
+    ACCOUNT_ACTIVATED("32041", "钱包已经被激活"),
+    NOT_WALLET_REL_CHAIN("32042", "钱包已经被激活"),
 
     //SIDE_CAR
     SIDE_CAR_NO_LOCAL_METHOD("40001", "边车本地调用没有找到本地的执行方法"),
@@ -73,62 +73,65 @@ public enum EExceptionCode {
     UPCHAIN_STATE_NONCE_NULL("41004", "链上取的nonce返回Null."),
     // 4000系，链上操作类
 
-    ORIGN_CHAIN_ERROR("4000","原生链上的错误。"),
+    ORIGN_CHAIN_ERROR("4000", "原生链上的错误。"),
 
-    NOT_FIND_CHAIN_CONFIG("4001",""),
+    NOT_FIND_CHAIN_CONFIG("4001", ""),
 
-    NOT_FIND_CHAIN_IP("4002","找不到链对应IP地址"),
+    NOT_FIND_CHAIN_IP("4002", "找不到链对应IP地址"),
 
-    NOT_FIND_ANY_OPEN_CONNECTION("4003","找不到任何的打开的连接"),
+    NOT_FIND_ANY_OPEN_CONNECTION("4003", "找不到任何的打开的连接"),
 
-    CREATE_ACCOUNT_FAIL("4004","创建账号失败"),
+    CREATE_ACCOUNT_FAIL("4004", "创建账号失败"),
 
-    ACCOUNT_NOT_ACTIVATED("4005","账号未激活，只有井通"),
+    ACCOUNT_NOT_ACTIVATED("4005", "账号未激活，只有井通"),
 
-    ACCOUNT_NOT_SUPPORT_TOKEN("4006","账号不支持该TOKEN"),
+    ACCOUNT_NOT_SUPPORT_TOKEN("4006", "账号不支持该TOKEN"),
 
-    ACCOUNT_ADDR_ILLEGAL("4007","账号地址是非法的，长度不符合要求或字符不符合要求"),
+    ACCOUNT_ADDR_ILLEGAL("4007", "账号地址是非法的，长度不符合要求或字符不符合要求"),
 
-    ACCOUNT_SECRET_ILLEGAL("4008","账号私钥是非法的，长度不符合要求或字符不符合要"),
+    ACCOUNT_SECRET_ILLEGAL("4008", "账号私钥是非法的，长度不符合要求或字符不符合要"),
 
-    ACCOUNT_NOT_IN_USE("4020","该账号暂停使用，可能是余额不足"),
+    ACCOUNT_NOT_IN_USE("4020", "该账号暂停使用，可能是余额不足"),
 
-    TRADE_HASH_ILLEGAL("4009","交易Hash格式不对，长度不符合要求或字符不符合要求"),
+    TRADE_HASH_ILLEGAL("4009", "交易Hash格式不对，长度不符合要求或字符不符合要求"),
 
-    ACCOUNT_SECRET_NOT_FOLLOW_ADDR("4010","账号私钥和公钥不相符"),
+    ACCOUNT_SECRET_NOT_FOLLOW_ADDR("4010", "账号私钥和公钥不相符"),
 
-    AMOUNT_ILLEGAL("4011","金额格式不对"),
+    AMOUNT_ILLEGAL("4011", "金额格式不对"),
 
-    FETCH_NONCE_FAIL("4012","取nonce失败"),
+    FETCH_NONCE_FAIL("4012", "取nonce失败"),
 
-    FETCH_BALANCE_FAIL("4013","取余额失败"),
+    FETCH_BALANCE_FAIL("4013", "取余额失败"),
 
-    FETCH_TX_FAIL("4014","取流水失败"),
+    FETCH_TX_FAIL("4014", "取流水失败"),
 
-    TRANSFER_FAIL("4015","交易失败"),
+    TRANSFER_FAIL("4015", "交易失败"),
 
-    TRANSFER_SIGN_ERROR("4016","交易签名失败"),
+    TRANSFER_SIGN_ERROR("4016", "交易签名失败"),
 
-    DEPLOY_FAIL("4017","部署合约失败"),
+    DEPLOY_FAIL("4017", "部署合约失败"),
 
-    RETURN_NULL_OR_EMPTY("4018","链返回空或NULL"),
+    RETURN_NULL_OR_EMPTY("4018", "链返回空或NULL"),
 
-    MEMO_PARSE_ERROR("4019","解析Memo出错"),
+    MEMO_PARSE_ERROR("4019", "解析Memo出错"),
 
-    CONTRACT_COMPILE_ERROR("4020","合约编译失败"),
-    CONTRACT_TYPE_NO_SUPPORT("4021","合约类型不支持"),
+    CONTRACT_COMPILE_ERROR("4020", "合约编译失败"),
+    CONTRACT_TYPE_NO_SUPPORT("4021", "合约类型不支持"),
+
+    CONTENT_NOT_FOUND("4022", "内容没有找到"),
+
     //6000系，加密解密类
-    NO_SUCH_ALGORITHM_EXCEPTION("6001",""),
+    NO_SUCH_ALGORITHM_EXCEPTION("6001", ""),
 
-    NO_SUCH_PROVIDER_EXCEPTION("6002",""),
+    NO_SUCH_PROVIDER_EXCEPTION("6002", ""),
 
-    INVALID_KEYSPEC_EXCEPTION("6003",""),
+    INVALID_KEYSPEC_EXCEPTION("6003", ""),
 
-    UNSUPPORTED_ENCODING_EXCEPTION("6004",""),
+    UNSUPPORTED_ENCODING_EXCEPTION("6004", ""),
 
-    ILLEGAL_ARGUMENT_EXCEPTION("6005",""),
+    ILLEGAL_ARGUMENT_EXCEPTION("6005", ""),
 
-    CONVERT_EXCEPTION("6006","转换出错，base64,hex");
+    CONVERT_EXCEPTION("6006", "转换出错，base64,hex");
 
 
     private String name;

@@ -12,11 +12,11 @@ import java.util.List;
  * @desc
  * @data 2019/9/2 17:02
  **/
-public class ContractExecRec {
+public class ContractRec {
 
-    private String  method;
+    private String method;
 
-    private List<KeyValue<String>> params=new ArrayList<>();
+    private List<KeyValue> params = new ArrayList<>();
 
 
     public String getMethod() {
@@ -27,11 +27,11 @@ public class ContractExecRec {
         this.method = method;
     }
 
-    public List<KeyValue<String>> getParams() {
+    public List<KeyValue> getParams() {
         return params;
     }
 
-    public void setParams(List<KeyValue<String>> params) {
+    public void setParams(List<KeyValue> params) {
         this.params = params;
     }
 }

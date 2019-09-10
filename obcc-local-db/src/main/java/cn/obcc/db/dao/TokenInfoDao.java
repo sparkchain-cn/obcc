@@ -20,6 +20,7 @@ public class TokenInfoDao extends JdbcTemplateDao<TokenInfo, Long> implements Jd
         return " CREATE TABLE " + this.tableName() + " (" +
                 primaryKeyName() + "  bigint(80) NOT NULL," +
                 " biz_id varchar(200) DEFAULT NULL," +
+                " hash varchar(200) DEFAULT NULL," +
                 " contract varchar(200) DEFAULT NULL," +
                 " code varchar(200) DEFAULT NULL," +
                 " name varchar(200) DEFAULT NULL," +

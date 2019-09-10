@@ -17,6 +17,7 @@ import cn.obcc.uuid.UuidUtils;
 import cn.obcc.vo.RetData;
 import cn.obcc.vo.driver.BlockTxInfo;
 import cn.obcc.vo.driver.ContractInfo;
+import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +36,8 @@ import java.util.Map;
 public abstract class ContractHandler<T> extends BaseHandler<T> implements IContractHandler<T> {
     public static final Logger logger = LoggerFactory.getLogger(ContractHandler.class);
 
+    protected abstract Map<String, String> buildMethodNameIdMap(ContractInfo contractInfo);
+
     @Override
     public CompileResult compile(String bizId, String contract, ExProps config) throws Exception {
         CompileResult contractCompile = ContractCompiler.compile(contract, getObccConfig());
@@ -48,6 +51,7 @@ public abstract class ContractHandler<T> extends BaseHandler<T> implements ICont
             contractInfo.setAbi(contractBin.getAbi());
             contractInfo.setBin(contractBin.getBinary());
             contractInfo.setContent(contract);
+            contractInfo.setMethodNameIdMapStr(JSON.toJSONString(buildMethodNameIdMap(contractInfo)));
             try {
                 getDriver().getLocalDb().getContractInfoDao().add(contractInfo);
             } catch (Exception e) {

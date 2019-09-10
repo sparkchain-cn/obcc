@@ -6,11 +6,9 @@ import cn.obcc.driver.contract.ContractHandler;
 import cn.obcc.driver.module.fn.IUpchainFn;
 import cn.obcc.driver.vo.ChainPipe;
 import cn.obcc.driver.vo.CompileResult;
-import cn.obcc.driver.vo.ContractExecRec;
+import cn.obcc.driver.vo.ContractRec;
 import cn.obcc.driver.vo.SrcAccount;
 import cn.obcc.exception.enums.EContractType;
-import cn.obcc.vo.RetData;
-import cn.obcc.vo.driver.BlockTxInfo;
 import cn.obcc.vo.driver.ContractInfo;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -48,7 +46,7 @@ public class ContractHandlerTest {
             }
 
             @Override
-            public ContractExecRec parseExecRec(ContractInfo contractInfo, String input) throws Exception {
+            public ContractRec parseTxInfo(ContractInfo contractInfo, String input) throws Exception {
                 return null;
             }
         };

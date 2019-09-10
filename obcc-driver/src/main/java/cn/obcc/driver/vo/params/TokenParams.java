@@ -10,7 +10,7 @@ public class TokenParams implements Serializable {
     private String contract;
     private String code;
     private String name;
-    private BigInteger supply;
+    private Long supply;
     private int precisions = 18;
 
 
@@ -38,11 +38,11 @@ public class TokenParams implements Serializable {
         this.name = name;
     }
 
-    public BigInteger getSupply() {
+    public Long getSupply() {
         return supply;
     }
 
-    public void setSupply(BigInteger supply) {
+    public void setSupply(Long supply) {
         this.supply = supply;
     }
 

@@ -808,6 +808,21 @@ public class BeanUtil {
         return null;
     }
 
+
+    public static Object newInstance(String className) {
+        try {
+            BeanUtil.class.getClassLoader().loadClass(className).newInstance();
+
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static Object invoke(Object o, Method m) {
         try {
             return m.invoke(o);

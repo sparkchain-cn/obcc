@@ -8,9 +8,18 @@ package cn.obcc.driver.vo;
  * @data 2019/9/2 17:11
  **/
 public class TokenRec {
+    private String method;
     private String destAddr;
     private String  amount;
     private  String memo;
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
+    }
 
     public String getDestAddr() {
         return destAddr;

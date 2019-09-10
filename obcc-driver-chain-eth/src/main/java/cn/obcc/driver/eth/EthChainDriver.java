@@ -18,6 +18,7 @@ import cn.obcc.driver.eth.module.tech.EthStateMonitor;
 import cn.obcc.driver.tech.INonceCalculator;
 import cn.obcc.driver.tech.IStateMonitor;
 import cn.obcc.driver.tech.ITxSignatureHandler;
+import org.web3j.utils.Convert;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +37,7 @@ public class EthChainDriver extends BaseChainDriver<Web3j> implements IChainDriv
             put(EDriverHandlerType.NonceCalculator.getName(), EthNonceCalculator.class);
             put(EDriverHandlerType.TxSignatureHandler.getName(), EthTxSignatureHandler.class);
             put(EDriverHandlerType.MemoParser.getName(), EthMemoParser.class);
+
         }};
     }
 
