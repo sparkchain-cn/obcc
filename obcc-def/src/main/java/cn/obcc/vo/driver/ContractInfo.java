@@ -1,12 +1,15 @@
 package cn.obcc.vo.driver;
 
 import cn.obcc.vo.Entity;
+import com.alibaba.fastjson.JSON;
 
 import javax.persistence.Column;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import java.util.Map;
 
 @Table(name = "contract_info")
-public class ContractInfo  extends Entity {
+public class ContractInfo extends Entity {
 
     private String bizId; //unique
 
@@ -15,6 +18,8 @@ public class ContractInfo  extends Entity {
     private String content;
     private String abi;
     private String bin;
+    //{"transfer":"0x2323233","burn":"03de3scdds"}
+    private String methodNameIdMapStr;
 
     private String hash;
     private String contractAddr;
@@ -64,6 +69,7 @@ public class ContractInfo  extends Entity {
     public void setHash(String hash) {
         this.hash = hash;
     }
+
     @Column(name = "contract_addr")
     public String getContractAddr() {
         return contractAddr;
@@ -80,6 +86,7 @@ public class ContractInfo  extends Entity {
     public void setState(int state) {
         this.state = state;
     }
+
     @Column(name = "compile_result")
     public String getCompileResult() {
         return compileResult;
@@ -88,6 +95,7 @@ public class ContractInfo  extends Entity {
     public void setCompileResult(String compileResult) {
         this.compileResult = compileResult;
     }
+
     @Column(name = "compile_exception")
     public String getCompileException() {
         return compileException;
@@ -103,5 +111,18 @@ public class ContractInfo  extends Entity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getMethodNameIdMapStr() {
+        return methodNameIdMapStr;
+    }
+
+    public void setMethodNameIdMapStr(String methodNameIdMapStr) {
+        this.methodNameIdMapStr = methodNameIdMapStr;
+    }
+
+    @Transient
+    public Map<String, String> getMethodIdNameMap() {
+        return (Map<String, String> )JSON.parse(getMethodNameIdMapStr());
     }
 }

@@ -10,6 +10,7 @@ import java.math.BigInteger;
 public class TokenInfo extends Entity {
 
     private String bizId;//unique
+    private String hash;
     private String contract;
     private String code;
     private String name;
@@ -20,8 +21,17 @@ public class TokenInfo extends Entity {
     private String contractAddress;
     private int state;
 
+    public String getParseClsName() {
+        return parseClsName;
+    }
+
+    public void setParseClsName(String parseClsName) {
+        this.parseClsName = parseClsName;
+    }
+
+    private String parseClsName;
     //转币的方法名
-    private String transferName;
+    private String transferName = "transfer";
     //private String chainCode;
 
     public String getContract() {
@@ -107,8 +117,15 @@ public class TokenInfo extends Entity {
         this.transferName = transferName;
     }
 
+    public String getHash() {
+        return hash;
+    }
 
-    //    public String getChainCode() {
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
+//    public String getChainCode() {
 //        return chainCode;
 //    }
 //
