@@ -10,7 +10,7 @@ public interface ILedgerStatement extends IStatement {
      * 直接激活<br>
      * pengrk created or updated at 2019年8月22日 上午11:27:23
      */
-    public void createAccount(String bizId,String username, String pwd) throws Exception;
+    public void createAccount(String bizId, String username, String pwd) throws Exception;
 
     /**
      * 给指定用户激活的原生币数 ,主要用于gas不够<br>
@@ -36,7 +36,7 @@ public interface ILedgerStatement extends IStatement {
      * <p>
      * pengrk created or updated at 2019年8月22日 上午11:38:54
      */
-    public void getBalance(String username, String tokenCode) throws Exception;
+    public String getBalance(String username, String tokenCode) throws Exception;
 
     /**
      * 查看指定用户指定币种的账单<br>
@@ -46,7 +46,7 @@ public interface ILedgerStatement extends IStatement {
      * @param username
      * @param tokenCode
      * @param destUser
-     * @param limit        筛选金额表达式  "x<10,x>5,x>10 or x<5, x>5 and x<10
+     * @param limit     筛选金额表达式  "x<10,x>5,x>10 or x<5, x>5 and x<10
      * @return
      * @throws Exception
      */

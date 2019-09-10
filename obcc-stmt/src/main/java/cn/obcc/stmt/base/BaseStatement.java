@@ -9,20 +9,17 @@ import cn.obcc.stmt.IStatement;
 public class BaseStatement implements IStatement {
 
     protected ObccConfig config;
-    protected IChainDriver driverManager;
+    protected IChainDriver driver;
 
     protected DbFactory localDb;
 
     @Override
-    public void init(ObccConfig config, DbFactory db) {
+    public void init(ObccConfig config, DbFactory db, IChainDriver driver) {
         this.config = config;
         this.localDb = db;
+        this.driver = driver;
     }
 
-    @Override
-    public void setDriverManager(IChainDriver driverManager) {
-        this.driverManager = driverManager;
-    }
 
     @Override
     public DbFactory getLocalDb() {
@@ -31,8 +28,10 @@ public class BaseStatement implements IStatement {
 
     @Override
     public void destory() {
-
-
     }
 
+
+    public IChainDriver getDriver() {
+        return driver;
+    }
 }

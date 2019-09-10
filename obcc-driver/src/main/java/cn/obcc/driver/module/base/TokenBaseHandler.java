@@ -36,6 +36,12 @@ import java.util.List;
 public abstract class TokenBaseHandler<T> extends BaseHandler<T> implements ITokenHandler<T> {
     public static final Logger logger = LoggerFactory.getLogger(TokenBaseHandler.class);
 
+    @Override
+    public void createToken(String bizId, SrcAccount account, String tokenName, String tokenCode, Long tokenSupply,
+                            IUpchainFn<BlockTxInfo> fn, ExProps config) throws Exception {
+
+         createToken(bizId, account, null, null, tokenName, tokenCode, tokenSupply, fn, config);
+    }
 
     @Override
     public void createToken(String bizId, SrcAccount account, String contract, String contractName,
@@ -119,7 +125,9 @@ public abstract class TokenBaseHandler<T> extends BaseHandler<T> implements ITok
 
     @Override
     public TokenInfo getToken(String ContractAddr) throws Exception {
-        List<TokenInfo> list = getDriver().getLocalDb().getTokenInfoDao().query(" contractAddress = ?", new Object[]{ContractAddr});
+        List<TokenInfo> list = getDriver().getLocalDb().getTokenInfoDao().
+                query(" contractAddress = ? or code= ?",
+                        new Object[]{ContractAddr, ContractAddr});
         if (list == null || list.size() < 1) return null;
         return list.get(0);
     }

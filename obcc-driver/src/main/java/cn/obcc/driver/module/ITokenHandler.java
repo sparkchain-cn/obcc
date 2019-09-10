@@ -19,6 +19,9 @@ import java.util.ArrayList;
  */
 public interface ITokenHandler<T> extends IChainHandler<T> {
 
+    public void createToken(String bizId, SrcAccount account, String tokenName, String tokenCode, Long tokenSupply,
+                            IUpchainFn<BlockTxInfo> fn, ExProps config) throws Exception;
+
     /**
      * 调用合约编译，deploy，写到文件或sqlite中 pengrk created or updated at 2019年8月23日 下午5:28:03
      *

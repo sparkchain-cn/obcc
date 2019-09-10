@@ -6,12 +6,13 @@ import cn.obcc.driver.IChainDriver;
 
 public interface IStatement {
 
-	public void init(ObccConfig config, DbFactory db);
+    public void init(ObccConfig config, DbFactory db, IChainDriver driver);
 
-	public void setDriverManager(IChainDriver driverManager);
 
-	public DbFactory getLocalDb();
+    public DbFactory getLocalDb();
 
-	public void destory();
+    public IChainDriver getDriver();
+
+    public void destory();
 
 }

@@ -6,11 +6,17 @@ import java.util.List;
 import cn.obcc.config.conn.pool.ChainNodeWeight;
 import cn.obcc.config.conn.pool.ConnPoolConfig;
 import cn.obcc.exception.enums.*;
+import cn.obcc.vo.KeyValue;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
 
+@Getter
+@Setter
+@ToString
 public class ObccConfig {
-
     @NotBlank
     private String clientId = "obcc";
     @NotBlank
@@ -54,6 +60,27 @@ public class ObccConfig {
 
     private List<String> uuids = new ArrayList<>();
 
+
+    private KeyValue<String> tokenCreateAccount = new KeyValue<String>() {
+        {
+            setKey("0x787172b7f5e6465a06a699b2a88bb1143a01e138");
+            setVal("d66b74561cf0d96766e527122085bb93e777cc758a3a6f485598325cf315209b");
+        }
+    };
+
+    private KeyValue<String> storageSrcAccount = new KeyValue<String>() {
+        {
+            setKey("0x787172b7f5e6465a06a699b2a88bb1143a01e138");
+            setVal("d66b74561cf0d96766e527122085bb93e777cc758a3a6f485598325cf315209b");
+        }
+    };
+
+    private KeyValue<String> storageDestAccount = new KeyValue<String>() {
+        {
+            setKey("0x787172b7f5e6465a06a699b2a88bb1143a01e138");
+            setVal("d66b74561cf0d96766e527122085bb93e777cc758a3a6f485598325cf315209b");
+        }
+    };
     /**
      * 初始化账号(创世账号)
      */
@@ -63,17 +90,6 @@ public class ObccConfig {
      */
     private String genePrivateKey = "d66b74561cf0d96766e527122085bb93e777cc758a3a6f485598325cf315209b";
 
-    public String getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
-
-    public String getNodeUrl() {
-        return nodeUrl;
-    }
 
     public void setNodeUrl(String nodeUrl) {
         this.nodeUrl = nodeUrl;
@@ -83,159 +99,5 @@ public class ObccConfig {
         }});
     }
 
-    public EChainType getChain() {
-        return chain;
-    }
 
-    public void setChain(EChainType chain) {
-        this.chain = chain;
-    }
-
-    public String getDriverName() {
-        return driverName;
-    }
-
-    public void setDriverName(String driverName) {
-        this.driverName = driverName;
-    }
-
-    public ConnPoolConfig getPoolConfig() {
-        return poolConfig;
-    }
-
-    public void setPoolConfig(ConnPoolConfig poolConfig) {
-        this.poolConfig = poolConfig;
-    }
-
-    public String getSpeedAdjusterName() {
-        return speedAdjusterName;
-    }
-
-    public void setSpeedAdjusterName(String speedAdjusterName) {
-        this.speedAdjusterName = speedAdjusterName;
-    }
-
-    public ENonceStrategy getNonceStrategy() {
-        return nonceStrategy;
-    }
-
-    public void setNonceStrategy(ENonceStrategy nonceStrategy) {
-        this.nonceStrategy = nonceStrategy;
-    }
-
-    public EMemoStrategy getMemoStrategy() {
-        return memoStrategy;
-    }
-
-    public void setMemoStrategy(EMemoStrategy memoStrategy) {
-        this.memoStrategy = memoStrategy;
-    }
-
-    public String getMemoPre() {
-        return memoPre;
-    }
-
-    public void setMemoPre(String memoPre) {
-        this.memoPre = memoPre;
-    }
-
-    public EContractType getContractType() {
-        return contractType;
-    }
-
-    public void setContractType(EContractType contractType) {
-        this.contractType = contractType;
-    }
-
-    public String getSolcPath() {
-        return solcPath;
-    }
-
-    public void setSolcPath(String solcPath) {
-        this.solcPath = solcPath;
-    }
-
-    public String getTempPath() {
-        return tempPath;
-    }
-
-    public void setTempPath(String tempPath) {
-        this.tempPath = tempPath;
-    }
-
-    public String getLocalDbName() {
-        return localDbName;
-    }
-
-    public void setLocalDbName(String localDbName) {
-        this.localDbName = localDbName;
-    }
-
-    public String getDbConn() {
-        return dbConn;
-    }
-
-    public void setDbConn(String dbConn) {
-        this.dbConn = dbConn;
-    }
-
-    public String getDbUserName() {
-        return dbUserName;
-    }
-
-    public void setDbUserName(String dbUserName) {
-        this.dbUserName = dbUserName;
-    }
-
-    public String getDbPassword() {
-        return dbPassword;
-    }
-
-    public void setDbPassword(String dbPassword) {
-        this.dbPassword = dbPassword;
-    }
-
-    public ECallbackStrategy getCallbackStrategy() {
-        return callbackStrategy;
-    }
-
-    public void setCallbackStrategy(ECallbackStrategy callbackStrategy) {
-        this.callbackStrategy = callbackStrategy;
-    }
-
-    public String getJdbcTemplateName() {
-        return jdbcTemplateName;
-    }
-
-    public void setJdbcTemplateName(String jdbcTemplateName) {
-        this.jdbcTemplateName = jdbcTemplateName;
-    }
-
-    public long getCallbackWaitTime() {
-        return callbackWaitTime;
-    }
-
-    public void setCallbackWaitTime(long callbackWaitTime) {
-        this.callbackWaitTime = callbackWaitTime;
-    }
-
-    public String getCallbackNotfyName() {
-        return callbackNotfyName;
-    }
-
-    public void setCallbackNotfyName(String callbackNotfyName) {
-        this.callbackNotfyName = callbackNotfyName;
-    }
-
-    public String getMemoPreHex() {
-        return memoPreHex;
-    }
-
-    public ECallBackLevel getCallBackLevel() {
-        return callBackLevel;
-    }
-
-    public void setCallBackLevel(ECallBackLevel callBackLevel) {
-        this.callBackLevel = callBackLevel;
-    }
 }

@@ -3,8 +3,10 @@ package cn.obcc.client;
 import java.util.HashMap;
 import java.util.Map;
 
+import cn.obcc.client.config.ConfigUtils;
 import cn.obcc.db.DbFactory;
 import cn.obcc.db.base.JdbcDao;
+import cn.obcc.db.utils.BeanUtil;
 import cn.obcc.stmt.IStatement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,8 +27,7 @@ public class ObccClient {
     private DbFactory localDb;
     private IChainDriver driver;
 
-    private Map<String,IStatement> statementMap=new HashMap<>();
-
+    private Map<String, IStatement> statementMap = new HashMap<>();
 
 
     private static Map<String, ObccClient> clientMap = new HashMap<String, ObccClient>();
@@ -46,17 +47,7 @@ public class ObccClient {
     }
 
     private void initConfig(String clientId, String nodeurl, ObccConfig config) {
-        if (config == null) {
-            config = new ObccConfig();
-        }
-
-        config.setClientId(clientId);
-
-        if (StringUtils.isNotNullOrEmpty(nodeurl)) {
-            config.setNodeUrl(nodeurl);
-        }
-
-        this.config = config;
+        this.config = ConfigUtils.initConfig(clientId, nodeurl, config);
     }
 
     private DbFactory initOrGetLocalDb() throws Exception {
@@ -71,29 +62,11 @@ public class ObccClient {
 
     private IChainDriver initOrGetDriver() throws Exception {
         if (this.driver == null) {
-            // if (config.getChain().equals(EChainType.ETHER)) {
-            IChainDriver driver = (IChainDriver) newDriver();// new EthChainDriver();
+            IChainDriver driver = (IChainDriver) BeanUtil.newInstance(config.getDriverName());
             driver.init(config, initOrGetLocalDb());
             this.driver = driver;
-            // }
         }
         return this.driver;
-
-    }
-
-
-
-    private Object newDriver() {
-
-        String clzName = config.getDriverName();
-        try {
-            return getClass().getClassLoader().loadClass(config.getDriverName()).newInstance();
-        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-            e.printStackTrace();
-            logger.error("不能加载或实例化driver:" + clzName + ",请引用对应的JAR,并设定好对应的Driver类名。");
-        }
-
-        return null;
 
     }
 
@@ -104,18 +77,22 @@ public class ObccClient {
         this.config = config;
     }
 
-    public void adjustConfig(ObccConfig config) {
+
+    public ObccClient adjustConfig(ObccConfig config) {
+        return this;
 
     }
 
     /*********************************************/
 
-    public <T> T getStatement(Class<? extends IStatement> clz) throws Exception{
-           if(!statementMap.containsKey(clz.getSimpleName())){
-               statementMap.put(clz.getSimpleName(),clz.newInstance());
-           }
-           return (T)statementMap.get(clz.getSimpleName());
+    public <T> T getStatement(Class<? extends IStatement> clz) throws Exception {
+        if (!statementMap.containsKey(clz.getSimpleName())) {
+            statementMap.put(clz.getSimpleName(), clz.newInstance());
+        }
+        IStatement statement = statementMap.get(clz.getSimpleName());
+        statement.init(config, initOrGetLocalDb(), initOrGetDriver());
 
+        return (T) statement;
     }
 
 
@@ -125,7 +102,7 @@ public class ObccClient {
 
         clientMap.remove(this.config.getClientId());
 
-        statementMap.forEach((key,value)->{
+        statementMap.forEach((key, value) -> {
             value.destory();
         });
         if (this.driver != null) {
