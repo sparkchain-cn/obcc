@@ -1,6 +1,7 @@
 package cn.obcc.vo;
 
 import cn.obcc.exception.enums.ETransferStatus;
+import lombok.Data;
 
 /**
  * @author pengrk
@@ -9,6 +10,7 @@ import cn.obcc.exception.enums.ETransferStatus;
  * @desc TODO
  * @date 2019/9/8 0008  10:02
  **/
+@Data
 public class BizState {
 
     private String bizId;
@@ -25,31 +27,4 @@ public class BizState {
         }
     }
 
-    public String getBizId() {
-        return bizId;
-    }
-
-    public void setBizId(String bizId) {
-        this.bizId = bizId;
-    }
-
-    public String getHash() {
-        return hash;
-    }
-
-    public void setHash(String hash) {
-        this.hash = hash;
-    }
-
-    public ETransferStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(ETransferStatus status) {
-        this.status = status;
-    }
-
-    public boolean isSingle() {
-        return single;
-    }
 }

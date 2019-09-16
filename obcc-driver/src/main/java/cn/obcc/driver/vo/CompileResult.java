@@ -1,5 +1,7 @@
 package cn.obcc.driver.vo;
 
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +12,8 @@ import java.util.List;
  * @desc TODO
  * @date 2019/8/28 0028  9:42
  **/
+
+@Data
 public class CompileResult {
 
     private String bizId; //unique
@@ -23,51 +27,5 @@ public class CompileResult {
     private String compileResult;
     private String compileException;
 
-    public String getBizId() {
-        return bizId;
-    }
 
-    public void setBizId(String bizId) {
-        this.bizId = bizId;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public List<ContractBin> getContractBinList() {
-        return contractBinList;
-    }
-
-    public void setContractBinList(List<ContractBin> contractBinList) {
-        this.contractBinList = contractBinList;
-    }
-
-    public int getState() {
-        return state;
-    }
-
-    public void setState(int state) {
-        this.state = state;
-    }
-
-    public String getCompileResult() {
-        return compileResult;
-    }
-
-    public void setCompileResult(String compileResult) {
-        this.compileResult = compileResult;
-    }
-
-    public String getCompileException() {
-        return compileException;
-    }
-
-    public void setCompileException(String compileException) {
-        this.compileException = compileException;
-    }
 }

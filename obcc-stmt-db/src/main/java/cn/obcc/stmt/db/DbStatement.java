@@ -6,7 +6,6 @@ import java.util.Map;
 
 import cn.obcc.config.ExProps;
 import cn.obcc.driver.module.fn.IUpchainFn;
-import cn.obcc.driver.vo.CompileResult;
 import cn.obcc.driver.vo.SrcAccount;
 import cn.obcc.exception.ObccException;
 import cn.obcc.exception.enums.EDbOperaType;
@@ -14,15 +13,10 @@ import cn.obcc.exception.enums.EExceptionCode;
 import cn.obcc.stmt.IDbStatement;
 import cn.obcc.stmt.base.BaseStatement;
 import cn.obcc.utils.base.StringUtils;
-import cn.obcc.uuid.UuidUtils;
 import cn.obcc.vo.KeyValue;
 import cn.obcc.vo.driver.ContractInfo;
 import cn.obcc.vo.driver.RecordInfo;
-import cn.obcc.vo.stmt.Procedure;
-import cn.obcc.vo.stmt.Table;
 import cn.obcc.vo.stmt.TableDefine;
-import cn.obcc.vo.Page;
-import cn.obcc.vo.RetData;
 import com.alibaba.fastjson.JSON;
 import lombok.NonNull;
 import org.slf4j.Logger;
@@ -30,7 +24,6 @@ import org.slf4j.LoggerFactory;
 
 public class DbStatement extends BaseStatement implements IDbStatement {
     public static final Logger logger = LoggerFactory.getLogger(DbStatement.class);
-
 
     @Override
     public String createTable(@NonNull String tableName, TableDefine define) throws Exception {
@@ -61,27 +54,6 @@ public class DbStatement extends BaseStatement implements IDbStatement {
         return null;
     }
 
-    @Override
-    public void createProcedure(@NonNull String name,
-                                @NonNull String content, List<String> params) throws Exception {
-        String bizId = config.getClientId() + "_" + name;
-        driver.getContractHandler().compile(bizId, content, new ExProps());
-        ContractInfo contractInfo = driver.getContractHandler().getContract(bizId, name);
-
-        KeyValue<String> v = config.getStorageSrcAccount();
-        KeyValue<String> d = config.getStorageDestAccount();
-        SrcAccount account = new SrcAccount() {{
-            setSrcAddr(v.getKey());
-            setSecret(v.getVal());
-        }};
-
-        IUpchainFn fn = (bizId1, hash, upchainType, state, resp) -> {
-
-        };
-
-        getDriver().getContractHandler().deploy(bizId, account, contractInfo, fn, new ExProps(), params);
-
-    }
 
     private String getBizId(String tableName, Long id) {
         return config.getClientId() + "_" + tableName + "_" + id;
@@ -160,22 +132,6 @@ public class DbStatement extends BaseStatement implements IDbStatement {
 
     }
 
-    @Override
-    public String exec(String bizId, String procedureName, String method, List<String> params) throws Exception {
-        ContractInfo contractInfo = driver.getContractHandler().getContract(bizId, procedureName);
-        IUpchainFn fn = (bizId1, hash, upchainType, state, resp) -> {
-
-        };
-        KeyValue<String> v = config.getStorageSrcAccount();
-        KeyValue<String> d = config.getStorageDestAccount();
-        SrcAccount account = new SrcAccount() {{
-            setSrcAddr(v.getKey());
-            setSecret(v.getVal());
-        }};
-
-        return getDriver().getContractHandler().invoke(bizId, contractInfo, account, new ExProps(), fn, method, params);
-
-    }
 
     @Override
     public boolean exist(String tableName, Long id) throws Exception {
@@ -200,4 +156,43 @@ public class DbStatement extends BaseStatement implements IDbStatement {
     }
 
 
+    @Override
+    public void createProcedure(@NonNull String name,
+                                @NonNull String content, List<String> params) throws Exception {
+        String bizId = config.getClientId() + "_" + name;
+        driver.getContractHandler().compile(bizId, content, new ExProps());
+        ContractInfo contractInfo = driver.getContractHandler().getContract(bizId, name);
+
+        KeyValue<String> v = config.getStorageSrcAccount();
+        KeyValue<String> d = config.getStorageDestAccount();
+        SrcAccount account = new SrcAccount() {{
+            setSrcAddr(v.getKey());
+            setSecret(v.getVal());
+        }};
+
+        IUpchainFn fn = (bizId1, hash, upchainType, state, resp) -> {
+
+        };
+
+        getDriver().getContractHandler().deploy(bizId, account, contractInfo, fn, new ExProps(), params);
+
+    }
+
+
+    @Override
+    public String exec(String bizId, String procedureName, String method, List<String> params) throws Exception {
+        ContractInfo contractInfo = driver.getContractHandler().getContract(bizId, procedureName);
+        IUpchainFn fn = (bizId1, hash, upchainType, state, resp) -> {
+
+        };
+        KeyValue<String> v = config.getStorageSrcAccount();
+        KeyValue<String> d = config.getStorageDestAccount();
+        SrcAccount account = new SrcAccount() {{
+            setSrcAddr(v.getKey());
+            setSecret(v.getVal());
+        }};
+
+        return getDriver().getContractHandler().invoke(bizId, contractInfo, account, new ExProps(), fn, method, params);
+
+    }
 }

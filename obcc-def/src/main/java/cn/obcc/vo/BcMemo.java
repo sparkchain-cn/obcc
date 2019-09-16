@@ -1,9 +1,12 @@
 package cn.obcc.vo;
 
+import lombok.Data;
+
 /**
  * <t>
  * 如果数据没有就不写，JSON
  */
+@Data
 public class BcMemo {
 
     public BcMemo(String bizId, String data) {
@@ -26,44 +29,4 @@ public class BcMemo {
     //修改的前一个hash等放到data对象中去
     private String data;
 
-    public String getBizId() {
-        return bizId;
-    }
-
-    public void setBizId(String bizId) {
-        this.bizId = bizId;
-    }
-
-//    public String getClientId() {
-//        return clientId;
-//    }
-
-//    public void setClientId(String clientId) {
-//        this.clientId = clientId;
-//    }
-
-
-    public Long getSeq() {
-        return seq;
-    }
-
-    public void setSeq(Long seq) {
-        this.seq = seq;
-    }
-
-    public Long getSum() {
-        return sum;
-    }
-
-    public void setSum(Long sum) {
-        this.sum = sum;
-    }
-
-    public String getData() {
-        return data;
-    }
-
-    public void setData(String data) {
-        this.data = data;
-    }
 }

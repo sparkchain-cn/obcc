@@ -1,8 +1,11 @@
 package cn.obcc.config.conn.pool;
 
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
 public class ConnPoolConfig {
 
 	private float enterRate = 1f;
@@ -35,88 +38,6 @@ public class ConnPoolConfig {
 		
 		return new ConnPoolConfig();
 
-	}
-
-	public int getPoolSize() {
-		return poolSize;
-	}
-
-	public void setPoolSize(int poolSize) {
-		this.poolSize = poolSize;
-	}
-
-	public int getMaxPoolSize() {
-		return maxPoolSize;
-	}
-
-	public void setMaxPoolSize(int maxPoolSize) {
-		this.maxPoolSize = maxPoolSize;
-	}
-
-	public int getInitConnectSize() {
-		return initConnectSize;
-	}
-
-	public void setInitConnectSize(int initConnectSize) {
-		this.initConnectSize = initConnectSize;
-	}
-
-	public int getClearInteval() {
-		return clearInteval;
-	}
-
-	public void setClearInteval(int clearInteval) {
-		this.clearInteval = clearInteval;
-	}
-
-
-
-	public int getMinPoolSize() {
-		return minPoolSize;
-	}
-
-	public void setMinPoolSize(int minPoolSize) {
-		this.minPoolSize = minPoolSize;
-	}
-
-	public float getEnterRate() {
-		return enterRate;
-	}
-
-	public void setEnterRate(float enterRate) {
-		this.enterRate = enterRate;
-	}
-
-	public int getMaxIdleSecond() {
-		return maxIdleSecond;
-	}
-
-	public void setMaxIdleSecond(int maxIdleSecond) {
-		this.maxIdleSecond = maxIdleSecond;
-	}
-
-	public int getCheckInvervalSecond() {
-		return checkInvervalSecond;
-	}
-
-	public void setCheckInvervalSecond(int checkInvervalSecond) {
-		this.checkInvervalSecond = checkInvervalSecond;
-	}
-
-	public List<ChainNodeWeight> getNodeWeights() {
-		return nodeWeights;
-	}
-
-	public void setNodeWeights(List<ChainNodeWeight> nodeWeights) {
-		this.nodeWeights = nodeWeights;
-	}
-
-	public boolean isAllowCheck() {
-		return allowCheck;
-	}
-
-	public void setAllowCheck(boolean allowCheck) {
-		this.allowCheck = allowCheck;
 	}
 
 }

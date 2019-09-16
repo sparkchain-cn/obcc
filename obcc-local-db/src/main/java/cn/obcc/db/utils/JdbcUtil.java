@@ -27,6 +27,7 @@ public class JdbcUtil {
 
     private static final Logger logger = Logger.getLogger(JdbcUtil.class);
 
+    private static Map<String,String> tableNameMap=new HashMap<String,String>();
     /**
      * 将对象分解出需要的配置信息，并存入MAP里。 键里面存的是字段的名称，值里存的是字段的值。
      *

@@ -1,7 +1,10 @@
 package cn.obcc.config.conn.pool;
 
+import lombok.Data;
+
 import java.util.Map;
 
+@Data
 public class ChainNodeWeight {
 	private String url;
 	private int weight;
@@ -15,28 +18,5 @@ public class ChainNodeWeight {
 		this.weight = weight;
 	}
 
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
-	public int getWeight() {
-		return weight;
-	}
-
-	public void setWeight(int weight) {
-		this.weight = weight;
-	}
-
-	public Map<String, Object> getExtras() {
-		return extras;
-	}
-
-	public void setExtras(Map<String, Object> extras) {
-		this.extras = extras;
-	}
 
 }

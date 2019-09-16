@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import cn.obcc.exception.enums.EExceptionCode;
+import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.xml.crypto.Data;
-
+@Data
 public class RetData<T> implements Serializable {
 
 	public final static Logger logger = LoggerFactory.getLogger(RetData.class);
@@ -29,26 +29,13 @@ public class RetData<T> implements Serializable {
 		return this;
 	}
 
-	public String getMessage() {
-		return message;
-	}
 
 	public RetData<T> setMessage(String message) {
 		this.message = message;
 		return this;
 	}
 
-	public boolean isSuccess() {
-		return success;
-	}
 
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
-
-	public Object getData() {
-		return data;
-	}
 
 	public RetData<T> setData(T data) {
 		this.data = data;

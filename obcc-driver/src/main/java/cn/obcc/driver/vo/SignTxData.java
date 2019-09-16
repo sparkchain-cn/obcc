@@ -1,18 +1,9 @@
 package cn.obcc.driver.vo;
 
+import lombok.Data;
+
+@Data
 public class SignTxData {
-	private String signData;
-	private String nonce;
-	public String getSignData() {
-		return signData;
-	}
-	public void setSignData(String signData) {
-		this.signData = signData;
-	}
-	public String getNonce() {
-		return nonce;
-	}
-	public void setNonce(String nonce) {
-		this.nonce = nonce;
-	}
+    private String signData;
+    private String nonce;
 }

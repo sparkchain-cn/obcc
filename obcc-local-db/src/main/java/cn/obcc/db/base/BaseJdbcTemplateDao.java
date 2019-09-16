@@ -47,7 +47,6 @@ public abstract class BaseJdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java
 
 
     private IJdbcTemplate newJdbcTemplate() {
-
         String clzName = config.getJdbcTemplateName();
         try {
             return (IJdbcTemplate) getClass().getClassLoader().loadClass(clzName).newInstance();

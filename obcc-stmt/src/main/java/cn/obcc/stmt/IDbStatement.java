@@ -1,15 +1,10 @@
 package cn.obcc.stmt;
 
 import java.util.List;
-import java.util.Map;
 
 import cn.obcc.exception.enums.EDbOperaType;
 import cn.obcc.vo.driver.RecordInfo;
-import cn.obcc.vo.stmt.Procedure;
-import cn.obcc.vo.stmt.Table;
 import cn.obcc.vo.stmt.TableDefine;
-import cn.obcc.vo.Page;
-import cn.obcc.vo.RetData;
 
 /**
  * @author mgicode

@@ -121,7 +121,6 @@ public class BeanUtil {
     }
 
     public static Object readFieldValue(Object object, String fieldName) {
-
         return getFieldValue(object, fieldName);
     }
 

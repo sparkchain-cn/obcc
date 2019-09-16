@@ -6,6 +6,7 @@ import cn.obcc.driver.module.fn.IUpchainFn;
 import cn.obcc.exception.enums.EChainTxType;
 import cn.obcc.exception.enums.ETransferStatus;
 import cn.obcc.exception.enums.EUpchainType;
+import lombok.Data;
 
 import java.util.Arrays;
 
@@ -16,6 +17,7 @@ import java.util.Arrays;
  * @desc
  * @data 2019/9/5 17:57
  **/
+@Data
 public class ChainPipe {
 
     private String chainCode;
@@ -38,96 +40,6 @@ public class ChainPipe {
 
     private String method;
     private Object[] params;
-
-
-    public String getBizId() {
-        return bizId;
-    }
-
-    public void setBizId(String bizId) {
-        this.bizId = bizId;
-    }
-
-    public SrcAccount getSrcAccount() {
-        return srcAccount;
-    }
-
-    public void setSrcAccount(SrcAccount srcAccount) {
-        this.srcAccount = srcAccount;
-    }
-
-    public String getDestAddr() {
-        return destAddr;
-    }
-
-    public void setDestAddr(String destAddr) {
-        this.destAddr = destAddr;
-    }
-
-    public String getContractAddr() {
-        return contractAddr;
-    }
-
-    public void setContractAddr(String contractAddr) {
-        this.contractAddr = contractAddr;
-    }
-
-    public String getChainCode() {
-        return chainCode;
-    }
-
-    public void setChainCode(String chainCode) {
-        this.chainCode = chainCode;
-    }
-
-    public String getMethod() {
-        return method;
-    }
-
-    public void setMethod(String method) {
-        this.method = method;
-    }
-
-
-    public Object[] getParams() {
-        return params;
-    }
-
-    public void setParams(Object[] params) {
-        this.params = params;
-    }
-
-    public ExProps getConfig() {
-        return config;
-    }
-
-    public void setConfig(ExProps config) {
-        this.config = config;
-    }
-
-    public IUpchainFn getCallbackFn() {
-        return callbackFn;
-    }
-
-    public void setCallbackFn(IUpchainFn callbackFn) {
-        this.callbackFn = callbackFn;
-    }
-
-    public EChainTxType getChainTxType() {
-        return chainTxType;
-    }
-
-    public void setChainTxType(EChainTxType chainTxType) {
-        this.chainTxType = chainTxType;
-    }
-
-    public String getAmount() {
-        return amount;
-    }
-
-    public void setAmount(String amount) {
-        this.amount = amount;
-    }
 
 
     public ChainPipe copy() {
