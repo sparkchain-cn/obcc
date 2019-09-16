@@ -2,7 +2,7 @@ package cn.obcc.driver.eth;
 
 import cn.obcc.config.ObccConfig;
 import cn.obcc.db.DbFactory;
-import cn.obcc.driver.eth.conn.builder.EthClientBuilder;
+import cn.obcc.driver.eth.conn.builder.EthClientBuilderBase;
 import cn.obcc.driver.eth.module.*;
 import cn.obcc.driver.eth.module.tech.*;
 import cn.obcc.driver.module.*;
@@ -85,7 +85,7 @@ public class EthChainDriverTest {
     public void testGetContractHandler() throws Exception {
         IContractHandler<Web3j> contractHandler = chainDriver.getContractHandler();
         Assert.assertNotNull(contractHandler);
-        EthContractHandler ethContractHandler = (EthContractHandler) contractHandler;
+        EthBaseContractHandler ethContractHandler = (EthBaseContractHandler) contractHandler;
 
         Assert.assertEquals(ethContractHandler.getDriver(), chainDriver);
         Assert.assertEquals(ethContractHandler.getObccConfig(), chainDriver.getObccConfig());
@@ -148,7 +148,7 @@ public class EthChainDriverTest {
     public void testGetNonceCalculator() throws Exception {
         INonceCalculator<Web3j> handler = chainDriver.getNonceCalculator();
         Assert.assertNotNull(handler);
-        EthNonceCalculator handlerImpl = (EthNonceCalculator) handler;
+        EthBaseNonceCalculator handlerImpl = (EthBaseNonceCalculator) handler;
 
         Assert.assertEquals(handlerImpl.getDriver(), chainDriver);
         Assert.assertEquals(handlerImpl.getObccConfig(), chainDriver.getObccConfig());
@@ -168,7 +168,7 @@ public class EthChainDriverTest {
     public void testGetMemoParser() throws Exception {
         IMemoParser<Web3j> handler = chainDriver.getMemoParser();
         Assert.assertNotNull(handler);
-        EthMemoParser handlerImpl = (EthMemoParser) handler;
+        EthBaseMemoParser handlerImpl = (EthBaseMemoParser) handler;
 
         Assert.assertEquals(handlerImpl.getDriver(), chainDriver);
         Assert.assertEquals(handlerImpl.getObccConfig(), chainDriver.getObccConfig());
@@ -177,7 +177,7 @@ public class EthChainDriverTest {
     @Test
     public void testGetChainClientBuilderClz() throws Exception {
         Class handler = chainDriver.getChainClientBuilderClz();
-        Assert.assertEquals(handler, EthClientBuilder.class);
+        Assert.assertEquals(handler, EthClientBuilderBase.class);
 
     }
 

@@ -1,8 +1,7 @@
 package cn.obcc.db.dao;
 
 import cn.obcc.db.base.JdbcDao;
-import cn.obcc.db.base.JdbcTemplateDao;
-import cn.obcc.vo.driver.AccountInfo;
+import cn.obcc.db.base.BaseJdbcTemplateDao;
 import cn.obcc.vo.driver.ContractInfo;
 
 /**
@@ -12,10 +11,11 @@ import cn.obcc.vo.driver.ContractInfo;
  * @desc TODO
  * @date 2019/8/28 0028  17:50
  **/
-public class ContractInfoDao  extends JdbcTemplateDao<ContractInfo, Long> implements JdbcDao<ContractInfo, Long>, java.io.Serializable  {
+public class ContractInfoDaoBase extends BaseJdbcTemplateDao<ContractInfo, Long> implements JdbcDao<ContractInfo, Long>, java.io.Serializable  {
 
 
     ////todo:
+    @Override
     public String getCreateSql(){
         return " CREATE TABLE " + this.tableName() + " (" +
                 primaryKeyName() + "  bigint(80) NOT NULL," +
@@ -30,11 +30,12 @@ public class ContractInfoDao  extends JdbcTemplateDao<ContractInfo, Long> implem
                 " state int DEFAULT NULL," +
                 " PRIMARY KEY (`" + primaryKeyName() + "`) )";
     }
+    @Override
     public String primaryKeyName() {
         //return JdbcUtil.findIdNameForClz(entityClass);
         return "id";
     }
-
+    @Override
     public String tableName() {
         return "contract_info";
         // return JdbcUtil.findTabelNameFromClz(entityClass);

@@ -137,7 +137,7 @@ public class EthNewBlockMonitor {
         Disposable d;
         d = flow.subscribe((t) -> {
             try {
-                if (t == null) return;
+                if (t == null) {return;}
                 BlockTxInfo info = null;
                 switch (driver.getObccConfig().getCallBackLevel()) {
                     case SupportUpchain:

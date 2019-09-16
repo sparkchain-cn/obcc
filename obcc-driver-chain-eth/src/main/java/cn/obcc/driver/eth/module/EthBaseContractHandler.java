@@ -1,7 +1,7 @@
 package cn.obcc.driver.eth.module;
 
 import cn.obcc.config.ExProps;
-import cn.obcc.driver.contract.ContractHandler;
+import cn.obcc.driver.contract.BaseContractHandler;
 import cn.obcc.driver.contract.solc.core.AbiParser;
 import cn.obcc.driver.eth.module.contract.ContractEncoder;
 import cn.obcc.driver.module.IContractHandler;
@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class EthContractHandler extends ContractHandler<Web3j> implements IContractHandler<Web3j> {
+public class EthBaseContractHandler extends BaseContractHandler<Web3j> implements IContractHandler<Web3j> {
 
 
     @Override

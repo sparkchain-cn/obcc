@@ -122,8 +122,9 @@ public class BeanUtils {
      * @return 属性值
      */
     public static Object getFieldValue(Object object, String fieldName) {
-        if (object == null)
+        if (object == null) {
             return null;
+        }
         Object result = null;
 
         try {
@@ -215,8 +216,9 @@ public class BeanUtils {
                     .getSuperclass()) {
                 try {
                     field = superClass.getDeclaredField(fieldName);
-                    if (field != null)
+                    if (field != null) {
                         break;
+                    }
                 } catch (NoSuchFieldException e) {
                     // Field不在当前类，继续向上转型
                 }
@@ -252,8 +254,9 @@ public class BeanUtils {
                 } catch (SecurityException e) {
                     e.printStackTrace();
                 }
-                if (field != null)
+                if (field != null) {
                     break;
+                }
             }
             if (field != null) {
                 methodMap.put(name, field);
@@ -605,6 +608,7 @@ public class BeanUtils {
         // 如果存在 就获取包下的所有文件 包括目录
         File[] dirfiles = dir.listFiles(new FileFilter() {
             // 自定义过滤规则 如果可以循环(包含子目录) 或则是以.class结尾的文件(编译好的java类文件)
+            @Override
             public boolean accept(File file) {
                 return (recursive && file.isDirectory())
                         || (file.getName().endsWith(".class"));

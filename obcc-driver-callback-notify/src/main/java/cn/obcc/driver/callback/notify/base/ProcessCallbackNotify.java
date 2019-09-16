@@ -18,6 +18,7 @@ import cn.obcc.vo.driver.BlockTxInfo;
  **/
 public class ProcessCallbackNotify<T> extends BaseHandler<T> implements ICallBackNotify<T> {
 
+    @Override
     public void notify(BlockTxInfo txInfo) throws Exception {
         String bizId = txInfo.getMemosObj().getBizId();
         String hash = txInfo.getHash();
@@ -29,6 +30,7 @@ public class ProcessCallbackNotify<T> extends BaseHandler<T> implements ICallBac
         register.unRegister(bizId);
     }
 
+    @Override
     public boolean filter(BlockTxInfo txInfo) throws Exception {
         BcMemo memo = txInfo.getMemosObj();
         return memo != null

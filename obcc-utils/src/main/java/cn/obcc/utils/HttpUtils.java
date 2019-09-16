@@ -54,8 +54,8 @@ public class HttpUtils {
 	}
 
 	public static String postJson(String url, String json, Map<String, String> headersParams) throws IOException {
-		MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-		RequestBody body = RequestBody.create(JSON, json);
+		MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
+		RequestBody body = RequestBody.create(mediaType, json);
 		OkHttpClient okHttpClient = new OkHttpClient();
 		Request.Builder builder = (new Request.Builder()).url(url);
 		builder.headers(setHeaders(headersParams));
@@ -128,16 +128,16 @@ public class HttpUtils {
 		return headers;
 	}
 
-	private static RequestBody setRequestBody(Map<String, String> BodyParams) {
+	private static RequestBody setRequestBody(Map<String, String> bodyParams) {
 		RequestBody body = null;
 		okhttp3.FormBody.Builder formEncodingBuilder = new okhttp3.FormBody.Builder();
-		if (BodyParams != null) {
-			Iterator<String> iterator = BodyParams.keySet().iterator();
+		if (bodyParams != null) {
+			Iterator<String> iterator = bodyParams.keySet().iterator();
 			String key = "";
 
 			while (iterator.hasNext()) {
 				key = ((String) iterator.next()).toString();
-				formEncodingBuilder.add(key, (String) BodyParams.get(key));
+				formEncodingBuilder.add(key, (String) bodyParams.get(key));
 			}
 		}
 

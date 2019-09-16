@@ -17,8 +17,8 @@ import java.util.List;
  * @desc TODO
  * @date 2019/8/27 0027  9:15
  **/
-public abstract class JsonMemoStragegy implements IMemoStrategy {
-    public static Logger logger = LoggerFactory.getLogger(JsonMemoStragegy.class);
+public abstract class BaseJsonMemoStragegy implements IMemoStrategy {
+    public static Logger logger = LoggerFactory.getLogger(BaseJsonMemoStragegy.class);
 
     @Override
     public abstract Long getMaxSize() throws Exception;
@@ -67,6 +67,7 @@ public abstract class JsonMemoStragegy implements IMemoStrategy {
         return ret;
     }
 
+    @Override
     public String encodeOne(String bizId, String preHex, String memo) throws Exception {
         Long len = memo.getBytes().length * 2L;
         //todo:200 must测算一下

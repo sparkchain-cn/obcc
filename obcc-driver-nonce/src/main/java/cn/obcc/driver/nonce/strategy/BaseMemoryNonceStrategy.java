@@ -1,16 +1,11 @@
 package cn.obcc.driver.nonce.strategy;
 
 import cn.obcc.driver.nonce.INonceStrategy;
-import cn.obcc.exception.ObccException;
-import cn.obcc.utils.base.StringUtils;
 import net.jodah.expiringmap.ExpirationPolicy;
 import net.jodah.expiringmap.ExpiringMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -20,8 +15,8 @@ import java.util.concurrent.TimeUnit;
  * @desc TODO
  * @date 2019/8/26 0026  8:52
  **/
-public abstract class MemoryNonceStrategy implements INonceStrategy {
-    public static final Logger logger = LoggerFactory.getLogger(MemoryNonceStrategy.class);
+public abstract class BaseMemoryNonceStrategy implements INonceStrategy {
+    public static final Logger logger = LoggerFactory.getLogger(BaseMemoryNonceStrategy.class);
     //chainCode这里需要注意：一个链多个Client,也必须共用一个集合，
     //多个链，多个client,其链Code必须不同，不然其nonce可能会冲突
     public static ExpiringMap<String, Long> map = ExpiringMap.builder()
@@ -55,7 +50,8 @@ public abstract class MemoryNonceStrategy implements INonceStrategy {
         return nowSeq;
 
     }
-    public Long adjustNonce(String chainCode, String address,Long num) throws Exception{
+    @Override
+    public Long adjustNonce(String chainCode, String address, Long num) throws Exception{
         String key = genAccountSeqKey(chainCode, address);
         Long nowSeq =num;
         Long nextSeq = nowSeq + 1;

@@ -81,11 +81,12 @@ public class HexUtils {
 
 
     private static byte[] hexStringToBytes(String hexString) {
-        if (hexString == null || hexString.equals("") || hexString.equalsIgnoreCase("0x")) {
+        if (hexString == null || "".equals(hexString) || "0x".equalsIgnoreCase(hexString)) {
             return new byte[2];
         }
-        if (hexString.startsWith("0x"))
+        if (hexString.startsWith("0x")) {
             hexString = hexString.replace("0x", "").trim();
+        }
         hexString = hexString.toUpperCase();
         int length = hexString.length() / 2;
         char[] hexChars = hexString.toCharArray();

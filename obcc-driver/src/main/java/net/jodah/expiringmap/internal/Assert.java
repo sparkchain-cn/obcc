@@ -10,23 +10,27 @@ public final class Assert {
   }
 
   public static <T> T notNull(T reference, String parameterName) {
-    if (reference == null)
+    if (reference == null) {
       throw new NullPointerException(parameterName + " cannot be null");
+    }
     return reference;
   }
 
   public static void operation(boolean condition, String message) {
-    if (!condition)
+    if (!condition) {
       throw new UnsupportedOperationException(message);
+    }
   }
 
   public static void state(boolean expression, String errorMessageFormat, Object... args) {
-    if (!expression)
+    if (!expression) {
       throw new IllegalStateException(String.format(errorMessageFormat, args));
+    }
   }
 
   public static void element(Object element, Object key) {
-    if (element == null)
+    if (element == null) {
       throw new NoSuchElementException(key.toString());
+    }
   }
 }

@@ -52,6 +52,7 @@ public enum EExceptionCode {
     TASK_FAILED("30001", "任务失败"),
     KEY_REPEAT("30002", "存在重复的Key"),
     FILE_SHA1_CHECK_ERROR("30003", "文件验证的sha1不对"),
+    HASH_CAN_NOT_FOUND("30004", "对应的Hash没有返回或没有生成"),
     //App
     APPID_SECRET_FAIL("31001", "appid及appsecret验证失败"),
 

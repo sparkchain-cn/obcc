@@ -1,24 +1,16 @@
 package cn.obcc.driver.eth.module;
 
-import cn.obcc.driver.base.BaseHandler;
 import cn.obcc.driver.contract.solc.core.AbiParser;
 import cn.obcc.driver.eth.module.token.DefaultSolToken;
 import cn.obcc.driver.module.ITokenHandler;
-import cn.obcc.driver.module.base.TokenBaseHandler;
-import cn.obcc.driver.module.fn.IUpchainFn;
-import cn.obcc.driver.vo.*;
-import cn.obcc.driver.vo.params.TokenParams;
+import cn.obcc.driver.module.base.BaseTokenHandler;
 import cn.obcc.exception.ObccException;
 import cn.obcc.exception.enums.EExceptionCode;
-import cn.obcc.vo.driver.BlockTxInfo;
 import cn.obcc.vo.driver.TokenInfo;
-import cn.obcc.config.ExProps;
-import cn.obcc.vo.RetData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.web3j.protocol.Web3j;
 
-import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -28,14 +20,14 @@ import java.util.List;
  * @desc TODO
  * @date 2019/8/24 0024  18:54
  **/
-public class EthTokenHandler extends TokenBaseHandler<Web3j> implements ITokenHandler<Web3j> {
+public class EthTokenHandler extends BaseTokenHandler<Web3j> implements ITokenHandler<Web3j> {
     public static final Logger logger = LoggerFactory.getLogger(EthTokenHandler.class);
 
     @Override
     public String getDefaultTokenContents() throws Exception {
         return DefaultSolToken.DEFAULT_TOKEN_STR;
     }
-
+    @Override
     protected boolean check(TokenInfo token, String methodName, List<String> params) throws Exception {
         if (token == null) {
             throw ObccException.create(EExceptionCode.PARAMETER_INVALID, "token params is null");

@@ -31,7 +31,7 @@ public class FileSafeUtils {
      * @return md5串
      * @throws NoSuchAlgorithmException
      */
-    public static String getMD5(File file) throws IOException,
+    public static String getMd5(File file) throws IOException,
             NoSuchAlgorithmException {
 
         messagedigest = MessageDigest.getInstance("MD5");
@@ -47,7 +47,7 @@ public class FileSafeUtils {
      * @param target 字符串 求一个字符串的md5值
      * @return md5 value
      */
-    public static String StringMD5(String target) {
+    public static String strMd5(String target) {
         return DigestUtils.md5Hex(target);
     }
 
@@ -85,7 +85,7 @@ public class FileSafeUtils {
      *
      * @throws Exception
      */
-    public static String encodeBySHA(String str) throws Exception {
+    public static String encodeBySha(String str) throws Exception {
         MessageDigest sha1;
         sha1 = MessageDigest.getInstance("SHA1");
         //以下三种不可用
@@ -114,7 +114,7 @@ public class FileSafeUtils {
      *
      * @return String
      */
-    public static String getCRC32(File file) {
+    public static String getCrc32(File file) {
         CRC32 crc32 = new CRC32();
         // MessageDigest.get
         FileInputStream fileInputStream = null;
@@ -134,19 +134,20 @@ public class FileSafeUtils {
             return null;
         } finally {
             try {
-                if (fileInputStream != null)
+                if (fileInputStream != null) {
                     fileInputStream.close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public static String getMD5String(String s) {
-        return getMD5String(s.getBytes());
+    public static String getMd5Str(String s) {
+        return getMd5Str(s.getBytes());
     }
 
-    public static String getMD5String(byte[] bytes) {
+    public static String getMd5Str(byte[] bytes) {
         messagedigest.update(bytes);
         return bufferToHex(messagedigest.digest());
     }
@@ -176,7 +177,7 @@ public class FileSafeUtils {
     }
 
     public static boolean checkPassword(String password, String md5PwdStr) {
-        String s = getMD5String(password);
+        String s = getMd5Str(password);
         return s.equals(md5PwdStr);
     }
 

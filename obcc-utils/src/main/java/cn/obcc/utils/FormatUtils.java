@@ -11,8 +11,9 @@ public class FormatUtils {
      * @Modified 2017-04-28 下午8:55:35
      */
     public static String formatJson(String jsonStr) {
-        if (null == jsonStr || "".equals(jsonStr))
+        if (null == jsonStr || "".equals(jsonStr)) {
             return "";
+        }
         StringBuilder sb = new StringBuilder();
         char last = '\0';
         char current = '\0';

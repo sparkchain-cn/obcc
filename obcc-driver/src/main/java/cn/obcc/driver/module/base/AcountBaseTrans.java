@@ -11,9 +11,7 @@ import cn.obcc.exception.ObccException;
 import cn.obcc.exception.enums.EChainTxType;
 import cn.obcc.exception.enums.EExceptionCode;
 import cn.obcc.exception.enums.ETransferStatus;
-import cn.obcc.exception.enums.EUpchainType;
 import cn.obcc.utils.base.StringUtils;
-import cn.obcc.vo.BcMemo;
 import cn.obcc.vo.BizState;
 import cn.obcc.vo.driver.BlockTxInfo;
 import org.slf4j.Logger;
@@ -54,7 +52,7 @@ public class AcountBaseTrans {
     }
 
     private static void transferOne(String memo, ChainPipe pipe, List<String> hashs,
-                                    IChainDriver driver, AccountBaseHandler accountHandler) {
+                                    IChainDriver driver, BaseAccountHandler accountHandler) {
         ChainPipe p1 = pipe.copy();
         p1.getSrcAccount().setMemos(memo);
         String hash = transferOne(pipe, driver, accountHandler);
@@ -87,7 +85,7 @@ public class AcountBaseTrans {
     }
 
 
-    private static String transferOne(ChainPipe pipe, IChainDriver driver, AccountBaseHandler accountHandler) {
+    private static String transferOne(ChainPipe pipe, IChainDriver driver, BaseAccountHandler accountHandler) {
         try {
             ChainPipe p1 = pipe;
             //2、计算nonce,如果传入的没有，那么就直接计算
@@ -114,7 +112,7 @@ public class AcountBaseTrans {
         return null;
     }
 
-    public static String multiTransfer(ChainPipe pipe, IChainDriver driver, AccountBaseHandler accountHandler) throws Exception {
+    public static String multiTransfer(ChainPipe pipe, IChainDriver driver, BaseAccountHandler accountHandler) throws Exception {
         String hashStrs = null;
         try {
             //1.check

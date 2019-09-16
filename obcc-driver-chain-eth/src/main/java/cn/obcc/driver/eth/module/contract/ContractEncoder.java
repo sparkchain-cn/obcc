@@ -66,18 +66,18 @@ public class ContractEncoder {
     }
 
     private static Type genInputParam(String type, String value) {
-        if (type.equalsIgnoreCase("address")) {
+        if ("address".equalsIgnoreCase(type)) {
             Address param = new Address(value);
             return param;
-        } else if (type.equalsIgnoreCase("uint256")) {
+        } else if ("uint256".equalsIgnoreCase(type)) {
 //			BigInteger amountBInt = Convert.toSha(value, Convert.Unit.MC).toBigInteger();
-            BigInteger amountBInt = BigInteger.valueOf(Long.parseLong(value));
-            Uint256 param = new Uint256(amountBInt);
+            BigInteger amount = BigInteger.valueOf(Long.parseLong(value));
+            Uint256 param = new Uint256(amount);
             return param;
-        } else if (type.equalsIgnoreCase("string")) {
+        } else if ("string".equalsIgnoreCase(type)) {
             Utf8String param = new Utf8String(value);
             return param;
-        } else if (type.equalsIgnoreCase("bool")) {
+        } else if ("bool".equalsIgnoreCase(type)) {
             Bool param = new Bool(Boolean.parseBoolean(value));
             return param;
         } else {
@@ -90,13 +90,13 @@ public class ContractEncoder {
         List<Class<? extends Type>> ret = new ArrayList<>();
         for (String type : typeNames) {
 
-            if (type.equalsIgnoreCase("address")) {
+            if ("address".equalsIgnoreCase(type)) {
                 ret.add(Address.class);
-            } else if (type.equalsIgnoreCase("uint256")) {
+            } else if ("uint256".equalsIgnoreCase(type)) {
                 ret.add(Uint256.class);
-            } else if (type.equalsIgnoreCase("string")) {
+            } else if ("string".equalsIgnoreCase(type)) {
                 ret.add(Utf8String.class);
-            } else if (type.equalsIgnoreCase("bool")) {
+            } else if ("bool".equalsIgnoreCase(type)) {
                 ret.add(Bool.class);
             } else {
                 ret.add(null);
@@ -116,19 +116,19 @@ public class ContractEncoder {
     }
 
     private static TypeReference genOutputParam(String type) {
-        if (type.equalsIgnoreCase("address")) {
+        if ("address".equalsIgnoreCase(type)) {
             TypeReference<Address> param = new TypeReference<Address>() {
             };
             return param;
-        } else if (type.equalsIgnoreCase("uint256")) {
+        } else if ("uint256".equalsIgnoreCase(type)) {
             TypeReference<Uint256> param = new TypeReference<Uint256>() {
             };
             return param;
-        } else if (type.equalsIgnoreCase("string")) {
+        } else if ("string".equalsIgnoreCase(type)) {
             TypeReference<Utf8String> param = new TypeReference<Utf8String>() {
             };
             return param;
-        } else if (type.equalsIgnoreCase("bool")) {
+        } else if ("bool".equalsIgnoreCase(type)) {
             TypeReference<Bool> param = new TypeReference<Bool>() {
             };
             return param;

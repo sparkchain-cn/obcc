@@ -19,7 +19,7 @@ public class BizNonceStrategy implements INonceStrategy {
     public Long computNonce(String chainCode, String address) throws Exception {
         return null;
     }
-
+    @Override
     public Long adjustNonce(String chainCode, String address, Long num) throws Exception {
         return num;
     }

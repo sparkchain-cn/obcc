@@ -39,7 +39,7 @@ public class EthHttpService extends HttpService {
             logger.error("clientBuilder.requestCountInc error.", e);
         }
     }
-
+    @Override
     protected InputStream performIO(String request) throws IOException {
         countSend();
         return super.performIO(request);

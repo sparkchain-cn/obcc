@@ -3,7 +3,6 @@ package cn.obcc.driver.eth.module.signature;
 import cn.obcc.driver.vo.params.SignTxParams;
 import cn.obcc.config.ExProps;
 import cn.obcc.vo.RetData;
-import org.web3j.protocol.Web3j;
 import org.web3j.tx.gas.DefaultGasProvider;
 import org.web3j.tx.gas.StaticGasProvider;
 
@@ -35,19 +34,19 @@ public class Signature {
             gasPrice = 0L;
         }
 
-        BigInteger gasPriceBInt = BigInteger.valueOf(gasPrice);
+        BigInteger gasPriceBint = BigInteger.valueOf(gasPrice);
         if (gasPrice <= 0) {
-            gasPriceBInt = DefaultGasProvider.GAS_PRICE;
+            gasPriceBint = DefaultGasProvider.GAS_PRICE;
 
         }
 
-        BigInteger gasLimitBInt = BigInteger.valueOf(gasLimit);
+        BigInteger gasLimitBint = BigInteger.valueOf(gasLimit);
         if (gasLimit <= 0) {
-            gasLimitBInt = DefaultGasProvider.GAS_LIMIT;
+            gasLimitBint = DefaultGasProvider.GAS_LIMIT;
 
         }
 
-        return new StaticGasProvider(gasPriceBInt, gasLimitBInt);
+        return new StaticGasProvider(gasPriceBint, gasLimitBint);
 
     }
     // endregion

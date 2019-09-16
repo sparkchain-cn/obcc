@@ -9,12 +9,10 @@ import cn.obcc.driver.vo.ChainPipe;
 import cn.obcc.driver.vo.CompileResult;
 import cn.obcc.driver.vo.SrcAccount;
 import cn.obcc.exception.enums.EChainTxType;
-import cn.obcc.exception.enums.EExceptionCode;
 import cn.obcc.exception.enums.ETransferStatus;
 import cn.obcc.exception.enums.EUpchainType;
 import cn.obcc.utils.base.StringUtils;
 import cn.obcc.uuid.UuidUtils;
-import cn.obcc.vo.RetData;
 import cn.obcc.vo.driver.BlockTxInfo;
 import cn.obcc.vo.driver.ContractInfo;
 import com.alibaba.fastjson.JSON;
@@ -33,8 +31,8 @@ import java.util.Map;
  * @desc TODO
  * @date 2019/8/26 0026  8:36
  **/
-public abstract class ContractHandler<T> extends BaseHandler<T> implements IContractHandler<T> {
-    public static final Logger logger = LoggerFactory.getLogger(ContractHandler.class);
+public abstract class BaseContractHandler<T> extends BaseHandler<T> implements IContractHandler<T> {
+    public static final Logger logger = LoggerFactory.getLogger(BaseContractHandler.class);
 
     protected abstract Map<String, String> buildMethodNameIdMap(ContractInfo contractInfo);
 
@@ -42,7 +40,7 @@ public abstract class ContractHandler<T> extends BaseHandler<T> implements ICont
     public CompileResult compile(String bizId, String contract, ExProps config) throws Exception {
         CompileResult contractCompile = ContractCompiler.compile(contract, getObccConfig());
         contractCompile.setBizId(bizId);
-        if (contractCompile.getState() == -1) return contractCompile;
+        if (contractCompile.getState() == -1) {return contractCompile;}
         //每个合约保存
         contractCompile.getContractBinList().stream().forEach((contractBin) -> {
             ContractInfo contractInfo = new ContractInfo();
@@ -85,7 +83,7 @@ public abstract class ContractHandler<T> extends BaseHandler<T> implements ICont
      */
     @Override
     public ContractInfo getContract(@NotEmpty String contractAddr) throws Exception {
-        if (StringUtils.isNullOrEmpty(contractAddr)) return null;
+        if (StringUtils.isNullOrEmpty(contractAddr)) {return null;}
         return getDriver().getLocalDb().getContractInfoDao()
                 .findOne(" contract_addr = ? ", new Object[]{contractAddr});
     }

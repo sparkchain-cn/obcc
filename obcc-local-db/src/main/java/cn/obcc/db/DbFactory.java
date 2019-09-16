@@ -2,9 +2,6 @@ package cn.obcc.db;
 
 import cn.obcc.config.ObccConfig;
 import cn.obcc.db.dao.*;
-import cn.obcc.vo.driver.ContractInfo;
-
-import java.io.File;
 
 /**
  * @author pengrk
@@ -17,11 +14,11 @@ public class DbFactory {
     ObccConfig config;
 
     static DbFactory instance;
-    AccountInfoDao accountInfoDao;
-    ContractInfoDao contractInfoDao;
-    TokenInfoDao tokenInfoDao;
-    RecordInfoDao recordInfoDao;
-    TxInfoDao txInfoDao;
+    AccountInfoDaoBase accountInfoDao;
+    ContractInfoDaoBase contractInfoDao;
+    TokenInfoDaoBase tokenInfoDao;
+    RecordInfoDaoBase recordInfoDao;
+    TxInfoDaoBase txInfoDao;
 
 
     private DbFactory(ObccConfig config) throws Exception {
@@ -30,19 +27,19 @@ public class DbFactory {
     }
 
     private void initDao() throws Exception {
-        accountInfoDao = new AccountInfoDao();
+        accountInfoDao = new AccountInfoDaoBase();
         accountInfoDao.init(config);
         accountInfoDao.createTable();
-        contractInfoDao = new ContractInfoDao();
+        contractInfoDao = new ContractInfoDaoBase();
         contractInfoDao.init(config);
         contractInfoDao.createTable();
-        tokenInfoDao = new TokenInfoDao();
+        tokenInfoDao = new TokenInfoDaoBase();
         tokenInfoDao.init(config);
         tokenInfoDao.createTable();
-        recordInfoDao = new RecordInfoDao();
+        recordInfoDao = new RecordInfoDaoBase();
         recordInfoDao.init(config);
         recordInfoDao.createTable();
-        txInfoDao=new TxInfoDao();
+        txInfoDao=new TxInfoDaoBase();
         txInfoDao.init(config);
         txInfoDao.createTable();
 
@@ -55,21 +52,21 @@ public class DbFactory {
         return instance;
     }
 
-    public AccountInfoDao getAccountInfoDao() {
+    public AccountInfoDaoBase getAccountInfoDao() {
         return accountInfoDao;
     }
 
-    public ContractInfoDao getContractInfoDao() {
+    public ContractInfoDaoBase getContractInfoDao() {
         return contractInfoDao;
     }
 
-    public RecordInfoDao getRecordInfoDao() {
+    public RecordInfoDaoBase getRecordInfoDao() {
         return recordInfoDao;
     }
 
-    public TokenInfoDao getTokenInfoDao() {
+    public TokenInfoDaoBase getTokenInfoDao() {
         return tokenInfoDao;
     }
 
-    public TxInfoDao getTxInfoDao(){return txInfoDao;}
+    public TxInfoDaoBase getTxInfoDao(){return txInfoDao;}
 }

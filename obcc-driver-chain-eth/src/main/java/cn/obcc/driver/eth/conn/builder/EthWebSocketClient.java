@@ -49,7 +49,7 @@ public class EthWebSocketClient extends WebSocketClient {
         countSend();
         super.send(data);
     }
-
+    @Override
     public void onError(Exception e) {
         if (clientBuilder.getCallback() != null) {
             clientBuilder.getCallback().ioErrorCountInc();

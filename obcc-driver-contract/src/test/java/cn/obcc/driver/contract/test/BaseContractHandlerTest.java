@@ -2,7 +2,7 @@ package cn.obcc.driver.contract.test;
 
 import cn.obcc.config.ObccConfig;
 import cn.obcc.config.ExProps;
-import cn.obcc.driver.contract.ContractHandler;
+import cn.obcc.driver.contract.BaseContractHandler;
 import cn.obcc.driver.module.fn.IUpchainFn;
 import cn.obcc.driver.vo.ChainPipe;
 import cn.obcc.driver.vo.CompileResult;
@@ -16,37 +16,46 @@ import org.testng.annotations.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
 
-public class ContractHandlerTest {
+public class BaseContractHandlerTest {
 
-    private ContractHandler handler;
+    private BaseContractHandler handler;
 
     private String testSolContent = null;
 
     @BeforeClass
     public void before() throws Exception {
-        handler = new ContractHandler() {
+        handler = new BaseContractHandler() {
+            @Override
+            protected Map<String, String> buildMethodNameIdMap(ContractInfo contractInfo) {
+                return null;
+            }
+
             @Override
             public ContractInfo getContract(String contractAddr) throws Exception {
                 return null;
             }
 
             @Override
-            public String doDeploy(ChainPipe pipe) throws Exception {
+            public String query(String srcAddr, ContractInfo contractInfo, ExProps config, String methodName, List params) throws Exception {
                 return null;
             }
 
-            @Override
-            public String doInvoke(ChainPipe pipe) throws Exception {
-                return null;
-            }
-
-            @Override
-            protected void onDeploy(SrcAccount srcAccount, ContractInfo contractInfo, IUpchainFn fn, ExProps config) {
-            }
 
             @Override
             public ContractRec parseTxInfo(ContractInfo contractInfo, String input) throws Exception {
+                return null;
+            }
+
+            @Override
+            public String getInvokeHexData(String abi, String fnName, List inputValues) throws Exception {
+                return null;
+            }
+
+            @Override
+            public String encodeConstructor(String abi, List params) throws Exception {
                 return null;
             }
         };
@@ -56,7 +65,7 @@ public class ContractHandlerTest {
 
         //读取sol文件(读取合约内容)
         StringBuilder builder = new StringBuilder();
-        InputStream resourceAsStream = ContractHandlerTest.class.getClassLoader().getResourceAsStream("Test.sol");
+        InputStream resourceAsStream = BaseContractHandlerTest.class.getClassLoader().getResourceAsStream("Test.sol");
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         if (resourceAsStream == null) {
             System.out.println("Do not read file : Test.sol");
@@ -80,7 +89,7 @@ public class ContractHandlerTest {
 
     @Test
     public void testCompiler() throws Exception {
-        CompileResult compile = handler.doCompile(System.currentTimeMillis() + "", testSolContent, new ExProps());
+        CompileResult compile = handler.compile(System.currentTimeMillis() + "", testSolContent, new ExProps());
         System.out.println(compile);
     }
 

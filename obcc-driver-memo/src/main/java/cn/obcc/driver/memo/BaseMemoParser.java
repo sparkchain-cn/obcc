@@ -1,7 +1,7 @@
 package cn.obcc.driver.memo;
 
 import cn.obcc.driver.base.BaseHandler;
-import cn.obcc.driver.memo.strategy.JsonMemoStragegy;
+import cn.obcc.driver.memo.strategy.BaseJsonMemoStragegy;
 import cn.obcc.driver.tech.IMemoParser;
 import cn.obcc.vo.BcMemo;
 import cn.obcc.exception.enums.EMemoStrategy;
@@ -15,7 +15,7 @@ import java.util.List;
  * @desc TODO
  * @date 2019/8/26 0026  8:36
  **/
-public abstract class MemoParser<T> extends BaseHandler<T> implements IMemoParser<T> {
+public abstract class BaseMemoParser<T> extends BaseHandler<T> implements IMemoParser<T> {
     @Override
     public abstract Long getMaxSize() throws Exception;
 
@@ -58,10 +58,10 @@ public abstract class MemoParser<T> extends BaseHandler<T> implements IMemoParse
 
     }
 
-    protected JsonMemoStragegy jsonStragegy = new JsonMemoStragegy() {
+    protected BaseJsonMemoStragegy jsonStragegy = new BaseJsonMemoStragegy() {
         @Override
         public Long getMaxSize() throws Exception {
-            return MemoParser.this.getMaxSize();
+            return BaseMemoParser.this.getMaxSize();
         }
     };
 

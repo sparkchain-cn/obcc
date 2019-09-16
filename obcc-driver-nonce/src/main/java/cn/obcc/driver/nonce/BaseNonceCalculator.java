@@ -3,12 +3,11 @@ package cn.obcc.driver.nonce;
 import cn.obcc.config.ExProps;
 import cn.obcc.driver.base.BaseHandler;
 import cn.obcc.driver.nonce.strategy.BizNonceStrategy;
-import cn.obcc.driver.nonce.strategy.ChainNonceStrategy;
-import cn.obcc.driver.nonce.strategy.MemoryNonceStrategy;
-import cn.obcc.driver.nonce.strategy.RedisNonceStrategy;
+import cn.obcc.driver.nonce.strategy.BaseChainNonceStrategy;
+import cn.obcc.driver.nonce.strategy.BaseMemoryNonceStrategy;
+import cn.obcc.driver.nonce.strategy.BaseRedisNonceStrategy;
 import cn.obcc.driver.tech.INonceCalculator;
 import cn.obcc.exception.enums.ENonceStrategy;
-import cn.obcc.vo.RetData;
 
 /**
  * @author pengrk
@@ -17,39 +16,40 @@ import cn.obcc.vo.RetData;
  * @desc TODO
  * @date 2019/8/26 0026  8:36
  **/
-public abstract class NonceCalculator<T> extends BaseHandler<T> implements INonceCalculator<T> {
+public abstract class BaseNonceCalculator<T> extends BaseHandler<T> implements INonceCalculator<T> {
     @Override
     public Long getNonce(String address, final ExProps config) throws Exception {
         String chainCode = getObccConfig().getChain().getName();
         return getNonceStrategy().computNonce(chainCode, address);
     }
 
+    @Override
     public Long adjustNonce(String address, Long num, ExProps config) throws Exception {
         String chainCode = getObccConfig().getChain().getName();
         return getNonceStrategy().adjustNonce(chainCode, address, num);
     }
 
 
-    protected MemoryNonceStrategy memoryNonceStrategy = new MemoryNonceStrategy() {
+    protected BaseMemoryNonceStrategy baseMemoryNonceStrategy = new BaseMemoryNonceStrategy() {
         @Override
         public Long getNonceFromChain(String address) throws Exception {
-            return (Long) NonceCalculator.this.getNonceFromChain(address);
+            return (Long) BaseNonceCalculator.this.getNonceFromChain(address);
         }
     };
 
-    protected ChainNonceStrategy chainNonceStrategy = new ChainNonceStrategy() {
+    protected BaseChainNonceStrategy baseChainNonceStrategy = new BaseChainNonceStrategy() {
         @Override
         public Long getNonceFromChain(String address) throws Exception {
-            return (Long) NonceCalculator.this.getNonceFromChain(address);
+            return (Long) BaseNonceCalculator.this.getNonceFromChain(address);
         }
     };
 
 
-    public RedisNonceStrategy getRedisNonceStrategy(NonceCalculator nonceCalculator) throws Exception {
+    public BaseRedisNonceStrategy getRedisNonceStrategy(BaseNonceCalculator nonceCalculator) throws Exception {
         throw new RuntimeException("你必须实现RedisNonceStrategy");
     }
 
-    public BizNonceStrategy getBizNonceStrategy(NonceCalculator nonceCalculator) throws Exception {
+    public BizNonceStrategy getBizNonceStrategy(BaseNonceCalculator nonceCalculator) throws Exception {
         throw new RuntimeException("你必须实现BizNonceStrategy");
     }
 
@@ -57,15 +57,15 @@ public abstract class NonceCalculator<T> extends BaseHandler<T> implements INonc
         ENonceStrategy strategy = getObccConfig().getNonceStrategy();
         switch (strategy) {
             case Memory:
-                return memoryNonceStrategy;
+                return baseMemoryNonceStrategy;
             case Redis:
                 return getRedisNonceStrategy(this);
             case Chain:
-                return chainNonceStrategy;
+                return baseChainNonceStrategy;
             case Biz:
                 return getBizNonceStrategy(this);
             default:
-                return chainNonceStrategy;
+                return baseChainNonceStrategy;
         }
 
     }

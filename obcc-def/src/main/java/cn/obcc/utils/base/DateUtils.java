@@ -36,7 +36,7 @@ public class DateUtils {
     /**
      * 带时分秒的标准时间格式
      */
-    public  static final SimpleDateFormat DATE_TIME_EXTENDED_FORMAT = new SimpleDateFormat(
+    public static final SimpleDateFormat DATE_TIME_EXTENDED_FORMAT = new SimpleDateFormat(
             "MM/dd/yyyy HH:mm:ss");
     /** */
     /**
@@ -515,15 +515,17 @@ public class DateUtils {
          * 详细设计： 1.被400整除是闰年，否则： 2.不能被4整除则不是闰年 3.能被4整除同时不能被100整除则是闰年
          * 3.能被4整除同时能被100整除则不是闰年
          */
-        if ((year % 400) == 0)
+        if ((year % 400) == 0) {
             return true;
-        else if ((year % 4) == 0) {
-            if ((year % 100) == 0)
-                return false;
-            else
+        } else if ((year % 4) == 0) {
+            if ((year % 100) == 0) {
+                {return false;}
+            } else {
                 return true;
-        } else
+            }
+        } else {
             return false;
+        }
     }
 
     /** */
@@ -1250,8 +1252,9 @@ public class DateUtils {
         /**
          * 详细设计： 1.theDate为空，则返回"" 2.否则使用theDateFormat格式化
          */
-        if (theDate == null)
+        if (theDate == null) {
             return "";
+        }
         return theDateFormat.format(theDate);
     }
 
@@ -1391,8 +1394,9 @@ public class DateUtils {
 
         calendar.setTime(date);
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1;
-        if (dayOfWeek < 0)
+        if (dayOfWeek < 0) {
             dayOfWeek = 0;
+        }
 
         return dayNames[dayOfWeek];
     }
@@ -1413,8 +1417,9 @@ public class DateUtils {
 
         calendar.setTime(date);
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1;
-        if (dayOfWeek < 0)
+        if (dayOfWeek < 0) {
             dayOfWeek = 0;
+        }
         if (dayOfWeek == 0) {
             dayOfWeek = 7;
         }
@@ -1431,8 +1436,9 @@ public class DateUtils {
 
         calendar.setTime(day);
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1;
-        if (dayOfWeek < 0)
+        if (dayOfWeek < 0) {
             dayOfWeek = 0;
+        }
         if (dayOfWeek == 0) {
             dayOfWeek = 7;
         }
@@ -1552,10 +1558,12 @@ public class DateUtils {
      * @return
      */
     public static long getDays(String date1, String date2) {
-        if (date1 == null || date1.equals(""))
+        if (date1 == null ||"" .equals(date1)) {
             return 0;
-        if (date2 == null || date2.equals(""))
+        }
+        if (date2 == null ||"" .equals(date2)) {
             return 0;
+        }
         // 转换为标准时间
         SimpleDateFormat myFormatter = new SimpleDateFormat("yyyy-MM-dd");
         Date date = null;

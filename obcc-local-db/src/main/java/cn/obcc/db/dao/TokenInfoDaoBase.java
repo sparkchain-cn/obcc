@@ -1,8 +1,7 @@
 package cn.obcc.db.dao;
 
 import cn.obcc.db.base.JdbcDao;
-import cn.obcc.db.base.JdbcTemplateDao;
-import cn.obcc.vo.driver.AccountInfo;
+import cn.obcc.db.base.BaseJdbcTemplateDao;
 import cn.obcc.vo.driver.TokenInfo;
 
 /**
@@ -12,10 +11,11 @@ import cn.obcc.vo.driver.TokenInfo;
  * @desc TODO
  * @date 2019/8/28 0028  17:44
  **/
-public class TokenInfoDao extends JdbcTemplateDao<TokenInfo, Long> implements JdbcDao<TokenInfo, Long>, java.io.Serializable  {
+public class TokenInfoDaoBase extends BaseJdbcTemplateDao<TokenInfo, Long> implements JdbcDao<TokenInfo, Long>, java.io.Serializable  {
 
 
     ////todo:
+    @Override
     public String getCreateSql(){
         return " CREATE TABLE " + this.tableName() + " (" +
                 primaryKeyName() + "  bigint(80) NOT NULL," +
@@ -33,11 +33,13 @@ public class TokenInfoDao extends JdbcTemplateDao<TokenInfo, Long> implements Jd
                 " PRIMARY KEY (`" + primaryKeyName() + "`) )";
     }
 
+    @Override
     public String primaryKeyName() {
         //return JdbcUtil.findIdNameForClz(entityClass);
         return "id";
     }
 
+    @Override
     public String tableName() {
         return "token_info";
         // return JdbcUtil.findTabelNameFromClz(entityClass);

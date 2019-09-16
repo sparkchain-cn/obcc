@@ -15,10 +15,12 @@ import cn.obcc.vo.driver.BlockTxInfo;
  **/
 public class UrlCallbackNotify<T> extends BaseHandler<T> implements ICallBackNotify<T> {
 
+    @Override
     public void notify(BlockTxInfo txInfo) throws Exception {
 
     }
 
+    @Override
     public boolean filter(BlockTxInfo txInfo) throws Exception {
        // BcMemo memo=txInfo.getMemosObj();
         //return memo != null && !StringUtils.isNullOrEmpty(memo.getBizId())

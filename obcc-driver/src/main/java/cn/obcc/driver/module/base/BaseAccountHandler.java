@@ -9,22 +9,17 @@ import cn.obcc.driver.vo.ChainPipe;
 import cn.obcc.driver.vo.SrcAccount;
 
 import cn.obcc.exception.ObccException;
-import cn.obcc.exception.enums.EChainTxType;
 import cn.obcc.exception.enums.EExceptionCode;
 import cn.obcc.exception.enums.ETransferStatus;
-import cn.obcc.exception.enums.EUpchainType;
 import cn.obcc.uuid.UuidUtils;
 import cn.obcc.vo.BizState;
 import cn.obcc.vo.driver.AccountInfo;
-import cn.obcc.utils.base.StringUtils;
 import cn.obcc.config.ExProps;
 import cn.obcc.vo.driver.BlockTxInfo;
-import cn.obcc.vo.driver.RecordInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotEmpty;
-import java.util.*;
 
 /**
  * @author pengrk
@@ -33,8 +28,8 @@ import java.util.*;
  * @desc TODO
  * @date 2019/8/25 0025  12:44
  **/
-public abstract class AccountBaseHandler<T> extends BaseHandler<T> implements IAccountHandler<T> {
-    public static final Logger logger = LoggerFactory.getLogger(AccountBaseHandler.class);
+public abstract class BaseAccountHandler<T> extends BaseHandler<T> implements IAccountHandler<T> {
+    public static final Logger logger = LoggerFactory.getLogger(BaseAccountHandler.class);
 
 
     public abstract String onTransfer(ChainPipe pipe) throws Exception;
@@ -81,6 +76,7 @@ public abstract class AccountBaseHandler<T> extends BaseHandler<T> implements IA
         return UuidUtils.get() + "";
     }
 
+    @Override
     public String doTransfer(ChainPipe pipe) throws Exception {
 
         getDriver().getStateMonitor().setBizState(pipe.getBizId(), new BizState(pipe.getBizId(), null, ETransferStatus.STATE_WRITE_CHAIN));
@@ -89,7 +85,7 @@ public abstract class AccountBaseHandler<T> extends BaseHandler<T> implements IA
 
         return AcountBaseTrans.multiTransfer(pipe, getDriver(), this);
     }
-
+    @Override
     public BizTxInfo getTxByBizId(String bizId, ExProps config) throws Exception {
         return AccountBaseTx.getTxByBizId(bizId, config, getDriver(), this);
     }

@@ -31,6 +31,7 @@ public class SqliteJdbcTemplate implements IJdbcTemplate {
     protected TableHandler tableHandler;
 
     //@Override
+    @Override
     public void init(ObccConfig config) throws Exception {
         this.config = config;
         createDb(config.getDbConn());

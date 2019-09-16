@@ -161,18 +161,18 @@ public class FileUtils {
      * @return
      */
     public static byte[] byteMergerAll(List<byte[]> values) {
-        int length_byte = 0;
+        int lengthByte = 0;
         for (int i = 0; i < values.size(); i++) {
-            length_byte += values.get(i).length;
+            lengthByte += values.get(i).length;
         }
-        byte[] all_byte = new byte[length_byte];
+        byte[] allByte = new byte[lengthByte];
         int countLength = 0;
         for (int i = 0; i < values.size(); i++) {
             byte[] b = values.get(i);
-            System.arraycopy(b, 0, all_byte, countLength, b.length);
+            System.arraycopy(b, 0, allByte, countLength, b.length);
             countLength += b.length;
         }
-        return all_byte;
+        return allByte;
     }
 
     /**

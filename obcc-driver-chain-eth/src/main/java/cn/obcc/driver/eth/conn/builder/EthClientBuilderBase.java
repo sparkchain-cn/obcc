@@ -4,27 +4,23 @@ import java.net.ConnectException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import cn.obcc.driver.base.BaseChainDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.http.HttpService;
 import org.web3j.protocol.websocket.WebSocketClient;
 import org.web3j.protocol.websocket.WebSocketService;
 
 import cn.obcc.config.ObccConfig;
 import cn.obcc.connect.builder.ChainClientBuilder;
-import cn.obcc.connect.builder.HttpAndWsClientBuilder;
+import cn.obcc.connect.builder.BaseHttpAndWsClientBuilder;
 import cn.obcc.connect.pool.ChainClientPoolFactory;
-import cn.obcc.driver.utils.JunctionUtils;
 import cn.obcc.utils.base.StringUtils;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-public class EthClientBuilder extends HttpAndWsClientBuilder<Web3j> implements ChainClientBuilder<Web3j> {
-    public static final Logger logger = LoggerFactory.getLogger(EthClientBuilder.class);
+public class EthClientBuilderBase extends BaseHttpAndWsClientBuilder<Web3j> implements ChainClientBuilder<Web3j> {
+    public static final Logger logger = LoggerFactory.getLogger(EthClientBuilderBase.class);
 
     private EthWebSocketClient ethWebSocketClient;
 
@@ -49,7 +45,7 @@ public class EthClientBuilder extends HttpAndWsClientBuilder<Web3j> implements C
         }
         if (StringUtils.isWs(url)) {
             try {
-                this.ethWebSocketClient = new EthWebSocketClient(parseURI(url));
+                this.ethWebSocketClient = new EthWebSocketClient(parseUri(url));
                 ethWebSocketClient.setClientBuilder(this);
                 websocketService = new WebSocketService(ethWebSocketClient, true);
 
@@ -88,7 +84,7 @@ public class EthClientBuilder extends HttpAndWsClientBuilder<Web3j> implements C
         }
     }
 
-    private static URI parseURI(@NotBlank String serverUrl) {
+    private static URI parseUri(@NotBlank String serverUrl) {
         try {
             return new URI(serverUrl);
         } catch (URISyntaxException var2) {
@@ -116,7 +112,7 @@ public class EthClientBuilder extends HttpAndWsClientBuilder<Web3j> implements C
 
 
     public static Web3j getClient(@NotNull ObccConfig obccConfig) throws Exception {
-        return (Web3j) ChainClientPoolFactory.getClient(obccConfig, EthClientBuilder.class);
+        return (Web3j) ChainClientPoolFactory.getClient(obccConfig, EthClientBuilderBase.class);
     }
 
     /**
@@ -127,7 +123,7 @@ public class EthClientBuilder extends HttpAndWsClientBuilder<Web3j> implements C
      * @throws Exception
      */
     public static Web3j getClient(@NotNull ObccConfig config, String uuid) throws Exception {
-        Web3j remote = ChainClientPoolFactory.getClient(config.getChain().getName(), uuid, EthClientBuilder.class);
+        Web3j remote = ChainClientPoolFactory.getClient(config.getChain().getName(), uuid, EthClientBuilderBase.class);
         return remote;
     }
 

@@ -1,9 +1,8 @@
 package cn.obcc.db.dao;
 
 import cn.obcc.db.base.JdbcDao;
-import cn.obcc.db.base.JdbcTemplateDao;
+import cn.obcc.db.base.BaseJdbcTemplateDao;
 import cn.obcc.vo.driver.BlockTxInfo;
-import cn.obcc.vo.driver.TokenInfo;
 
 /**
  * @author pengrk
@@ -12,10 +11,11 @@ import cn.obcc.vo.driver.TokenInfo;
  * @desc TODO
  * @date 2019/8/28 0028  17:44
  **/
-public class TxInfoDao extends JdbcTemplateDao<BlockTxInfo, Long> implements JdbcDao<BlockTxInfo, Long>, java.io.Serializable  {
+public class TxInfoDaoBase extends BaseJdbcTemplateDao<BlockTxInfo, Long> implements JdbcDao<BlockTxInfo, Long>, java.io.Serializable  {
 
 
     ////todo:
+    @Override
     public String getCreateSql(){
         return " CREATE TABLE " + this.tableName() + " (" +
                 primaryKeyName() + "  bigint(80) NOT NULL," +
@@ -43,11 +43,13 @@ public class TxInfoDao extends JdbcTemplateDao<BlockTxInfo, Long> implements Jdb
                 " PRIMARY KEY (`" + primaryKeyName() + "`) )";
     }
 
+    @Override
     public String primaryKeyName() {
         //return JdbcUtil.findIdNameForClz(entityClass);
         return "id";
     }
 
+    @Override
     public String tableName() {
         return "block_tx_info";
         // return JdbcUtil.findTabelNameFromClz(entityClass);

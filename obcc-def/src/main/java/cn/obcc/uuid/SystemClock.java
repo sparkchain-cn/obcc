@@ -41,6 +41,7 @@ public class SystemClock {
                     }
                 });
         scheduler.scheduleAtFixedRate(new Runnable() {
+            @Override
             public void run() {
                 SystemClock.this.now.set(System.currentTimeMillis());
             }

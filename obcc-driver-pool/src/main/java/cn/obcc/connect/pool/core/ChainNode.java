@@ -81,8 +81,9 @@ public class ChainNode<T> {
 
     public void removeTo(int needCount) throws Exception {
         removeDead();
-        if (clientWrapperList.size() == needCount)
+        if (clientWrapperList.size() == needCount) {
             return;
+        }
 
         if (clientWrapperList.size() < needCount) {
             addTo(needCount);
@@ -234,8 +235,9 @@ public class ChainNode<T> {
                     clientWrapperList.add(tw);
                 }
                 return tw;
-            }catch (Exception e){e.printStackTrace();}
-            finally {
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
                 return null;
             }
         }

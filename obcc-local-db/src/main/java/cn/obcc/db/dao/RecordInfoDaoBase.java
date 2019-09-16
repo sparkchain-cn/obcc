@@ -1,8 +1,7 @@
 package cn.obcc.db.dao;
 
 import cn.obcc.db.base.JdbcDao;
-import cn.obcc.db.base.JdbcTemplateDao;
-import cn.obcc.vo.driver.AccountInfo;
+import cn.obcc.db.base.BaseJdbcTemplateDao;
 import cn.obcc.vo.driver.RecordInfo;
 
 /**
@@ -12,10 +11,11 @@ import cn.obcc.vo.driver.RecordInfo;
  * @desc TODO
  * @date 2019/8/28 0028  17:44
  **/
-public class RecordInfoDao extends JdbcTemplateDao<RecordInfo, Long> implements JdbcDao<RecordInfo, Long>, java.io.Serializable {
+public class RecordInfoDaoBase extends BaseJdbcTemplateDao<RecordInfo, Long> implements JdbcDao<RecordInfo, Long>, java.io.Serializable {
 
 
     ////todo:
+    @Override
     public String getCreateSql() {
         return " CREATE TABLE " + this.tableName() + " (" +
                 primaryKeyName() + "  bigint(80) NOT NULL," +
@@ -26,11 +26,13 @@ public class RecordInfoDao extends JdbcTemplateDao<RecordInfo, Long> implements 
                 " PRIMARY KEY (`" + primaryKeyName() + "`) )";
     }
 
+    @Override
     public String primaryKeyName() {
         //return JdbcUtil.findIdNameForClz(entityClass);
         return "id";
     }
 
+    @Override
     public String tableName() {
         return "record_info";
         // return JdbcUtil.findTabelNameFromClz(entityClass);

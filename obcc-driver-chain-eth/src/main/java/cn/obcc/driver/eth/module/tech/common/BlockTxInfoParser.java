@@ -174,7 +174,7 @@ public class BlockTxInfoParser {
             if (!StringUtils.isNullOrEmpty(blockHash)) {
                 timeStamp = web3j.ethGetBlockByHash(blockHash, false).send().getBlock().getTimestamp();
             }
-            if (timeStamp == null) return null;
+            if (timeStamp == null) {return null;}
             return DateUtils.getDateFormat(new Date(timeStamp.longValue()), "MM/dd/yyyy HH:mm:ss");
             //return timeStamp == null ? (System.currentTimeMillis() / 1000) : timeStamp.longValue();
         } catch (IOException e) {

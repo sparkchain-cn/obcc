@@ -4,7 +4,7 @@ import cn.obcc.config.ExProps;
 import cn.obcc.driver.eth.module.account.AccountTransfer;
 import cn.obcc.driver.eth.module.tech.common.BlockTxInfoParser;
 import cn.obcc.driver.module.IAccountHandler;
-import cn.obcc.driver.module.base.AccountBaseHandler;
+import cn.obcc.driver.module.base.BaseAccountHandler;
 import cn.obcc.driver.utils.JunctionUtils;
 import cn.obcc.driver.vo.Account;
 import cn.obcc.driver.vo.ChainPipe;
@@ -32,7 +32,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 
 
-public class EthAccountHandler extends AccountBaseHandler<Web3j> implements IAccountHandler<Web3j> {
+public class EthAccountHandler extends BaseAccountHandler<Web3j> implements IAccountHandler<Web3j> {
 
     @Override
     public Account createAccount() throws Exception {
@@ -68,25 +68,25 @@ public class EthAccountHandler extends AccountBaseHandler<Web3j> implements IAcc
         if (account.getGasPrice() == null) {
             account.setGasPrice(0L);
         }
-        BigInteger gasPriceBInt = BigInteger.valueOf(account.getGasPrice());
+        BigInteger gasPrice = BigInteger.valueOf(account.getGasPrice());
         if (account.getGasPrice() <= 0) {
-            gasPriceBInt = DefaultGasProvider.GAS_PRICE;
-            account.setGasPrice(gasPriceBInt.longValue());
+            gasPrice = DefaultGasProvider.GAS_PRICE;
+            account.setGasPrice(gasPrice.longValue());
         }
 
-        BigInteger gasLimitBInt = BigInteger.valueOf(account.getGasLimit());
+        BigInteger gasLimit = BigInteger.valueOf(account.getGasLimit());
         if (account.getGasLimit() <= 0) {
-            gasLimitBInt = DefaultGasProvider.GAS_LIMIT;
-            account.setGasLimit(gasLimitBInt.longValue());
+            gasLimit = DefaultGasProvider.GAS_LIMIT;
+            account.setGasLimit(gasLimit.longValue());
         }
 
         //todo:估算gas
         return new Long[]{
-                gasPriceBInt.longValue(), gasLimitBInt.longValue()
+                gasPrice.longValue(), gasLimit.longValue()
         };
 
     }
-
+    @Override
     public boolean checkAccount(SrcAccount account, ExProps config) throws Exception {
         Credentials credentials = Credentials.create(account.getSecret());
         if (account.getSrcAddr().equalsIgnoreCase(credentials.getAddress())) {
@@ -99,9 +99,9 @@ public class EthAccountHandler extends AccountBaseHandler<Web3j> implements IAcc
     @Override
     public String onTransfer(ChainPipe pipe) throws Exception {
         // 把十进制的转换成ETH的Wei, 1ETH = 10^18 Wei
-        BigInteger amountBInt = Convert.toWei(pipe.getAmount(), Convert.Unit.ETHER).toBigInteger();
+        BigInteger amount = Convert.toWei(pipe.getAmount(), Convert.Unit.ETHER).toBigInteger();
         EthSendTransaction est = AccountTransfer.trySendTx(
-                pipe.getSrcAccount(), amountBInt, pipe.getDestAddr(), driver.getNonceCalculator(), pipe.getConfig(),getClient());
+                pipe.getSrcAccount(), amount, pipe.getDestAddr(), driver.getNonceCalculator(), pipe.getConfig(),getClient());
 
         Response.Error err = est.getError();
         if (err != null) {

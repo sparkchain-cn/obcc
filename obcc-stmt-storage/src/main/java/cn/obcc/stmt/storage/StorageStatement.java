@@ -1,29 +1,20 @@
 package cn.obcc.stmt.storage;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
 import cn.obcc.config.ExProps;
-import cn.obcc.driver.module.base.AccountBaseHandler;
-import cn.obcc.driver.module.fn.IUpchainFn;
 import cn.obcc.driver.vo.BizTxInfo;
-import cn.obcc.driver.vo.SrcAccount;
 import cn.obcc.exception.ObccException;
 import cn.obcc.exception.enums.*;
 import cn.obcc.stmt.IStorageStatement;
 import cn.obcc.stmt.base.BaseStatement;
-import cn.obcc.stmt.fn.IUploadFn;
-import cn.obcc.stmt.fn.IVerifyFn;
 import cn.obcc.stmt.storage.base.FileStorage;
 import cn.obcc.stmt.storage.base.IpfsStorage;
 import cn.obcc.stmt.storage.base.MemoStorage;
 import cn.obcc.utils.FileSafeUtils;
-import cn.obcc.utils.FileUtils;
 import cn.obcc.utils.base.StringUtils;
-import cn.obcc.vo.KeyValue;
-import cn.obcc.vo.RetData;
 import cn.obcc.vo.driver.BlockTxInfo;
 import cn.obcc.vo.driver.RecordInfo;
 import lombok.NonNull;

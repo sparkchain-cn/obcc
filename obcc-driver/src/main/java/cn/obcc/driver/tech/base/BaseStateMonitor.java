@@ -1,10 +1,8 @@
 package cn.obcc.driver.tech.base;
 
-import cn.obcc.config.ExProps;
 import cn.obcc.driver.base.BaseHandler;
-import cn.obcc.driver.module.base.AccountBaseHandler;
+import cn.obcc.driver.module.base.BaseAccountHandler;
 import cn.obcc.driver.tech.IStateMonitor;
-import cn.obcc.exception.enums.ETransferStatus;
 import cn.obcc.utils.base.StringUtils;
 import cn.obcc.vo.BizState;
 import net.jodah.expiringmap.ExpirationPolicy;
@@ -22,7 +20,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2019/9/7 0007  22:32
  **/
 public abstract class BaseStateMonitor<T> extends BaseHandler<T> implements IStateMonitor<T> {
-    public static final Logger logger = LoggerFactory.getLogger(AccountBaseHandler.class);
+    public static final Logger logger = LoggerFactory.getLogger(BaseAccountHandler.class);
 
     @Override
     public void setBizState(String bizId, BizState bizState) throws Exception {
@@ -51,7 +49,7 @@ public abstract class BaseStateMonitor<T> extends BaseHandler<T> implements ISta
     @Override
     public void delBizState(String bizId) throws Exception {
         BizState state = getBizState(bizId);
-        if (state == null) return;
+        if (state == null) {return;}
         IStateMonitor.BizStateMap.remove(bizId);
         if (state.isSingle()) {
             delState(state.getHash());

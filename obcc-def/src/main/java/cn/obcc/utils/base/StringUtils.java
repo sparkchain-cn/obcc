@@ -64,10 +64,12 @@ public class StringUtils {
     }
 
     public static String removeIds(String oldIds, String removeIds) {
-        if (isNullOrEmpty(removeIds))
+        if (isNullOrEmpty(removeIds)) {
             return oldIds;
-        if (isNullOrEmpty(oldIds))
+        }
+        if (isNullOrEmpty(oldIds)) {
             return "";
+        }
         String ids[] = oldIds.split(",");
         String newidss[] = removeIds.split(",");
 
@@ -106,8 +108,9 @@ public class StringUtils {
     }
 
     public static String incFillZero(String code, Integer len, String c) {
-        if (isNullOrEmpty(code))
+        if (isNullOrEmpty(code)) {
             code = "1";
+        }
         Integer intHao = Integer.parseInt(code);
         intHao++;
         String strHao = code + "";
@@ -241,8 +244,9 @@ public class StringUtils {
 
             String[] kvarr = kvs.split("[,，]");
             for (String kv : kvarr) {
-                if (isNullOrEmpty(kv))
+                if (isNullOrEmpty(kv)) {
                     continue;
+                }
                 String[] kvss = kv.split("[:：]");
                 if (kvss != null && kvss.length == 2) {
                     kvalues.add(new KeyValue(kvss[0], kvss[1]));
@@ -284,13 +288,13 @@ public class StringUtils {
      * 		返回radiodialog/singleselectlist.ftl
      * </pre>
      *
-     * @param s内容
-     * @param ch分隔字符
+     * @param s 内容
+     * @param ch 分隔字符
      * @param count  取第count个之后
      * @return
      */
     public static String afterStr(String s, String ch, int count) {
-        if (IsNullOrEmpty(s)) {
+        if (isNullOrEmpty(s)) {
             return s;
         }
         String temp = s;
@@ -312,13 +316,13 @@ public class StringUtils {
      * 如 afterStrSub(getPath(), "/", 1) 取得全路径中文件名
      * </pre>
      *
-     * @param s内容
+     * @param s 内容
      * @param ch    分隔字符
      * @param count 末尾向前数，取第count个
      * @return
      */
     public static String afterStrSub(String s, String ch, int count) {
-        if (IsNullOrEmpty(s)) {
+        if (isNullOrEmpty(s)) {
             return s;
         }
         String temp = s;
@@ -340,7 +344,7 @@ public class StringUtils {
     }
 
     public static String frontStr(String s, String ch, int count) {
-        if (IsNullOrEmpty(s)) {
+        if (isNullOrEmpty(s)) {
             return s;
         }
 
@@ -356,7 +360,7 @@ public class StringUtils {
     }
 
     public static String frontStrPre(String s, String ch, int count) {
-        if (IsNullOrEmpty(s)) {
+        if (isNullOrEmpty(s)) {
             return s;
         }
         String temp = s;
@@ -394,10 +398,12 @@ public class StringUtils {
      * @return
      */
     public static String buildPath(String path, boolean needhead) {
-        if (IsNullOrEmpty(path)) {
+        if (isNullOrEmpty(path)) {
             return path;
         } else {
-            path = path.replace("\\\\", "/").replace("\\", "/").replace("///", "/").replace("//", "/");
+            path = path.replace("\\\\", "/")
+                    .replace("\\", "/")
+                    .replace("///", "/").replace("//", "/");
             if (needhead == false) {
                 if (path.charAt(0) == '\\' | path.charAt(0) == '/') {
                     path = path.substring(1);
@@ -418,14 +424,16 @@ public class StringUtils {
      * @param path
      * @param needhead     false 如果路径中第一个字符是seperate,去掉它
      * @param needfoot     true 如果路径中最后一个字符不是seperate,加上它
-     * @param seperate分隔字符 ，一般为/,当然可以指定
+     * @param seperate 分隔字符 ，一般为/,当然可以指定
      * @return
      */
     public static String buildPath(String path, boolean needhead, boolean needfoot, String seperate) {
-        if (IsNullOrEmpty(path)) {
+        if (isNullOrEmpty(path)) {
             return path;
         } else {
-            path = path.replace("\\\\", seperate).replace("\\", seperate).replace("///", seperate).replace("//",
+            path = path.replace("\\\\", seperate)
+                    .replace("\\", seperate)
+                    .replace("///", seperate).replace("//",
                     seperate);
             if (needhead == false) {
                 if (path.charAt(0) == '\\' || path.charAt(0) == '/') {
@@ -455,8 +463,9 @@ public class StringUtils {
      * @return
      */
     public static boolean contain(List<String> arr, String s) {
-        if (arr == null || arr.size() < 1 || IsNullOrEmpty(s))
+        if (arr == null || arr.size() < 1 || isNullOrEmpty(s)) {
             return false;
+        }
         for (String str : arr) {
             if (str.equals(s)) {
                 return true;
@@ -474,8 +483,9 @@ public class StringUtils {
      * @return
      */
     public static boolean contain(String[] arr, String s) {
-        if (arr == null || arr.length < 1 || IsNullOrEmpty(s))
+        if (arr == null || arr.length < 1 || isNullOrEmpty(s)) {
             return false;
+        }
         for (String str : arr) {
             if (str.equals(s)) {
                 return true;
@@ -493,8 +503,9 @@ public class StringUtils {
      * @return
      */
     public static boolean containPre(String[] arr, String s) {
-        if (arr == null || arr.length < 1 || isNullOrEmpty(s))
+        if (arr == null || arr.length < 1 || isNullOrEmpty(s)) {
             return false;
+        }
         for (String str : arr) {
             if (s.startsWith(str)) {
                 return true;
@@ -512,8 +523,9 @@ public class StringUtils {
      * @return
      */
     public static boolean containStart(List<String> arr, String s) {
-        if (arr == null || arr.size() < 1 || IsNullOrEmpty(s))
+        if (arr == null || arr.size() < 1 || isNullOrEmpty(s)) {
             return false;
+        }
         for (String str : arr) {
             if (str.startsWith(s)) {
                 return true;
@@ -531,8 +543,9 @@ public class StringUtils {
      * @return
      */
     public static boolean containStart(String[] arr, String s) {
-        if (arr == null || arr.length < 1 || IsNullOrEmpty(s))
+        if (arr == null || arr.length < 1 || isNullOrEmpty(s)) {
             return false;
+        }
         for (String str : arr) {
             if (s.startsWith(str)) {
                 return true;
@@ -597,10 +610,11 @@ public class StringUtils {
     }
 
     public static String defaultValue(String str, String defalutv) {
-        if (str == null)
+        if (str == null) {
             return defalutv;
-        else
+        } else {
             return str;
+        }
     }
 
     /**
@@ -613,8 +627,9 @@ public class StringUtils {
 
     public static String exception(Throwable t) {
         try {
-            if (t == null)
+            if (t == null) {
                 return null;
+            }
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             try {
                 t.printStackTrace(new PrintStream(baos));
@@ -651,8 +666,9 @@ public class StringUtils {
      * @return
      */
     public static String getExt(String filename) {
-        if (filename == null)
+        if (filename == null) {
             return "";
+        }
         int index = filename.lastIndexOf(".");
         if (index > 0) {
             String ext = filename.substring(index + 1);
@@ -664,8 +680,9 @@ public class StringUtils {
     }
 
     public static String getExtDot(String filename) {
-        if (filename == null)
+        if (filename == null) {
             return "";
+        }
         int index = filename.lastIndexOf(".");
         if (index > -1) {
             String ext = filename.substring(index);
@@ -684,8 +701,9 @@ public class StringUtils {
      * @return
      */
     public static int indexOfArr(String[] arr, String s) {
-        if (arr == null || arr.length < 1 || IsNullOrEmpty(s))
+        if (arr == null || arr.length < 1 || isNullOrEmpty(s)) {
             return -1;
+        }
         for (int i = 0; i < arr.length; i++) {
             if (s.equals(arr[i])) {
                 return i;
@@ -762,28 +780,28 @@ public class StringUtils {
         return isChanged(s1, s2);
     }
 
-    @Deprecated
-    public static boolean IsNotNullOrEmpty(String str) {
-        return !IsNullOrEmpty(str);
-
-    }
+//    @Deprecated
+//    public static boolean IsNotNullOrEmpty(String str) {
+//        return !IsNullOrEmpty(str);
+//
+//    }
 
     public static boolean isNotNullOrEmpty(String str) {
         return !isNullOrEmpty(str);
     }
 
-    @Deprecated
-    public static boolean IsNullOrEmpty(String str) {
-
-        // if (str == null) {
-        // return true;
-        // }
-        // if ("".equals(str.trim())) {
-        // return true;
-        // }
-        // return false;
-        return isNullOrEmpty(str);
-    }
+//    @Deprecated
+//    public static boolean IsNullOrEmpty(String str) {
+//
+//        // if (str == null) {
+//        // return true;
+//        // }
+//        // if ("".equals(str.trim())) {
+//        // return true;
+//        // }
+//        // return false;
+//        return isNullOrEmpty(str);
+//    }
 
     public static boolean isNullOrEmpty(String str) {
 
@@ -912,8 +930,9 @@ public class StringUtils {
             return null;
         }
         String vString = o.toString();
-        if (isNullOrEmpty(vString))
+        if (isNullOrEmpty(vString)) {
             return null;
+        }
         String vString2 = vString.replaceAll("\"", "").replaceAll("'", "");
         return vString2;
 
@@ -1064,8 +1083,9 @@ public class StringUtils {
      * @return
      */
     public static String[] splitPath(String fullpath, String split) {
-        if (isNullOrEmpty(fullpath))
+        if (isNullOrEmpty(fullpath)) {
             return null;
+        }
         fullpath = buildPath(fullpath);
         String[] ps = fullpath.split(split);
 
@@ -1480,8 +1500,9 @@ class StringEncoding {
     }
 
     private int getEncodingValue(byte[] content) {
-        if (content == null)
+        if (content == null) {
             return -1;
+        }
         int[] scores;
         int index, maxscore = 0;
         int encoding = UNKNOWN;

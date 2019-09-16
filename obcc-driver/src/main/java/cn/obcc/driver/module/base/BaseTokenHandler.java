@@ -33,8 +33,8 @@ import java.util.List;
  * @desc TODO
  * @date 2019/9/9 0009  16:55
  **/
-public abstract class TokenBaseHandler<T> extends BaseHandler<T> implements ITokenHandler<T> {
-    public static final Logger logger = LoggerFactory.getLogger(TokenBaseHandler.class);
+public abstract class BaseTokenHandler<T> extends BaseHandler<T> implements ITokenHandler<T> {
+    public static final Logger logger = LoggerFactory.getLogger(BaseTokenHandler.class);
 
     @Override
     public void createToken(String bizId, SrcAccount account, String tokenName, String tokenCode, Long tokenSupply,
@@ -124,19 +124,25 @@ public abstract class TokenBaseHandler<T> extends BaseHandler<T> implements ITok
     }
 
     @Override
-    public TokenInfo getToken(String ContractAddr) throws Exception {
+    public TokenInfo getToken(String contractAddr) throws Exception {
         List<TokenInfo> list = getDriver().getLocalDb().getTokenInfoDao().
                 query(" contractAddress = ? or code= ?",
-                        new Object[]{ContractAddr, ContractAddr});
-        if (list == null || list.size() < 1) return null;
+                        new Object[]{contractAddr, contractAddr});
+        if (list == null || list.size() < 1) {
+            return null;
+        }
         return list.get(0);
     }
 
     @Override
     public TokenRec parseTxInfo(String contractAddr, ContractRec rec) throws Exception {
-        if (rec == null) return null;
+        if (rec == null) {
+            return null;
+        }
         TokenInfo info = getToken(contractAddr);
-        if (info == null) return null;
+        if (info == null) {
+            return null;
+        }
         ITokenParse tokenParse = null;
         if (StringUtils.isNotNullOrEmpty(info.getParseClsName())) {
             //todo:cache it

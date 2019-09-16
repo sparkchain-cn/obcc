@@ -2,11 +2,8 @@ package cn.obcc.driver.nonce.strategy;
 
 import cn.obcc.driver.nonce.INonceStrategy;
 import cn.obcc.utils.base.StringUtils;
-import net.jodah.expiringmap.ExpirationPolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author pengrk
@@ -15,8 +12,8 @@ import java.util.concurrent.TimeUnit;
  * @desc TODO
  * @date 2019/8/26 0026  9:37
  **/
-public abstract class RedisNonceStrategy implements INonceStrategy {
-    public static final Logger logger = LoggerFactory.getLogger(MemoryNonceStrategy.class);
+public abstract class BaseRedisNonceStrategy implements INonceStrategy {
+    public static final Logger logger = LoggerFactory.getLogger(BaseMemoryNonceStrategy.class);
 
 
 
@@ -49,8 +46,9 @@ public abstract class RedisNonceStrategy implements INonceStrategy {
     public Long getNounceFormRedis(String chainCode, String account) {
         String key = genAccountSeqKey(chainCode, account);
         String value = getKeyFromRedis(key);// null;// redisEthService.get(key);
-        if (value == null)
+        if (value == null) {
             return null;
+        }
         return Long.parseLong(value);
     }
 
@@ -96,7 +94,8 @@ public abstract class RedisNonceStrategy implements INonceStrategy {
 
     }
 
-    public Long adjustNonce(String chainCode, String address,Long num) throws Exception{
+    @Override
+    public Long adjustNonce(String chainCode, String address, Long num) throws Exception{
         String key = genAccountSeqKey(chainCode, address);
         Long nowSeq =num;
         Long nextSeq = nowSeq + 1;

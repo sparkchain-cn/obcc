@@ -76,7 +76,7 @@ public abstract class BaseChainDriver<T> implements IChainDriver<T> {
         return ChainClientPoolFactory.getClient(getChainClientName(), uuid, getChainClientBuilderClz());
     }
 
-
+    @Override
     public ISpeedAdjuster<T> getSpeedAdjuster() throws Exception {
         return (ISpeedAdjuster) handlerMap.get(EDriverHandlerType.SpeedAdjuster.getName());
     }
@@ -142,7 +142,7 @@ public abstract class BaseChainDriver<T> implements IChainDriver<T> {
         return this.localDb;
     }
 
-
+    @Override
     public ObccConfig getObccConfig() {
         return obccConfig;
     }

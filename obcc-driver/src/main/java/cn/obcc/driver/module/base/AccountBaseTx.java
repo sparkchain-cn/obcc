@@ -24,8 +24,8 @@ import java.util.List;
 public class AccountBaseTx {
 
 
-    public static BizTxInfo getTxByHashs(@NotEmpty String hashs, ExProps config, AccountBaseHandler accountBaseHandler) throws Exception {
-        if (StringUtils.isNullOrEmpty(hashs)) return null;
+    public static BizTxInfo getTxByHashs(@NotEmpty String hashs, ExProps config, BaseAccountHandler baseAccountHandler) throws Exception {
+        if (StringUtils.isNullOrEmpty(hashs)) {return null;}
         List<BlockTxInfo> list = new ArrayList<>();
 
         BizTxInfo bizTx = new BizTxInfo();
@@ -33,7 +33,7 @@ public class AccountBaseTx {
         StringBuffer sb = new StringBuffer();
         Arrays.stream(hashs.split("[,，]")).forEach((s) -> {
             try {
-                BlockTxInfo tx = accountBaseHandler.getTxByHash(hashs, config);
+                BlockTxInfo tx = baseAccountHandler.getTxByHash(hashs, config);
                 // BlockTxInfo tx = (BlockTxInfo) retetData();
                 sb.append(tx.getMemosObj().getData());
                 //todo:判断多个hash的流水的bizid是否相同
@@ -53,12 +53,12 @@ public class AccountBaseTx {
     }
 
 
-    public static BizTxInfo getTxByBizId(String bizId, ExProps config, IChainDriver driver, AccountBaseHandler accountBaseHandler) throws Exception {
+    public static BizTxInfo getTxByBizId(String bizId, ExProps config, IChainDriver driver, BaseAccountHandler baseAccountHandler) throws Exception {
         RecordInfo recordInfo = driver.getLocalDb().getRecordInfoDao().findOne("biz_id=?", new Object[]{bizId});
         if (recordInfo == null) {
             throw ObccException.create(EExceptionCode.RETURN_NULL_OR_EMPTY, "根据BizId:" + bizId + "不能找到对应的hash");
         }
-        BizTxInfo bizInfos = getTxByHashs(recordInfo.getHashs(), config, accountBaseHandler);
+        BizTxInfo bizInfos = getTxByHashs(recordInfo.getHashs(), config, baseAccountHandler);
         return bizInfos;
     }
 }

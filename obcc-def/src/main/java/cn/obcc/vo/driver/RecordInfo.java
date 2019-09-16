@@ -25,7 +25,17 @@ public class RecordInfo extends Entity {
 
     private String msgType;//msg,file
 
+    private String lastHashs;
+
     private int state;//
+
+    //每个bizId在一条链上
+    private String chainCode;
+
+    //每个bizId多条记录的blockNumber以，分隔
+    private String blockNumbers;
+
+    private String data;//原始的memo
 
     public String getBizId() {
         return bizId;
@@ -76,5 +86,38 @@ public class RecordInfo extends Entity {
 
     public void setMsgType(String msgType) {
         this.msgType = msgType;
+    }
+
+    public String getLastHashs() {
+        return lastHashs;
+    }
+
+    public void setLastHashs(String lastHashs) {
+        this.lastHashs = lastHashs;
+    }
+
+
+    public String getChainCode() {
+        return chainCode;
+    }
+
+    public void setChainCode(String chainCode) {
+        this.chainCode = chainCode;
+    }
+
+    public String getBlockNumbers() {
+        return blockNumbers;
+    }
+
+    public void setBlockNumbers(String blockNumbers) {
+        this.blockNumbers = blockNumbers;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
     }
 }

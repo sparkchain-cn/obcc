@@ -2,7 +2,6 @@ package cn.obcc.driver.eth.conn.builder;
 
 import cn.obcc.config.ObccConfig;
 import cn.obcc.connect.pool.fn.ClientAdviceFn;
-import cn.obcc.driver.base.BaseChainDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -20,7 +19,7 @@ public class EthClientBuilderTest {
 //    f89eee0cb710893e3f4bf3a737ac633848c8652a479e32c54376ad3cffa9841
     @Test
     public void testInit() throws Exception {
-        EthClientBuilder builder = new EthClientBuilder();
+        EthClientBuilderBase builder = new EthClientBuilderBase();
         builder.init("http://47.98.144.109:8745", null);
         Web3j web3j = builder.newNativeClient();
         Assert.assertNull(builder.getCallback());
@@ -70,7 +69,7 @@ public class EthClientBuilderTest {
 
     @Test
     public void testSetCallback() throws Exception {
-        EthClientBuilder builder = new EthClientBuilder();
+        EthClientBuilderBase builder = new EthClientBuilderBase();
         builder.init("http://47.98.144.109:8745", null);
         Web3j web3j = builder.newNativeClient();
         Assert.assertNull(builder.getCallback());
@@ -116,7 +115,7 @@ public class EthClientBuilderTest {
     @Test
     public void testNewNativeClient() throws Exception {
 
-        EthClientBuilder builder = new EthClientBuilder();
+        EthClientBuilderBase builder = new EthClientBuilderBase();
         builder.init("http://47.98.144.109:8745", null);
         Web3j web3j = builder.newNativeClient();
         BigInteger bn1 = web3j.ethBlockNumber().send().getBlockNumber();
@@ -131,7 +130,7 @@ public class EthClientBuilderTest {
 
     @Test
     public void testIsDead() throws Exception {
-        EthClientBuilder builder = new EthClientBuilder();
+        EthClientBuilderBase builder = new EthClientBuilderBase();
         builder.init("ws://47.98.144.109:8756", null);
         Web3j web3j = builder.newNativeClient();
 
@@ -145,7 +144,7 @@ public class EthClientBuilderTest {
 
     @Test
     public void testIsOpen() throws Exception {
-        EthClientBuilder builder = new EthClientBuilder();
+        EthClientBuilderBase builder = new EthClientBuilderBase();
         builder.init("ws://47.98.144.109:8756", null);
         Web3j web3j = builder.newNativeClient();
 
@@ -158,7 +157,7 @@ public class EthClientBuilderTest {
 
     @Test
     public void testOpen() throws Exception {
-        EthClientBuilder builder = new EthClientBuilder();
+        EthClientBuilderBase builder = new EthClientBuilderBase();
         builder.init("ws://47.98.144.109:8756", null);
         Web3j web3j = builder.newNativeClient();
 
@@ -175,7 +174,7 @@ public class EthClientBuilderTest {
 
     @Test
     public void testClose() throws Exception {
-        EthClientBuilder builder = new EthClientBuilder();
+        EthClientBuilderBase builder = new EthClientBuilderBase();
         builder.init("ws://47.98.144.109:8756", null);
         Web3j web3j = builder.newNativeClient();
 
@@ -193,7 +192,7 @@ public class EthClientBuilderTest {
     public void testGetClient() throws Exception {
         ObccConfig config = new ObccConfig();
         config.setNodeUrl("ws://47.98.144.109:8756");
-        Web3j web3j = EthClientBuilder.getClient(config);
+        Web3j web3j = EthClientBuilderBase.getClient(config);
 
         BigInteger bn2 = web3j.ethBlockNumber().send().getBlockNumber();
         Assert.assertNotNull(bn2);

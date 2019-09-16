@@ -151,8 +151,9 @@ public class ChainPipe {
         pipe.setConfig(config); //没变
         pipe.setCallbackFn(callbackFn); //没变
         pipe.setMethod(method);
-        if (params != null)
+        if (params != null) {
             pipe.setParams(Arrays.copyOf(params, params.length));
+        }
 
         return pipe;
     }

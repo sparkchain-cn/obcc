@@ -34,8 +34,9 @@ public class MapUtils {
             return true;
         }
         List list = map.get(key);
-        if (list.size() < 0)
+        if (list.size() < 0) {
             return true;
+        }
 
         return false;
     }
@@ -107,8 +108,9 @@ public class MapUtils {
     }
 
     public static String get(Map map, String key) {
-        if (map == null)
+        if (map == null) {
             return null;
+        }
         Object value = map.get(key);
         if (value != null) {
             return String.valueOf(value);
@@ -158,8 +160,9 @@ public class MapUtils {
      * @author:彭仁夔 于2014年11月3日上午8:46:56创建,，trim string
      */
     public static void buildDotMap(String s, Object v, Map map) {
-        if (StringUtils.isNullOrEmpty(s))
+        if (StringUtils.isNullOrEmpty(s)) {
             return;
+        }
         String[] strs = s.split(".");
         if (strs.length > 1) {
             int subpos = s.indexOf(".");
@@ -231,15 +234,17 @@ public class MapUtils {
     // }
     public static Map copy(Map source, Map dest, boolean only, boolean force) {
 
-        if (dest == null)
+        if (dest == null) {
             dest = new HashMap<Object, Object>();
+        }
         for (Object obj : source.keySet()) {
             if (only == true) {
                 Object object = source.get(obj);
                 if (object.getClass().isArray()) {
                     Object[] objs = (Object[]) object;
-                    if (objs == null || objs.length == 0)
+                    if (objs == null || objs.length == 0) {
                         continue;
+                    }
                     Object o = objs[0];
                     if (objs.length == 1 || force == true) {
                         dest.put(obj, o);
@@ -259,8 +264,9 @@ public class MapUtils {
 
     public static void remove(String names, Map map) {
 
-        if (StringUtils.isNullOrEmpty(names) || map == null)
+        if (StringUtils.isNullOrEmpty(names) || map == null) {
             return;
+        }
 
         String[] ns = names.split(",");
         if (ns != null) {
@@ -367,7 +373,7 @@ public class MapUtils {
             for (int i = 0; i < propertyDescriptors.length; i++) {
                 PropertyDescriptor descriptor = propertyDescriptors[i];
                 String propertyName = descriptor.getName();
-                if (names != null && names.length > 0)
+                if (names != null && names.length > 0) {
                     if (map.containsKey(propertyName) && StringUtils.contain(names, propertyName)) {
                         // 下面一句可以 try 起来，这样当一个属性赋值失败的时候就不会影响其他属性赋值。
                         Object value = map.get(propertyName);
@@ -391,6 +397,7 @@ public class MapUtils {
                         }
                         retMap.put(propertyName, value);
                     }
+                }
             }
         } catch (NumberFormatException e) {
             e.printStackTrace();
@@ -470,9 +477,10 @@ public class MapUtils {
         return returnMap;
     }
 
-    public static List<Map> ListObject2ListMap(List list) {
-        if (list == null)
+    public static List<Map> ListObjToListMap(List list) {
+        if (list == null) {
             return null;
+        }
         List<Map> retList = new ArrayList<>();
         for (Object o : list) {
             try {
@@ -492,8 +500,9 @@ public class MapUtils {
     }
 
     public static List<Map> listTree2ListMapTree(List list, String childrenName) {
-        if (list == null)
+        if (list == null) {
             return null;
+        }
         List<Map> retList = new ArrayList<>();
         for (Object o : list) {
             retList.add(treeObj2TreeMap(o, childrenName));
@@ -523,14 +532,17 @@ public class MapUtils {
     }
 
     public static boolean containAndNotNull(Map<String, ?> map, String key) {
-        if (!map.containsKey(key))
+        if (!map.containsKey(key)) {
             return false;
+        }
         Object v = map.get(key);
-        if (v == null)
+        if (v == null) {
             return false;
+        }
         if (v instanceof String) {
-            if (StringUtils.isNullOrEmpty((String) v))
+            if (StringUtils.isNullOrEmpty((String) v)) {
                 return false;
+            }
         }
         return true;
     }

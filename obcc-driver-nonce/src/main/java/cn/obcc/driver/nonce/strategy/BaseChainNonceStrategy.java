@@ -12,12 +12,13 @@ import java.util.concurrent.TimeUnit;
  * @desc TODO
  * @date 2019/8/26 0026  8:48
  **/
-public abstract class ChainNonceStrategy implements INonceStrategy {
+public abstract class BaseChainNonceStrategy implements INonceStrategy {
 
     @Override
     public Long computNonce(String chainCode, String address) throws Exception {
         return getNonceFromChain(address);
     }
+    @Override
     public Long adjustNonce(String chainCode, String address,Long num) throws Exception{
       //  String key = genAccountSeqKey(chainCode, address);
         Long nowSeq =num;

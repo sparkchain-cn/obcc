@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -23,9 +22,9 @@ import java.util.Set;
  * @wetsite:www.mgicode.com
  * @license:GPL
  */
-public abstract class JdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java.io.Serializable {
+public abstract class BaseJdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java.io.Serializable {
 
-    private static final Logger logger = Logger.getLogger(JdbcTemplateDao.class);
+    private static final Logger logger = Logger.getLogger(BaseJdbcTemplateDao.class);
 
     protected IJdbcTemplate jdbcTemplate;
     protected Class<T> entityClass;
@@ -34,7 +33,7 @@ public abstract class JdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java.io.
     private ObccConfig config;
 
     @SuppressWarnings("unchecked")
-    public JdbcTemplateDao() {
+    public BaseJdbcTemplateDao() {
         initEntity();
     }
 
@@ -78,6 +77,7 @@ public abstract class JdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java.io.
 //        }
     }
 
+    @Override
     public void add(T object) {
         // Assert.notNull(object, "对象不能为空");
         String tableName = JdbcUtil.findTabelName(object);
@@ -141,6 +141,7 @@ public abstract class JdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java.io.
         getJdbcTemplate().update(sql.toString(), params);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public List<T> query(String conditionSql, Object[] params) {
         return getJdbcTemplate().query(
@@ -148,6 +149,7 @@ public abstract class JdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java.io.
                 params, rowMapper);
     }
 
+    @Override
     public T findOne(String conditionSql, Object[] params) {
         List<T> list = query(conditionSql, params);
         if (list == null || list.isEmpty()) {
@@ -156,7 +158,7 @@ public abstract class JdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java.io.
         return list.get(0);
     }
 
-    public T findByID(PK id) {
+    public T findById(PK id) {
         List<T> list = query("" + primaryKeyName() + "= ? ", new Object[]{id});
         if (list == null || list.isEmpty()) {
             return null;
@@ -183,6 +185,7 @@ public abstract class JdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java.io.
     }
 
 
+    @Override
     @SuppressWarnings("unchecked")
     public List<T> queryBySql(String sql, Object[] params) {
         return getJdbcTemplate().query(sql, params, rowMapper);
@@ -193,10 +196,12 @@ public abstract class JdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java.io.
         return getJdbcTemplate().queryForSingle(sql);
     }
 
+    @Override
     public String queryIdsBySql(String sql, Object[] params) {
         final StringBuffer sBuffer = new StringBuffer();
         RowMapper rMapper = new RowMapper() {
-            public Object mapRow(ResultSet rs, int Index) throws SQLException {
+            @Override
+            public Object mapRow(ResultSet rs, int index) throws SQLException {
                 return String.valueOf(rs.getObject(1));
 
             }
@@ -218,18 +223,21 @@ public abstract class JdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java.io.
 
     }
 
+    @Override
     public void delete(String conditionSql, Object[] params) {
         getJdbcTemplate().update(
                 "delete from " + tableName() + " where  " + conditionSql,
                 params);
     }
 
+    @Override
     public T queryById(String id) {
         // Assert.notNull(id, "ID不能为空");
         final List<T> object = queryBy(primaryKeyName(), id);
         return (object.size() == 0) ? null : (T) object.get(0);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public List<T> queryBy(String propertyName, Object value) {
         return getJdbcTemplate().query(
@@ -237,6 +245,7 @@ public abstract class JdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java.io.
                         + " = ?", new Object[]{value}, rowMapper);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public List<T> queryAll() {
         return getJdbcTemplate().query("select * from " + tableName(),
@@ -253,6 +262,7 @@ public abstract class JdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java.io.
 
     }
 
+    @Override
     public void deleteById(Long id) {
         //Assert.notNull(id, "ID不能为空");
         getJdbcTemplate().update(
@@ -260,6 +270,7 @@ public abstract class JdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java.io.
                         + "= ?", new Object[]{id});
     }
 
+    @Override
     public void deleteAll() {
         getJdbcTemplate().update("delete from " + tableName());
     }
@@ -268,7 +279,8 @@ public abstract class JdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java.io.
      * 字段映射，子类直接使用
      */
     public RowMapper rowMapper = new RowMapper() {
-        public Object mapRow(ResultSet rs, int Index) throws SQLException {
+        @Override
+        public Object mapRow(ResultSet rs, int index) throws SQLException {
             T newEntity = null;
             try {
                 newEntity = entityClass.newInstance();
@@ -320,10 +332,12 @@ public abstract class JdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java.io.
 
     }
 
+    @Override
     public String primaryKeyName() {
         return JdbcUtil.findIdNameForClz(entityClass);
     }
 
+    @Override
     public String tableName() {
         return JdbcUtil.findTabelNameFromClz(entityClass);
     }

@@ -41,7 +41,7 @@ public class BaseException extends Exception {
 	public void setMsg(String msg) {
 		this.msg = msg;
 	}
-
+	@Override
 	public Throwable getCause() {
 		return cause;
 	}
