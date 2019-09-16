@@ -81,6 +81,10 @@ public class ObccConfig {
             setVal("d66b74561cf0d96766e527122085bb93e777cc758a3a6f485598325cf315209b");
         }
     };
+
+    private String localFilePath = "c:/obcc/";
+    private String ipfsPath = "http://localhost:6789";
+
     /**
      * 初始化账号(创世账号)
      */

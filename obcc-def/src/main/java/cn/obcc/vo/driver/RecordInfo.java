@@ -1,5 +1,6 @@
 package cn.obcc.vo.driver;
 
+import cn.obcc.vo.BcMemo;
 import cn.obcc.vo.Entity;
 
 import javax.persistence.Column;
@@ -20,6 +21,9 @@ public class RecordInfo extends Entity {
     private String hashs;
     private String userName;
 
+    private String storeType;//memo,IPFS,fileSys
+
+    private String msgType;//msg,file
 
     private int state;//
 
@@ -38,6 +42,7 @@ public class RecordInfo extends Entity {
     public void setHashs(String hashs) {
         this.hashs = hashs;
     }
+
     @Column(name = "user_name")
     public String getUserName() {
         return userName;
@@ -53,5 +58,23 @@ public class RecordInfo extends Entity {
 
     public void setState(int state) {
         this.state = state;
+    }
+
+    @Column(name = "store_type")
+    public String getStoreType() {
+        return storeType;
+    }
+
+    public void setStoreType(String storeType) {
+        this.storeType = storeType;
+    }
+
+    @Column(name = "msg_type")
+    public String getMsgType() {
+        return msgType;
+    }
+
+    public void setMsgType(String msgType) {
+        this.msgType = msgType;
     }
 }

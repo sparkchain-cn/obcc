@@ -153,9 +153,35 @@ public abstract class JdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java.io.
         if (list == null || list.isEmpty()) {
             return null;
         }
-        ;
         return list.get(0);
     }
+
+    public T findByID(PK id) {
+        List<T> list = query("" + primaryKeyName() + "= ? ", new Object[]{id});
+        if (list == null || list.isEmpty()) {
+            return null;
+        }
+        return list.get(0);
+    }
+
+    public T findOneByProp(String name, Object value) {
+        List<T> list = query("" + name + "= ? ", new Object[]{value});
+        if (list == null || list.isEmpty()) {
+            return null;
+        }
+        return list.get(0);
+    }
+
+
+
+    public List findByProp(String name, Object value) {
+        List<T> list = query("" + name + "= ? ", new Object[]{value});
+        if (list == null || list.isEmpty()) {
+            return null;
+        }
+        return list;
+    }
+
 
     @SuppressWarnings("unchecked")
     public List<T> queryBySql(String sql, Object[] params) {

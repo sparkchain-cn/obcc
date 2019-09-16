@@ -1,12 +1,16 @@
 package cn.obcc.utils;
 //package com.sparkchain.chain.junction.utils;
 //
+
 import io.ipfs.api.IPFS;
 import io.ipfs.api.MerkleNode;
 import io.ipfs.api.NamedStreamable;
 import io.ipfs.multihash.Multihash;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +41,7 @@ public class IpfsUtils {
         return ipfsMap.get(ipfsAddress);
     }
 
-    public static String add(String ipfsAddress, String memos) throws IOException {
+    public static String save(String ipfsAddress, String memos) throws IOException {
         IPFS ipfs = getIPFS(ipfsAddress);
 
         NamedStreamable.ByteArrayWrapper byteArrayWrapper = new NamedStreamable.ByteArrayWrapper(memos.getBytes());
@@ -45,9 +49,22 @@ public class IpfsUtils {
         return addResult.hash.toString();
     }
 
+
+    public static String save(String ipfsAddress, InputStream is) throws Exception {
+        IPFS ipfs = getIPFS(ipfsAddress);
+
+        NamedStreamable.ByteArrayWrapper byteArrayWrapper =
+                new NamedStreamable.ByteArrayWrapper(FileUtils.inputStreamToBytes(is));
+        MerkleNode addResult = ipfs.add(byteArrayWrapper).get(0);
+        return addResult.hash.toString();
+    }
+
+
     public static String cat(String ipfsAddress, String hash) throws IOException {
         IPFS ipfs = getIPFS(ipfsAddress);
         byte[] data = ipfs.cat(Multihash.fromBase58(hash));
         return new String(data);
     }
+
+
 }
