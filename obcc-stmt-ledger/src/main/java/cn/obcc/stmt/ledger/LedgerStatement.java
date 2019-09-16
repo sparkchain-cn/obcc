@@ -5,16 +5,12 @@ import cn.obcc.driver.module.fn.IUpchainFn;
 import cn.obcc.driver.vo.SrcAccount;
 import cn.obcc.exception.ObccException;
 import cn.obcc.exception.enums.EExceptionCode;
-import cn.obcc.exception.enums.ETransferStatus;
-import cn.obcc.exception.enums.EUpchainType;
 import cn.obcc.stmt.ILedgerStatement;
 import cn.obcc.stmt.base.BaseStatement;
 import cn.obcc.stmt.fn.ITokenSendFn;
 import cn.obcc.vo.Page;
 import cn.obcc.vo.driver.AccountInfo;
-import cn.obcc.vo.driver.BlockTxInfo;
 import cn.obcc.vo.driver.TokenInfo;
-import lombok.Lombok;
 import lombok.NonNull;
 
 public class LedgerStatement extends BaseStatement implements ILedgerStatement {
@@ -90,7 +86,7 @@ public class LedgerStatement extends BaseStatement implements ILedgerStatement {
     }
 
     protected AccountInfo getAccountInfo(String name) throws Exception {
-        AccountInfo info = getDriver().getLocalDb().getAccountInfoDao().findOne(" user_name=? ", new Object[]{name});
+        AccountInfo info = getDriver().getLocalDb().getAccountInfoDao().get(" user_name=? ", new Object[]{name});
         if (info == null) {
             throw ObccException.create(EExceptionCode.RETURN_NULL_OR_EMPTY, "username:{0} 找不到对象的账户", name);
         }

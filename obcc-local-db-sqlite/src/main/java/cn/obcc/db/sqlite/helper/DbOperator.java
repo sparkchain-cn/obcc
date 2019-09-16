@@ -2,7 +2,7 @@ package cn.obcc.db.sqlite.helper;
 
 import cn.obcc.db.mapper.RowMapper;
 import cn.obcc.db.sqlite.utils.ConnUtils;
-import cn.obcc.db.utils.TypeUtil;
+import cn.obcc.db.utils.TypeUtils;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -122,7 +122,7 @@ public class DbOperator {
     public <T> List<T> query(String sql, Object[] params, RowMapper<T> rm) throws SQLException, ClassNotFoundException {
         logger.debug("查询SQL:" + sql);
         logger.debug("查询参数:" + JSON.toJSONString(params));
-       // System.out.println(sql);
+        // System.out.println(sql);
         //System.out.println(JSON.toJSONString(params));
         List<T> rsList = new ArrayList<T>();
         ResultSet resultSet = null;
@@ -174,24 +174,26 @@ public class DbOperator {
     private void holdParams(PreparedStatement stmt, Object[] params) throws SQLException {
         int i = 1;
         for (Object o : params) {
-            if (TypeUtil.isString(o.getClass())) {
+            if (TypeUtils.isString(o.getClass())) {
                 stmt.setString(i, (String) o);
-            } else if (TypeUtil.isLong(o.getClass())) {
+            } else if (TypeUtils.isLong(o.getClass())) {
                 stmt.setLong(i, (Long) o);
-            } else if (TypeUtil.isInteger(o.getClass())) {
+            } else if (TypeUtils.isInteger(o.getClass())) {
                 stmt.setInt(i, (int) o);
-            } else if (TypeUtil.isBoolean(o.getClass())) {
+            } else if (TypeUtils.isBoolean(o.getClass())) {
                 stmt.setBoolean(i, (boolean) o);
-            } else if (TypeUtil.isDouble(o.getClass())) {
+            } else if (TypeUtils.isDouble(o.getClass())) {
                 stmt.setDouble(i, (double) o);
-            } else if (TypeUtil.isFloat(o.getClass())) {
+            } else if (TypeUtils.isFloat(o.getClass())) {
                 stmt.setFloat(i, (float) o);
             } else if (o instanceof Date || (o instanceof java.sql.Date)) {
                 stmt.setDate(i, (Date) o);
-            } else if (TypeUtil.isShort(o.getClass())) {
+            } else if (TypeUtils.isShort(o.getClass())) {
                 stmt.setShort(i, (short) o);
             } else if (o instanceof Timestamp) {
                 stmt.setTimestamp(i, (Timestamp) o);
+            } else if (o.getClass().isEnum()) {
+                stmt.setString(i, ((Enum) o).name());
             } else {
                 stmt.setString(i, (String) o);
             }
@@ -213,7 +215,7 @@ public class DbOperator {
     public int update(String sql, Object[] params) {
         logger.debug("操作SQL:" + sql);
         logger.debug("操作参数:" + JSON.toJSONString(params));
-       // System.out.println(sql);
+        // System.out.println(sql);
         //System.out.println(JSON.toJSONString(params));
 
         Connection connection = null;

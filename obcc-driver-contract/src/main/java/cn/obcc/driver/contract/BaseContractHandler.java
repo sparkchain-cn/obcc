@@ -71,7 +71,7 @@ public abstract class BaseContractHandler<T> extends BaseHandler<T> implements I
     @Override
     public ContractInfo getContract(@NotEmpty String bizId, @NotEmpty String contractName) throws Exception {
         return getDriver().getLocalDb().getContractInfoDao()
-                .findOne(" biz_id=? && name=? ", new Object[]{bizId + contractName, contractName});
+                .get(" biz_id=? && name=? ", new Object[]{bizId + contractName, contractName});
     }
 
     /**
@@ -85,7 +85,7 @@ public abstract class BaseContractHandler<T> extends BaseHandler<T> implements I
     public ContractInfo getContract(@NotEmpty String contractAddr) throws Exception {
         if (StringUtils.isNullOrEmpty(contractAddr)) {return null;}
         return getDriver().getLocalDb().getContractInfoDao()
-                .findOne(" contract_addr = ? ", new Object[]{contractAddr});
+                .get(" contract_addr = ? ", new Object[]{contractAddr});
     }
 
 

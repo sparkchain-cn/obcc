@@ -1,7 +1,7 @@
 package cn.obcc.driver.module.base;
 
 import cn.obcc.config.ExProps;
-import cn.obcc.db.utils.BeanUtil;
+import cn.obcc.db.utils.BeanUtils;
 import cn.obcc.driver.ITokenParse;
 import cn.obcc.driver.base.BaseHandler;
 import cn.obcc.driver.module.ITokenHandler;
@@ -116,7 +116,7 @@ public abstract class BaseTokenHandler<T> extends BaseHandler<T> implements ITok
     public boolean isExistToken(String contractAddr) throws Exception {
         //todo:修改
         String count = getDriver().getLocalDb().getTokenInfoDao()
-                .queryForSingle("select count(1) from token_info where contractAddress='" + contractAddr + "'");
+                .getValue("select count(1) from token_info where contractAddress='" + contractAddr + "'");
         if (Long.parseLong(count) > 0) {
             return true;
         }
@@ -146,7 +146,7 @@ public abstract class BaseTokenHandler<T> extends BaseHandler<T> implements ITok
         ITokenParse tokenParse = null;
         if (StringUtils.isNotNullOrEmpty(info.getParseClsName())) {
             //todo:cache it
-            tokenParse = (ITokenParse) BeanUtil.newInstance(info.getParseClsName());
+            tokenParse = (ITokenParse) BeanUtils.newInstance(info.getParseClsName());
         } else {
             tokenParse = new DefaultTokenParse();
         }

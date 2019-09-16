@@ -1,8 +1,11 @@
 package cn.obcc.vo.driver;
 
+import cn.obcc.utils.base.StringUtils;
 import cn.obcc.vo.Entity;
+import lombok.Data;
 
 import javax.persistence.Column;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -13,10 +16,15 @@ import javax.persistence.Table;
  * @date 2019/8/27 0027  16:06
  **/
 
-@Table(name = "account_info")
+//@Table(name = "account_info")
+@Data
 public class AccountInfo extends Entity {
 
+    @Id
+    private long id;
+
     private String bizId;
+
     private String userName;
     private String password;
     private String address;
@@ -26,60 +34,4 @@ public class AccountInfo extends Entity {
     //激活不在这里做
     private int state;//0:创建，1：已激活
 
-    @Column(name = "biz_id")
-    public String getBizId() {
-        return bizId;
-    }
-
-    public void setBizId(String bizId) {
-        this.bizId = bizId;
-    }
-    @Column(name = "user_name")
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getSecret() {
-        return secret;
-    }
-
-    public void setSecret(String secret) {
-        this.secret = secret;
-    }
-
-    public String getPublicKey() {
-        return publicKey;
-    }
-
-    public void setPublicKey(String publicKey) {
-        this.publicKey = publicKey;
-    }
-
-    public int getState() {
-        return state;
-    }
-
-    public void setState(int state) {
-        this.state = state;
-    }
 }

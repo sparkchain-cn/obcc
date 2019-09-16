@@ -94,7 +94,7 @@ public class StorageStatement extends BaseStatement implements IStorageStatement
     }
 
     private RecordInfo findRecord(String bizid) throws Exception {
-        RecordInfo recordInfo = getDriver().getLocalDb().getRecordInfoDao().findOneByProp("biz_id", bizid);
+        RecordInfo recordInfo = getDriver().getLocalDb().getRecordInfoDao().getByProp("biz_id", bizid);
         return recordInfo;
     }
 

@@ -87,21 +87,21 @@ public class DbStatement extends BaseStatement implements IDbStatement {
     protected Long getSize(String tableName, Long id) throws Exception {
         String bizId = getBizId(tableName, id);
         String v = getDriver().getLocalDb().getRecordInfoDao().
-                queryForSingle("select count(1) from record_info where biz_id like '" + bizId + "%'");
+                getValue("select count(1) from record_info where biz_id like '" + bizId + "%'");
         return Long.parseLong(v);
     }
 
     private String getUpdateBizId(String tableName, Long id) throws Exception {
         String bizId = getBizId(tableName, id);
         String v = getDriver().getLocalDb().getRecordInfoDao().
-                queryForSingle("select count(1) from record_info where biz_id like '" + bizId + "%'");
+                getValue("select count(1) from record_info where biz_id like '" + bizId + "%'");
         return bizId + "_" + v;
     }
 
     @Override
     public String update(String tableName, Long id, Object data) throws Exception {
         String bizId = getUpdateBizId(tableName, id);
-        RecordInfo recordInfo = getDriver().getLocalDb().getRecordInfoDao().findOneByProp("biz_id", bizId);
+        RecordInfo recordInfo = getDriver().getLocalDb().getRecordInfoDao().getByProp("biz_id", bizId);
         if (recordInfo == null) {
             throw ObccException.create(EExceptionCode.RETURN_NULL_OR_EMPTY, "id:{}can not find the RecordInfo.", id);
         }
@@ -136,14 +136,14 @@ public class DbStatement extends BaseStatement implements IDbStatement {
     @Override
     public boolean exist(String tableName, Long id) throws Exception {
         String bizId = getBizId(tableName, id);
-        RecordInfo recordInfo = getDriver().getLocalDb().getRecordInfoDao().findOneByProp("biz_id", bizId);
+        RecordInfo recordInfo = getDriver().getLocalDb().getRecordInfoDao().getByProp("biz_id", bizId);
         return recordInfo == null ? false : true;
     }
 
     @Override
     public boolean exist(EDbOperaType type, String name) throws Exception {
         String bizId = config.getClientId() + "_" + name;
-        RecordInfo recordInfo = getDriver().getLocalDb().getRecordInfoDao().findOneByProp("biz_id", bizId);
+        RecordInfo recordInfo = getDriver().getLocalDb().getRecordInfoDao().getByProp("biz_id", bizId);
         return recordInfo == null ? false : true;
     }
 

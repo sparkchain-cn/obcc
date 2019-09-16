@@ -101,7 +101,4 @@ public class Page<T> {
         return startRow;
     }
 
-    public void setStartRow(int startRow) {
-        this.startRow = startRow;
-    }
 }

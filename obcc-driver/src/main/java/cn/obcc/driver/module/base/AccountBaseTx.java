@@ -54,7 +54,7 @@ public class AccountBaseTx {
 
 
     public static BizTxInfo getTxByBizId(String bizId, ExProps config, IChainDriver driver, BaseAccountHandler baseAccountHandler) throws Exception {
-        RecordInfo recordInfo = driver.getLocalDb().getRecordInfoDao().findOne("biz_id=?", new Object[]{bizId});
+        RecordInfo recordInfo = driver.getLocalDb().getRecordInfoDao().get("biz_id=?", new Object[]{bizId});
         if (recordInfo == null) {
             throw ObccException.create(EExceptionCode.RETURN_NULL_OR_EMPTY, "根据BizId:" + bizId + "不能找到对应的hash");
         }

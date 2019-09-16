@@ -79,7 +79,7 @@ public class SqliteJdbcTemplate implements IJdbcTemplate {
     }
 
     @Override
-    public String queryForSingle(String sql) {
+    public String getValue(String sql) {
         String s = null;
         try {
             s = dbOperator.queryForSingle(sql);

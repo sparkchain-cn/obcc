@@ -1,5 +1,7 @@
 package cn.obcc.vo;
 
+import javax.persistence.Id;
+
 /**
  * @author pengrk
  * @version 1.0
@@ -9,13 +11,4 @@ package cn.obcc.vo;
  **/
 public class Entity {
 
-    private long id;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 }

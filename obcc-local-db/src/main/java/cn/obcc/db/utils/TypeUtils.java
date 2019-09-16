@@ -10,7 +10,7 @@ import java.util.Map;
  * @wetsite:www.mgicode.com
  * @license:GPL
  */
-public class TypeUtil {
+public class TypeUtils {
     /**
      * 判断是否是值类型
      **/

@@ -59,6 +59,56 @@ public class StringUtils {
 //		return mergeIds(oldIds, newIds);
 //	}
 
+    /**
+     * 下划线转驼峰法
+     *
+     * @param line       源字符串
+     * @param smallCamel 大小驼峰,是否为小驼峰
+     * @return 转换后的字符串
+     */
+    public static String underlineToCamel(String line, boolean smallCamel) {
+        if (line == null || "".equals(line)) {
+            return "";
+        }
+        StringBuffer sb = new StringBuffer();
+        Pattern pattern = Pattern.compile("([A-Za-z\\d]+)(_)?");
+        Matcher matcher = pattern.matcher(line);
+        while (matcher.find()) {
+            String word = matcher.group();
+            sb.append(smallCamel && matcher.start() == 0 ? Character.toLowerCase(word.charAt(0)) : Character.toUpperCase(word.charAt(0)));
+            int index = word.lastIndexOf('_');
+            if (index > 0) {
+                sb.append(word.substring(1, index).toLowerCase());
+            } else {
+                sb.append(word.substring(1).toLowerCase());
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 驼峰法转下划线
+     *
+     * @param line 源字符串
+     * @return 转换后的字符串
+     */
+    public static String camelToUnderline(String line) {
+        if (line == null || "".equals(line)) {
+            return "";
+        }
+        line = String.valueOf(line.charAt(0)).toUpperCase().concat(line.substring(1));
+        StringBuffer sb = new StringBuffer();
+        Pattern pattern = Pattern.compile("[A-Z]([a-z\\d]+)?");
+        Matcher matcher = pattern.matcher(line);
+        while (matcher.find()) {
+            String word = matcher.group();
+            sb.append(word.toUpperCase());
+            sb.append(matcher.end() == line.length() ? "" : "_");
+        }
+        return sb.toString();
+    }
+
+
     public static String delIds(String oldIds, String removeIds) {
         return removeIds(oldIds, removeIds);
     }
@@ -288,9 +338,9 @@ public class StringUtils {
      * 		返回radiodialog/singleselectlist.ftl
      * </pre>
      *
-     * @param s 内容
-     * @param ch 分隔字符
-     * @param count  取第count个之后
+     * @param s     内容
+     * @param ch    分隔字符
+     * @param count 取第count个之后
      * @return
      */
     public static String afterStr(String s, String ch, int count) {
@@ -316,7 +366,7 @@ public class StringUtils {
      * 如 afterStrSub(getPath(), "/", 1) 取得全路径中文件名
      * </pre>
      *
-     * @param s 内容
+     * @param s     内容
      * @param ch    分隔字符
      * @param count 末尾向前数，取第count个
      * @return
@@ -422,8 +472,8 @@ public class StringUtils {
      * 对路径进行处理把路径中/,//,\,\\等都转换为seperate，
      *
      * @param path
-     * @param needhead     false 如果路径中第一个字符是seperate,去掉它
-     * @param needfoot     true 如果路径中最后一个字符不是seperate,加上它
+     * @param needhead false 如果路径中第一个字符是seperate,去掉它
+     * @param needfoot true 如果路径中最后一个字符不是seperate,加上它
      * @param seperate 分隔字符 ，一般为/,当然可以指定
      * @return
      */
@@ -434,7 +484,7 @@ public class StringUtils {
             path = path.replace("\\\\", seperate)
                     .replace("\\", seperate)
                     .replace("///", seperate).replace("//",
-                    seperate);
+                            seperate);
             if (needhead == false) {
                 if (path.charAt(0) == '\\' || path.charAt(0) == '/') {
                     path = path.substring(1);
@@ -866,6 +916,12 @@ public class StringUtils {
         return str.substring(0, cnt);
     }
 
+    public static void main(String[] args) {
+        String line = "I_HAVE_AN_IPANG3_PIG";
+        String camel = underlineToCamel(line, true);
+        System.out.println(camel);
+        System.out.println(camelToUnderline(camel));
+    }
     // public static void main(String[] args) {
     // // utils.subStrUnCamel(entity.name,2,true)
     // String p = "http://pathd\\//de//dessss";

@@ -5,18 +5,13 @@ import java.util.Map;
 
 import cn.obcc.client.config.ConfigUtils;
 import cn.obcc.db.DbFactory;
-import cn.obcc.db.base.JdbcDao;
-import cn.obcc.db.utils.BeanUtil;
+import cn.obcc.db.utils.BeanUtils;
 import cn.obcc.stmt.IStatement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cn.obcc.config.ObccConfig;
 import cn.obcc.driver.IChainDriver;
-import cn.obcc.stmt.IDbStatement;
-import cn.obcc.stmt.ILedgerStatement;
-import cn.obcc.stmt.IStorageStatement;
-import cn.obcc.utils.base.StringUtils;
 
 public class ObccClient {
 
@@ -62,7 +57,7 @@ public class ObccClient {
 
     private IChainDriver initOrGetDriver() throws Exception {
         if (this.driver == null) {
-            IChainDriver driver = (IChainDriver) BeanUtil.newInstance(config.getDriverName());
+            IChainDriver driver = (IChainDriver) BeanUtils.newInstance(config.getDriverName());
             driver.init(config, initOrGetLocalDb());
             this.driver = driver;
         }

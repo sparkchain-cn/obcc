@@ -2,19 +2,21 @@ package cn.obcc.db.base;
 
 import cn.obcc.config.ObccConfig;
 import cn.obcc.db.mapper.RowMapper;
-import cn.obcc.db.utils.BeanUtil;
-import cn.obcc.db.utils.JdbcUtil;
+import cn.obcc.db.utils.BeanUtils;
+import cn.obcc.db.utils.ClassUtils;
+import cn.obcc.db.utils.ColumnNameReflect;
+import cn.obcc.db.utils.JdbcUtils;
 import cn.obcc.utils.base.StringUtils;
-import org.apache.log4j.Logger;
+import lombok.NonNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author pengrk
@@ -24,7 +26,7 @@ import java.util.Set;
  */
 public abstract class BaseJdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java.io.Serializable {
 
-    private static final Logger logger = Logger.getLogger(BaseJdbcTemplateDao.class);
+    public static final Logger logger = LoggerFactory.getLogger(BaseJdbcTemplateDao.class);
 
     protected IJdbcTemplate jdbcTemplate;
     protected Class<T> entityClass;
@@ -32,9 +34,13 @@ public abstract class BaseJdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java
 
     private ObccConfig config;
 
-    @SuppressWarnings("unchecked")
+    //fieldName->ColumnNameReflect
+    protected final Map<String, ColumnNameReflect> entityClzDistill;
+
+
     public BaseJdbcTemplateDao() {
         initEntity();
+        entityClzDistill = JdbcUtils.distillClz(entityClass);
     }
 
     @Override
@@ -42,9 +48,7 @@ public abstract class BaseJdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java
         this.config = config;
         this.jdbcTemplate = newJdbcTemplate();
         jdbcTemplate.init(config);
-
     }
-
 
     private IJdbcTemplate newJdbcTemplate() {
         String clzName = config.getJdbcTemplateName();
@@ -61,121 +65,154 @@ public abstract class BaseJdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java
 
 
     private void initEntity() {
-        entityClass = BeanUtil.getSuperClassGenricType(getClass());
-//        try {
-//            synchronized (this) {
-//                if (entity == null) {
-//                    entity = entityClass.newInstance();
-//                }
-//            }
-//
-//        } catch (InstantiationException e) {
-//            throw new RuntimeException(e);
-//        } catch (IllegalAccessException e) {
-//            throw new RuntimeException(e);
-//        }
+        entityClass = ClassUtils.getSuperClassGenricType(getClass());
+
     }
 
+
     @Override
-    public void add(T object) {
-        // Assert.notNull(object, "对象不能为空");
-        String tableName = JdbcUtil.findTabelName(object);
-        Map<String, Object> map = JdbcUtil.distill(object);
-        Set<String> columnNames = map.keySet();
-        StringBuffer columnString = new StringBuffer();
+    public void add(@NonNull T object) {
+        String tableName = tableName();
+        Collection<ColumnNameReflect> columnNames = entityClzDistill.values();
+        StringBuffer clnsb = new StringBuffer();
         List<Object> paramList = new ArrayList<Object>();
-        int index = 0;
         StringBuffer interrogations = new StringBuffer();
-        for (String columnName : columnNames) {
-            if (map.get(columnName) == null) {
+        int index = 0;
+
+        for (ColumnNameReflect nameReflect : columnNames) {
+            if (nameReflect == null) {
                 continue;
             }
-            columnString.append(columnName).append(",");
-            paramList.add(map.get(columnName));
+            clnsb.append(nameReflect).append(",");
+            try {
+                Object v = nameReflect.getReadMethod().invoke(object);
+                paramList.add(v);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+
             interrogations.append(" ? ").append(",");
             index++;
+
         }
         Object[] params = new Object[paramList.size()];
+
         for (int i = 0; i < paramList.size(); i++) {
             params[i] = paramList.get(i);
         }
-        columnString.deleteCharAt(columnString.length() - 1);
+
+        clnsb.deleteCharAt(clnsb.length() - 1);
         interrogations.deleteCharAt(interrogations.length() - 1);
-        final String sql = "insert into " + tableName + "(" + columnString
-                + " ) values(" + interrogations + ")";
+
+        final String sql = "INSERT INTO " + tableName + " ( " + clnsb
+                + " ) VALUES ( " + interrogations + " ) ";
+
+        logger.debug("sql:" + sql);
         getJdbcTemplate().update(sql, params);
     }
 
 
     @Override
-    public void update(T object) {
-        //Assert.notNull(object, "对象不能为空");
-        String tableName = JdbcUtil.findTabelName(object);
-        Map<String, Object> map = JdbcUtil.distill(object);
-        Set<String> columnNames = map.keySet();
+    public void update(@NonNull T object) {
+        String tableName = tableName();
+
+        Collection<ColumnNameReflect> columnNames = entityClzDistill.values();
         List<Object> paramList = new ArrayList<Object>();
         StringBuffer paramSql = new StringBuffer();
         Object id = null;
-        for (String columnName : columnNames) {
-            final Object value = map.get(columnName);
-            if (primaryKeyName().equalsIgnoreCase(columnName)) {
-                id = value;
-                continue;
+        for (ColumnNameReflect nameReflect : columnNames) {
+            try {
+                Object value = nameReflect.getReadMethod().invoke(object);
+                //解析Id
+                if (primaryKeyName().equalsIgnoreCase(nameReflect.getColumnName())) {
+                    id = value;
+                    continue;
+                }
+                //null值不update
+                if (value == null) {
+                    continue;
+                }
+                paramList.add(value);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
             }
-            if (value == null) {
-                continue;
-            }
-            paramSql.append(columnName).append(" = ").append("?").append(",");
-            paramList.add(value);
+
+            paramSql.append(nameReflect.getColumnName()).append(" = ").append(" ? ").append(" , ");
         }
+
         Object[] params = new Object[paramList.size() + 1];
+        //更新值
         for (int i = 0; i < paramList.size(); i++) {
             params[i] = paramList.get(i);
         }
+        //Id条件
         params[paramList.size()] = id;
+
         paramSql.deleteCharAt(paramSql.length() - 1);
+
         final StringBuffer sql = new StringBuffer().append("UPDATE ").append(
-                tableName).append(" SET ").append(paramSql).append(" where ")
-                .append(primaryKeyName()).append("=?");
+                tableName).append(" SET ").append(paramSql).append(" WHERE ")
+                .append(primaryKeyName()).append("= ?");
+
         getJdbcTemplate().update(sql.toString(), params);
     }
 
+
     @Override
-    @SuppressWarnings("unchecked")
+    public void update(@NonNull PK id, Map<String, Object> values) {
+        String tableName = tableName();
+
+        Collection<ColumnNameReflect> columnNames = entityClzDistill.values();
+        List<Object> paramList = new ArrayList<Object>();
+        StringBuffer paramSql = new StringBuffer();
+        // Object id = null;
+        for (String key : values.keySet()) {
+            ColumnNameReflect reflect = entityClzDistill.get(key);
+            if (reflect == null) {
+                logger.error("class {} field {} 不存在。", entityClass.getName(), key);
+                continue;
+            }
+            paramList.add(values.get(key));
+            paramSql.append(reflect.getColumnName()).append(" = ").append(" ? ").append(" , ");
+        }
+
+        Object[] params = new Object[paramList.size() + 1];
+        //更新值
+        for (
+                int i = 0; i < paramList.size(); i++) {
+            params[i] = paramList.get(i);
+        }
+        //Id条件
+        params[paramList.size()] = id;
+
+        paramSql.deleteCharAt(paramSql.length() - 1);
+
+        StringBuffer sql = new StringBuffer().append("UPDATE ").append(
+                tableName).append(" SET ").append(paramSql).append(" WHERE ")
+                .append(primaryKeyName()).append("= ?");
+
+        getJdbcTemplate().update(sql.toString(), params);
+    }
+
+
+    @Override
     public List<T> query(String conditionSql, Object[] params) {
         return getJdbcTemplate().query(
-                "select * from " + tableName() + " where  " + conditionSql,
+                "SELECT * FROM " + tableName() + " WHERE  " + conditionSql,
                 params, rowMapper);
     }
 
     @Override
-    public T findOne(String conditionSql, Object[] params) {
-        List<T> list = query(conditionSql, params);
-        if (list == null || list.isEmpty()) {
-            return null;
-        }
-        return list.get(0);
+    public List<T> queryBySql(String sql, Object[] params) {
+        return getJdbcTemplate().query(sql, params, rowMapper);
     }
 
-    public T findById(PK id) {
-        List<T> list = query("" + primaryKeyName() + "= ? ", new Object[]{id});
-        if (list == null || list.isEmpty()) {
-            return null;
-        }
-        return list.get(0);
-    }
-
-    public T findOneByProp(String name, Object value) {
-        List<T> list = query("" + name + "= ? ", new Object[]{value});
-        if (list == null || list.isEmpty()) {
-            return null;
-        }
-        return list.get(0);
-    }
-
-
-
-    public List findByProp(String name, Object value) {
+    @Override
+    public List<T> findByProp(String name, Object value) {
         List<T> list = query("" + name + "= ? ", new Object[]{value});
         if (list == null || list.isEmpty()) {
             return null;
@@ -183,26 +220,45 @@ public abstract class BaseJdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java
         return list;
     }
 
-
     @Override
-    @SuppressWarnings("unchecked")
-    public List<T> queryBySql(String sql, Object[] params) {
-        return getJdbcTemplate().query(sql, params, rowMapper);
-    }
-
-
-    public String queryForSingle(String sql) {
-        return getJdbcTemplate().queryForSingle(sql);
+    public T getById(PK id) {
+        List<T> list = query("" + primaryKeyName() + "= ? ", new Object[]{id});
+        if (list == null || list.isEmpty()) {
+            return null;
+        }
+        return list.get(0);
     }
 
     @Override
-    public String queryIdsBySql(String sql, Object[] params) {
+    public T getByProp(String name, Object value) {
+        List<T> list = query("" + name + "= ? ", new Object[]{value});
+        if (list == null || list.isEmpty()) {
+            return null;
+        }
+        return list.get(0);
+    }
+
+    @Override
+    public T get(String conditionSql, Object[] params) {
+        List<T> list = query(conditionSql, params);
+        if (list == null || list.isEmpty()) {
+            return null;
+        }
+        return list.get(0);
+    }
+
+    @Override
+    public String getValue(String sql) {
+        return getJdbcTemplate().getValue(sql);
+    }
+
+    @Override
+    public String getCatIds(String sql, Object[] params) {
         final StringBuffer sBuffer = new StringBuffer();
         RowMapper rMapper = new RowMapper() {
             @Override
             public Object mapRow(ResultSet rs, int index) throws SQLException {
                 return String.valueOf(rs.getObject(1));
-
             }
         };
         List<Object> list = getJdbcTemplate().query(sql, params, rMapper);
@@ -214,7 +270,6 @@ public abstract class BaseJdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java
                     sBuffer.append(",");
                 }
             }
-
             return sBuffer.toString();
         }
 
@@ -229,31 +284,24 @@ public abstract class BaseJdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java
                 params);
     }
 
-    @Override
-    public T queryById(String id) {
-        // Assert.notNull(id, "ID不能为空");
-        final List<T> object = queryBy(primaryKeyName(), id);
-        return (object.size() == 0) ? null : (T) object.get(0);
-    }
 
     @Override
     @SuppressWarnings("unchecked")
     public List<T> queryBy(String propertyName, Object value) {
         return getJdbcTemplate().query(
-                "select * from " + tableName() + " where " + propertyName
+                "SELECT * FROM " + tableName() + " WHERE " + propertyName
                         + " = ?", new Object[]{value}, rowMapper);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<T> queryAll() {
-        return getJdbcTemplate().query("select * from " + tableName(),
+        return getJdbcTemplate().query("SELECT * FROM " + tableName(),
                 rowMapper);
     }
 
     public boolean exist(String tableName) {
         String sql = String.format("SELECT count(*) FROM sqlite_master WHERE type='table' AND name= '%s'", tableName);
-        String count = queryForSingle(sql);
+        String count = getValue(sql);
         if (StringUtils.isNotNullOrEmpty(count) && Integer.parseInt(count) > 0) {
             return true;
         }
@@ -262,16 +310,15 @@ public abstract class BaseJdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java
     }
 
     @Override
-    public void deleteById(Long id) {
-        //Assert.notNull(id, "ID不能为空");
+    public void deleteById(@NonNull PK id) {
         getJdbcTemplate().update(
-                "delete from " + tableName() + " where " + primaryKeyName()
+                "DELETE FROM " + tableName() + " WHERE " + primaryKeyName()
                         + "= ?", new Object[]{id});
     }
 
     @Override
     public void deleteAll() {
-        getJdbcTemplate().update("delete from " + tableName());
+        getJdbcTemplate().update("DELETE FROM " + tableName());
     }
 
     /**
@@ -280,39 +327,35 @@ public abstract class BaseJdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java
     public RowMapper rowMapper = new RowMapper() {
         @Override
         public Object mapRow(ResultSet rs, int index) throws SQLException {
-            T newEntity = null;
-            try {
-                newEntity = entityClass.newInstance();
-            } catch (InstantiationException e1) {
-                throw new RuntimeException("字段映射时出现异常", e1);
-            } catch (IllegalAccessException e1) {
-                throw new RuntimeException("字段映射时出现异常", e1);
-            }
-            Map<String, Method> map = JdbcUtil.distillSetter(newEntity);
-            Set<String> columns = map.keySet();
-            for (String column : columns) {
-                Method method = map.get(column);
+            T newEntity = (T) BeanUtils.newInstance(entityClass);
+            for (ColumnNameReflect reflect : entityClzDistill.values()) {
+                Method method = reflect.getWriteMethod();
+                String clnName = reflect.getColumnName();
                 try {
-                    final String type = method.getParameterTypes()[0]
+                    String type = method.getParameterTypes()[0]
                             .getSimpleName();
                     if ("String".equals(type)) {
-                        method.invoke(newEntity, rs.getString(column));
+                        method.invoke(newEntity, rs.getString(clnName));
                     } else if ("int".equals(type) || "Integer".equals(type)) {
-                        method.invoke(newEntity, rs.getInt(column));
-                    } else if ("long".equals(type)) {
-                        method.invoke(newEntity, rs.getLong(column));
+                        method.invoke(newEntity, rs.getInt(clnName));
+                    } else if ("long".equals(type) || "Long".equals(type)) {
+                        method.invoke(newEntity, rs.getLong(clnName));
+                    } else if ("float".equals(type) || "Float".equals(type)) {
+                        method.invoke(newEntity, rs.getFloat(clnName));
+                    } else if ("double".equals(type) || "Double".equals(type)) {
+                        method.invoke(newEntity, rs.getDouble(clnName));
+                    } else if ("Boolean".equals(type) || "boolean".equals(type)) {
+                        method.invoke(newEntity, rs.getBoolean(clnName));
+                    } else if ("BigDecimal".equals(type) || "decimal".equals(type)) {
+                        method.invoke(newEntity, rs.getBigDecimal(clnName));
                     } else if ("Date".equals(type)) {
-                        method.invoke(newEntity, rs.getTimestamp(column));
+                        method.invoke(newEntity, rs.getTimestamp(clnName));
+                    } else if (method.getParameterTypes()[0].isEnum()) {
+                        method.invoke(newEntity, BeanUtils.getEnum(rs.getString(clnName), (Class<? extends Enum>) method.getParameterTypes()[0]));
                     } else {
-                        method.invoke(newEntity, rs.getObject(column));
+                        method.invoke(newEntity, rs.getObject(clnName));
                     }
-                } catch (IllegalArgumentException e) {
-                    throw new RuntimeException("字段映射时出现异常", e);
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException("字段映射时出现异常", e);
-                } catch (InvocationTargetException e) {
-                    throw new RuntimeException("字段映射时出现异常", e);
-                } catch (Exception e) {
+                } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException("字段映射时出现异常", e);
                 }
             }
@@ -333,12 +376,12 @@ public abstract class BaseJdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java
 
     @Override
     public String primaryKeyName() {
-        return JdbcUtil.findIdNameForClz(entityClass);
+        return JdbcUtils.findIdNameForClz(entityClass);
     }
 
     @Override
     public String tableName() {
-        return JdbcUtil.findTabelNameFromClz(entityClass);
+        return JdbcUtils.findTabelNameFromClz(entityClass);
     }
 
     @Override
@@ -348,4 +391,17 @@ public abstract class BaseJdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java
 
     ////todo:
     public abstract String getCreateSql();
+
+    //        try {
+//            synchronized (this) {
+//                if (entity == null) {
+//                    entity = entityClass.newInstance();
+//                }
+//            }
+//
+//        } catch (InstantiationException e) {
+//            throw new RuntimeException(e);
+//        } catch (IllegalAccessException e) {
+//            throw new RuntimeException(e);
+//        }
 }

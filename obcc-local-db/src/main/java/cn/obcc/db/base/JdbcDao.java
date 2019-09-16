@@ -2,8 +2,10 @@ package cn.obcc.db.base;
 
 import cn.obcc.config.ObccConfig;
 import cn.obcc.db.base.IJdbcTemplate;
+import lombok.NonNull;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author pengrk
@@ -32,6 +34,8 @@ public interface JdbcDao<T, PK> {
      */
     public void update(T object);
 
+    public void update(@NonNull PK id, Map<String, Object> values);
+
     /**
      * 按照指定条件和参数进行查询操作
      *
@@ -41,8 +45,17 @@ public interface JdbcDao<T, PK> {
      */
     public List<T> query(String conditionSql, Object[] params);
 
-    public T findOne(String conditionSql, Object[] params);
 
+
+    public List<T> findByProp(String name, Object value);
+
+
+    public T getById(PK id);
+    public T get(String conditionSql, Object[] params);
+
+    public T getByProp(String name, Object value);
+
+    public String getValue(String sql);
     /**
      * 使用sql语句进行查询
      *
@@ -60,7 +73,7 @@ public interface JdbcDao<T, PK> {
      * @param params 参数 如 new Object[]{"f","f"}
      * @return 存放对象的列表
      */
-    public String queryIdsBySql(String sql, Object[] params);
+    public String getCatIds(String sql, Object[] params);
 
     /**
      * 按照指定条件和参数进行删除操作
@@ -77,7 +90,7 @@ public interface JdbcDao<T, PK> {
      * @param id
      * @return
      */
-    public T queryById(String id);
+//    public T queryById(String id);
 
     /**
      * 根据属性名和属性值查询对象.
@@ -96,7 +109,7 @@ public interface JdbcDao<T, PK> {
      *
      * @param id
      */
-    public void deleteById(Long id);
+    public void deleteById(PK id);
 
     /**
      * 删除所有的对象
