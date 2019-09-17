@@ -102,7 +102,7 @@ public class EthAccountHandlerTest {
             }
         });
 
-        String hash = ethAccountHandler.doTransfer(pipe);
+        String hash = ethAccountHandler.transferSync(pipe);
         this.hash = hash;
         Assert.assertNotNull(hash);
 
@@ -189,7 +189,7 @@ public class EthAccountHandlerTest {
     @Test
     public void testTestCreateAccount() throws Exception {
         String bizId = UuidUtils.get() + "";
-        AccountInfo accountInfo = ethAccountHandler.createAccount(bizId, "user1", "user1");
+        AccountInfo accountInfo = ethAccountHandler.createAccount(bizId, "user1", "user1",new ExProps());
 
         Assert.assertNotNull(accountInfo.getAddress());
         Assert.assertNotNull(accountInfo.getPassword());

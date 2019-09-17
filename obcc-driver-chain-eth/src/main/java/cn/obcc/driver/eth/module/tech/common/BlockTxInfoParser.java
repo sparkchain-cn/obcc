@@ -100,6 +100,9 @@ public class BlockTxInfoParser {
         IContractHandler contractHandler = driver.getContractHandler();
         ITokenHandler tokenHandler = driver.getTokenHandler();
 
+        if (t.getTo() == null) {
+            return;
+        }
         ContractInfo contractInfo = contractHandler.getContract(t.getTo());
         if (contractInfo == null) {
             logger.debug("Contract " + t.getTo() + "is not  Contract  registed in this system.");
@@ -174,7 +177,9 @@ public class BlockTxInfoParser {
             if (!StringUtils.isNullOrEmpty(blockHash)) {
                 timeStamp = web3j.ethGetBlockByHash(blockHash, false).send().getBlock().getTimestamp();
             }
-            if (timeStamp == null) {return null;}
+            if (timeStamp == null) {
+                return null;
+            }
             return DateUtils.getDateFormat(new Date(timeStamp.longValue()), "MM/dd/yyyy HH:mm:ss");
             //return timeStamp == null ? (System.currentTimeMillis() / 1000) : timeStamp.longValue();
         } catch (IOException e) {

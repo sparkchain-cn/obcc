@@ -99,6 +99,7 @@ public class SqliteJdbcTemplate implements IJdbcTemplate {
 
     @Override
     public int update(String sql) {
+
         return dbOperator.update(sql);
     }
 

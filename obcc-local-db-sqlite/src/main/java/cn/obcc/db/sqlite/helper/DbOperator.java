@@ -76,7 +76,7 @@ public class DbOperator {
         return rsList;
     }
 
-    public <T> String getValue(String sql,Object[] params)
+    public <T> String getValue(String sql, Object[] params)
             throws SQLException, ClassNotFoundException {
         logger.debug("查询SQL:" + sql);
         //System.out.println(sql);
@@ -155,19 +155,20 @@ public class DbOperator {
      * @throws ClassNotFoundException
      */
     public int update(String sql) {
-        logger.debug("操作SQL:" + sql);
-        System.out.println(sql);
-        Connection connection = null;
-        try {
-            connection = this.openConn();
-            int c = connection.createStatement().executeUpdate(new String(sql.getBytes(), "utf8"));
-            return c;
-        } catch (UnsupportedEncodingException | SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return -1;
-        } finally {
-            this.close(connection);
-        }
+        return update(sql, new Object[]{});
+//        logger.debug("操作SQL:" + sql);
+//        System.out.println(sql);
+//        Connection connection = null;
+//        try {
+//            connection = this.openConn();
+//            int c = connection.createStatement().executeUpdate(new String(sql.getBytes(), "utf8"));
+//            return c;
+//        } catch (UnsupportedEncodingException | SQLException | ClassNotFoundException e) {
+//            e.printStackTrace();
+//            return -1;
+//        } finally {
+//            this.close(connection);
+//        }
 
     }
 
@@ -175,50 +176,44 @@ public class DbOperator {
     private void holdParams(PreparedStatement stmt, Object[] params) throws SQLException {
         int i = 1;
         for (Object o : params) {
-            if (TypeUtils.isString(o.getClass())) {
+//            if (o == null) {
+//                stmt.setObject(i, o);
+//                stmt.setNull(i, Types.VARCHAR);
+//                continue;
+//            }
+            String type = o.getClass().getSimpleName();
+            if ("String".equals(type)) {
                 stmt.setString(i, (String) o);
-            } else if (TypeUtils.isLong(o.getClass())) {
+            } else if ("long".equals(type) || "Long".equals(type)) {
                 stmt.setLong(i, (Long) o);
-            } else if (TypeUtils.isInteger(o.getClass())) {
+            } else if ("int".equals(type) || "Integer".equals(type)) {
                 stmt.setInt(i, (int) o);
-            } else if (TypeUtils.isBoolean(o.getClass())) {
+            } else if ("boolean".equals(type) || "Boolean".equals(type)) {
                 stmt.setBoolean(i, (boolean) o);
-            } else if (TypeUtils.isDouble(o.getClass())) {
+            } else if ("double".equals(type) || "Double".equals(type)) {
                 stmt.setDouble(i, (double) o);
-            } else if (TypeUtils.isFloat(o.getClass())) {
+            } else if ("float".equals(type) || "Float".equals(type)) {
                 stmt.setFloat(i, (float) o);
-            } else if (o instanceof Date || (o instanceof java.sql.Date)) {
+            } else if ("date".equals(type) || "Date".equals(type) || o instanceof Date || (o instanceof java.sql.Date)) {
                 stmt.setDate(i, (Date) o);
-            } else if (TypeUtils.isShort(o.getClass())) {
+            } else if ("short".equals(type) || "Short".equals(type)) {
                 stmt.setShort(i, (short) o);
-            } else if (o instanceof Timestamp) {
+            } else if ("Timestamp".equals(type) || o instanceof Timestamp) {
                 stmt.setTimestamp(i, (Timestamp) o);
             } else if (o.getClass().isEnum()) {
                 stmt.setString(i, ((Enum) o).name());
             } else {
-                stmt.setString(i, (String) o);
+                //stmt.setString(i,  o);
+                stmt.setObject(i, o);
             }
             i++;
-            // stmt.setDate();
-            // stmt.setInt();
-            // stmt.setBoolean();
-            //stmt.setShort();
-            //stmt.setFloat();
-            // stmt.setDouble();
-            //stmt.setLong();
-            //stmt.setTimestamp();
-            //stmt.setString();
-            //stmt.setString(1, username);
-            //stmt.setString(2, address);
+
         }
     }
 
     public int update(String sql, Object[] params) {
         logger.debug("操作SQL:" + sql);
         logger.debug("操作参数:" + JSON.toJSONString(params));
-        // System.out.println(sql);
-        //System.out.println(JSON.toJSONString(params));
-
         Connection connection = null;
         PreparedStatement stmt = null;
 
@@ -226,12 +221,13 @@ public class DbOperator {
             connection = this.openConn();
             stmt = connection.prepareStatement(sql);
             holdParams(stmt, params);
-            int rows = stmt.executeUpdate(new String(sql.getBytes(), "utf8"));
+            int rows = stmt.executeUpdate();
+            // int rows = stmt.executeUpdate(new String(sql.getBytes(), "utf8"));
             if (rows > 0) {
                 System.out.println("operate successfully!");
             }
             return rows;
-        } catch (SQLException | ClassNotFoundException | UnsupportedEncodingException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             return -1;
         } finally {
@@ -271,5 +267,48 @@ public class DbOperator {
             }
         }
     }
+
+
+//    private void holdParams(PreparedStatement stmt, Object[] params) throws SQLException {
+//        int i = 1;
+//        for (Object o : params) {
+//            String type =o.getClass().getSimpleName();
+//            if (TypeUtils.isString(o.getClass())) {
+//                stmt.setString(i, (String) o);
+//            } else if (TypeUtils.isLong(o.getClass())) {
+//                stmt.setLong(i, (Long) o);
+//            } else if (TypeUtils.isInteger(o.getClass())) {
+//                stmt.setInt(i, (int) o);
+//            } else if (TypeUtils.isBoolean(o.getClass())) {
+//                stmt.setBoolean(i, (boolean) o);
+//            } else if (TypeUtils.isDouble(o.getClass())) {
+//                stmt.setDouble(i, (double) o);
+//            } else if (TypeUtils.isFloat(o.getClass())) {
+//                stmt.setFloat(i, (float) o);
+//            } else if (o instanceof Date || (o instanceof java.sql.Date)) {
+//                stmt.setDate(i, (Date) o);
+//            } else if (TypeUtils.isShort(o.getClass())) {
+//                stmt.setShort(i, (short) o);
+//            } else if (o instanceof Timestamp) {
+//                stmt.setTimestamp(i, (Timestamp) o);
+//            } else if (o.getClass().isEnum()) {
+//                stmt.setString(i, ((Enum) o).name());
+//            } else {
+//                stmt.setString(i, (String) o);
+//            }
+//            i++;
+//            // stmt.setDate();
+//            // stmt.setInt();
+//            // stmt.setBoolean();
+//            //stmt.setShort();
+//            //stmt.setFloat();
+//            // stmt.setDouble();
+//            //stmt.setLong();
+//            //stmt.setTimestamp();
+//            //stmt.setString();
+//            //stmt.setString(1, username);
+//            //stmt.setString(2, address);
+//        }
+//    }
 
 }

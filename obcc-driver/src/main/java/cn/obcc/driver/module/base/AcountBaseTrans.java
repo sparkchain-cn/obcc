@@ -80,7 +80,7 @@ public class AcountBaseTrans {
                 recv.setErrorCode(((ObccException) e1).getErrorCode());
                 recv.setErrorMsg(((ObccException) e1).getMsg());
             } else {
-                recv.setErrorMsg(e1.getMessage());
+                recv.setErrorMsg(StringUtils.exception(e1));
                 recv.setErrorCode(EExceptionCode.UNDEAL_ERROR + "");
             }
         }

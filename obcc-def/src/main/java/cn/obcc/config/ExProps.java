@@ -25,7 +25,7 @@ public class ExProps implements Serializable {
     private EUpchainType upchainType = EUpchainType.Transfer;
 
     //传递过程，到transfer中保存到数据中去
-    private RecordInfo recordInfo;
+    private RecordInfo recordInfo = new RecordInfo();
 
     private String appid;
     private String sparkHash;

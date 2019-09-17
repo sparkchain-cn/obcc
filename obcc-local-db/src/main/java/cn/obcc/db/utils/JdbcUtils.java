@@ -20,6 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -34,7 +35,7 @@ public class JdbcUtils {
 
 
     public static Map<String, ColumnNameReflect> distillClz(Class entityClass) {
-        Map<String, ColumnNameReflect> result = new HashMap<String, ColumnNameReflect>();
+        Map<String, ColumnNameReflect> result = new LinkedHashMap<>();
 
         Map<String, ReadWriteMethod> map = BeanUtils.getPropMethods(entityClass);
 
@@ -45,9 +46,8 @@ public class JdbcUtils {
                 if (f.getAnnotation(Transient.class) != null) {
                     continue;
                 }
-
                 ColumnNameReflect crf = new ColumnNameReflect();
-                crf.setColumnName(StringUtils.camelToUnderline(f.getName()));
+                crf.setColumnName(StringUtils.camelToUnderline(f.getName()).toLowerCase());
                 crf.setField(f);
                 // 判断是否配置了字段的注释
                 boolean hasColumn = f.isAnnotationPresent(Column.class);
@@ -57,8 +57,7 @@ public class JdbcUtils {
                 if (column != null) {
                     crf.setColumn(column);
                 }
-
-                if (StringUtils.isNotNullOrEmpty(column.name())) {
+                if (column != null && StringUtils.isNotNullOrEmpty(column.name())) {
                     crf.setColumnName(column.name());
                 }
 
@@ -115,7 +114,7 @@ public class JdbcUtils {
             if (field.isAnnotationPresent(Column.class)) {
                 result = field.getAnnotation(Column.class).name();
             } else {
-                result = StringUtils.camelToUnderline(field.getName());
+                result = StringUtils.camelToUnderline(field.getName()).toLowerCase();
             }
             //  return result;
             if (result == null) {

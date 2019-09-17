@@ -43,6 +43,7 @@ public class DbFactory {
         txInfoDao = new TxInfoDaoBase();
         txInfoDao.init(config);
         txInfoDao.createTable();
+        tableInfoDao=new TableInfoDaoBase();
         tableInfoDao.init(config);
         tableInfoDao.createTable();
 

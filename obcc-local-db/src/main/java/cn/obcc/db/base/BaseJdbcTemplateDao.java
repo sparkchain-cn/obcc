@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+import javax.persistence.Column;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
@@ -80,9 +81,13 @@ public abstract class BaseJdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java
             if (nameReflect == null) {
                 continue;
             }
-            clnsb.append(nameReflect).append(",");
             try {
                 Object v = nameReflect.getReadMethod().invoke(object);
+                if (v == null) {
+                    continue;
+                }
+                clnsb.append(nameReflect.getColumnName()).append(",");
+
                 paramList.add(v);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
@@ -103,8 +108,8 @@ public abstract class BaseJdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java
         clnsb.deleteCharAt(clnsb.length() - 1);
         interrogations.deleteCharAt(interrogations.length() - 1);
 
-        final String sql = "INSERT INTO " + tableName + " ( " + clnsb
-                + " ) VALUES ( " + interrogations + " ) ";
+        final String sql = "INSERT INTO " + tableName + " ( " + clnsb.toString()
+                + " ) VALUES ( " + interrogations.toString() + " ) ";
 
         logger.debug("sql:" + sql);
         getJdbcTemplate().update(sql, params);
@@ -173,7 +178,8 @@ public abstract class BaseJdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java
                 logger.error("class {} field {} 不存在。", entityClass.getName(), key);
                 continue;
             }
-            paramList.add(values.get(key));
+            Object v = values.get(key);
+            paramList.add(v == null ? "" : v);
             paramSql.append(reflect.getColumnName()).append(" = ").append(" ? ").append(" , ");
         }
 
@@ -404,54 +410,42 @@ public abstract class BaseJdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java
         sb.append(" CREATE TABLE " + this.tableName() + " ( ");
 
         entityClzDistill.forEach((key, cnr) -> {
-            if (cnr.getColumnName().equals(primaryKeyName())) {
-                sb.append(primaryKeyName() + "  bigint(80) NOT NULL , ");
-            }
+//            if (cnr.getColumnName().equals(primaryKeyName())) {
+//                sb.append(primaryKeyName() + "  bigint(80) NOT NULL , ");
+//            }
             sb.append(" " + cnr.getColumnName() + " ");
             String type = cnr.getField().getType().getSimpleName();
-            //" user_name varchar(200) DEFAULT NULL," +
+            int len = 255;
+            if (cnr.getColumn() != null) {
+                len = cnr.getColumn().length();
+            }
             if ("String".equals(type)) {
-                sb.append(" varchar ( " + cnr.getColumn().length() + " ) ");
+                sb.append(" varchar ( " + len + " ) ");
             } else if ("int".equals(type) || "Integer".equals(type)) {
-                sb.append(" int  " + cnr.getColumn().length() + "  ");
+                sb.append(" int  " + "  ");
             } else if ("long".equals(type) || "Long".equals(type)) {
                 sb.append(" bigint(" + 80 + ")  ");
             } else if ("float".equals(type) || "Float".equals(type)) {
-                sb.append(" float ( " + cnr.getColumn().length() + ",10" + " ) ");
+                sb.append(" float ( " + len + ",10" + " ) ");
             } else if ("double".equals(type) || "Double".equals(type)) {
-                sb.append(" double ( " + cnr.getColumn().length() + ",10" + " ) ");
+                sb.append(" double ( " + len + ",10" + " ) ");
             } else if ("Boolean".equals(type) || "boolean".equals(type)) {
                 sb.append(" bit  ");
             } else if ("BigDecimal".equals(type) || "decimal".equals(type)) {
-                sb.append(" decimal( " + cnr.getColumn().length() + ",10" + " ) ");
+                sb.append(" decimal( " + len + ",10" + " ) ");
             } else if ("Date".equals(type)) {
                 sb.append(" date ");
             } else if (cnr.getField().getType().isEnum()) {
-                sb.append(" varchar ( " + cnr.getColumn().length() + " ) ");
+                sb.append(" varchar ( " + len + " ) ");
             } else {
-                sb.append(" varchar ( " + cnr.getColumn().length() + " ) ");
+                sb.append(" varchar ( " + len + " ) ");
             }
 
             sb.append(" DEFAULT NULL, ");
-
         });
 
         sb.append(" PRIMARY KEY (`" + primaryKeyName() + "`) )");
-
         return sb.toString();
     }
 }
-
-//        try {
-//            synchronized (this) {
-//                if (entity == null) {
-//                    entity = entityClass.newInstance();
-//                }
-//            }
-//
-//        } catch (InstantiationException e) {
-//            throw new RuntimeException(e);
-//        } catch (IllegalAccessException e) {
-//            throw new RuntimeException(e);
-//        }
 

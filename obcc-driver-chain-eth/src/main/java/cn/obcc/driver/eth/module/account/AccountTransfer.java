@@ -77,16 +77,16 @@ public class AccountTransfer {
 
         String signedTransactionData = signEthTxData(
                 account.getSecret(), destAddress, BigInteger.valueOf(Long.parseLong(account.getNonce())),
-                account.getGasPrice(), account.getGasLimit(), amount, account.getMemos());
+                account.getGasPrice(), account.getGasLimit(), amount, account.getMemos() == null ? "" : account.getMemos());
 
         EthSendTransaction est = null;
         try {
             est = web3j.ethSendRawTransaction(signedTransactionData).send();
         } catch (SocketTimeoutException ex) {
-             logger.error(StringUtils.exception(ex));
+            logger.error(StringUtils.exception(ex));
             throw ObccException.create(EExceptionCode.IO_EXCEPTION, "web3j SocketTimeoutException error.");
         } catch (IOException e) {
-             logger.error(StringUtils.exception(e));
+            logger.error(StringUtils.exception(e));
             throw ObccException.create(EExceptionCode.IO_EXCEPTION, "web3j IOException error.");
         }
         return est;
