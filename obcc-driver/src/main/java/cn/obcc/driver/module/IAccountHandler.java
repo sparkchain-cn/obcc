@@ -83,6 +83,15 @@ public interface IAccountHandler<T> extends IChainHandler<T> {
     public String transfer(String bizId, SrcAccount account, String amount,
                            String destAddress, ExProps config, IUpchainFn<BlockTxInfo> callback) throws Exception;
 
+    public default String transfer(String bizId, SrcAccount account,
+                                   String destAddress, ExProps config, IUpchainFn<BlockTxInfo> callback) throws Exception {
+        return transfer(bizId, account, "0", destAddress, config, callback);
+    }
+
+    public default String transfer(String bizId, SrcAccount account, String destAddress, ExProps config) throws Exception {
+        return transfer(bizId, account, "0", destAddress, config, null);
+    }
+
     /**
      * 根据 transfer返回的hash获取该次支付的相关信息;<br>
      * 多条记录进行合并

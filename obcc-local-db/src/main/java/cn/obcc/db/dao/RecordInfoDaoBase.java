@@ -17,7 +17,7 @@ public class RecordInfoDaoBase extends BaseJdbcTemplateDao<RecordInfo, Long> imp
 
 
     public String getBizIdPreLikeSize(String bizId) throws Exception {
-        String v = getValue("select count(1) from record_info where biz_id like ?", new Object[]{bizId + "%"});
+        String v = getValue("select count(1) from record_info where biz_id like ?", new Object[]{bizId + "##%"});
         return v;
     }
 

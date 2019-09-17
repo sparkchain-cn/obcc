@@ -24,15 +24,12 @@ public class ObccClient {
 
     private Map<String, IStatement> statementMap = new HashMap<>();
 
-
     private static Map<String, ObccClient> clientMap = new HashMap<String, ObccClient>();
 
     public static ObccClient get(String clientId, String nodeurl, ObccConfig config) throws Exception {
-
         if (clientMap.containsKey(clientId)) {
             return clientMap.get(clientId);
         }
-
         ObccClient client = new ObccClient();
         client.initConfig(clientId, nodeurl, config);
         client.initOrGetDriver();
@@ -94,18 +91,16 @@ public class ObccClient {
     /**************************************************/
 
     public boolean close() {
-
         clientMap.remove(this.config.getClientId());
-
         statementMap.forEach((key, value) -> {
             value.destory();
         });
         if (this.driver != null) {
             this.driver.destory();
         }
-
         return true;
     }
+
 
     public boolean gracefulClose() {
         this.close();

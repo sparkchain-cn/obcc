@@ -28,7 +28,7 @@ public class BaseCallbackRegister extends BaseHandler implements ICallbackRegist
         if (map.containsKey(bizId)) {
             throw ObccException.create(EExceptionCode.KEY_REPEAT, "注册回调函数时存在重复的Key.");
         }
-        map.put(bizId, fn, ExpirationPolicy.ACCESSED, 20, TimeUnit.MINUTES);
+        map.put(bizId, fn, ExpirationPolicy.ACCESSED, 50, TimeUnit.MINUTES);
     }
 
     @Override

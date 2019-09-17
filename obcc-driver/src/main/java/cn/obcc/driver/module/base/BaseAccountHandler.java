@@ -41,7 +41,7 @@ public abstract class BaseAccountHandler<T> extends BaseHandler<T> implements IA
         //创建完成调用 db保存
         Account ret = this.createAccount();
         if (ret == null) {
-            throw ObccException.create(EExceptionCode.CREATE_ACCOUNT_FAIL, "创建");
+            throw ObccException.create(EExceptionCode.CREATE_ACCOUNT_FAIL, "创建 account error.");
         }
         Account ac = (Account) ret;
         AccountInfo acInfo = new AccountInfo();
@@ -96,20 +96,18 @@ public abstract class BaseAccountHandler<T> extends BaseHandler<T> implements IA
         pipe.getCallbackFn().exec(pipe.getBizId(), null, pipe.getConfig().
                 getUpchainType(), ETransferStatus.STATE_SPC_QUEUE, null);
 
-        return UuidUtils.get() + "";
+        //流水表的ID
+        return pipe.getConfig().getRecordInfo().getId() + "";
     }
+
 
     @Override
     public String transferSync(ChainPipe pipe) throws Exception {
-
-        getDriver().getStateMonitor().setBizState(pipe.getBizId(),
-                new BizState(pipe.getBizId(), null,
-                        pipe.getConfig().getRecordInfo().getId() + "", ETransferStatus.STATE_WRITE_CHAIN));
+        BizStateExcutor.setBizState(driver, pipe, null, ETransferStatus.STATE_WRITE_CHAIN);
         //状态回调
-        pipe.getCallbackFn().exec(pipe.getBizId(), null,
-                pipe.getConfig().getUpchainType(), ETransferStatus.STATE_WRITE_CHAIN, null);
-
+        StateCbExcutor.call(pipe, null, ETransferStatus.STATE_WRITE_CHAIN, null);
         return AcountBaseTrans.multiTransfer(pipe, getDriver(), this);
+
     }
 
     @Override

@@ -34,4 +34,8 @@ public class BaseStatement implements IStatement {
     public IChainDriver getDriver() {
         return driver;
     }
+
+    protected void checkBizId(String bizId) throws Exception {
+        getDriver().getStateMonitor().checkAndSetBizId(bizId);
+    }
 }

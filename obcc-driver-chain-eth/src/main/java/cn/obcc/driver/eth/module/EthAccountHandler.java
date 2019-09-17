@@ -61,7 +61,7 @@ public class EthAccountHandler extends BaseAccountHandler<Web3j> implements IAcc
     @Override
     public Long[] calGas(SrcAccount account, String amount, String destAddress, ExProps config) throws Exception {
 
-        Web3j web3j = getClient();// config.getClient();
+        Web3j web3j = getClient();
         if (account.getGasLimit() == null) {
             account.setGasLimit(0L);
         }
@@ -86,6 +86,7 @@ public class EthAccountHandler extends BaseAccountHandler<Web3j> implements IAcc
         };
 
     }
+
     @Override
     public boolean checkAccount(SrcAccount account, ExProps config) throws Exception {
         Credentials credentials = Credentials.create(account.getSecret());
@@ -100,8 +101,8 @@ public class EthAccountHandler extends BaseAccountHandler<Web3j> implements IAcc
     public String onTransfer(ChainPipe pipe) throws Exception {
         // 把十进制的转换成ETH的Wei, 1ETH = 10^18 Wei
         BigInteger amount = Convert.toWei(pipe.getAmount(), Convert.Unit.ETHER).toBigInteger();
-        EthSendTransaction est = AccountTransfer.trySendTx(
-                pipe.getSrcAccount(), amount, pipe.getDestAddr(), driver.getNonceCalculator(), pipe.getConfig(),getClient());
+        EthSendTransaction est = AccountTransfer.trySendTx(pipe.getSrcAccount(), amount,
+                pipe.getDestAddr(), driver.getNonceCalculator(), pipe.getConfig(), getClient());
 
         Response.Error err = est.getError();
         if (err != null) {
@@ -115,9 +116,8 @@ public class EthAccountHandler extends BaseAccountHandler<Web3j> implements IAcc
 
     @Override
     public BlockTxInfo getTxByHash(String hash, ExProps config) throws Exception {
-
         try {
-            Web3j web3j = getClient();// config.getClient();
+            Web3j web3j = getClient();
             Transaction tx;
             String chaincode = getObccConfig().getChain().getName();
 
@@ -129,7 +129,6 @@ public class EthAccountHandler extends BaseAccountHandler<Web3j> implements IAcc
         } catch (Exception e) {
             throw ObccException.create(EExceptionCode.FETCH_TX_FAIL, e.getMessage());
         }
-        //return RetData.error("没有找到返回的结果");
         return null;
     }
 
@@ -138,7 +137,7 @@ public class EthAccountHandler extends BaseAccountHandler<Web3j> implements IAcc
     public String getBalance(String addr, ExProps config) throws Exception {
         try {
             addr = JunctionUtils.hexAddrress(addr);
-            Web3j web3j = getClient();//config.getClient();
+            Web3j web3j = getClient();
             EthGetBalance ethGetBalance = web3j.ethGetBalance(addr, DefaultBlockParameterName.LATEST).send();
             BigInteger balance = ethGetBalance.getBalance();
             BigDecimal bDecimal = Convert.fromWei(balance + "", Convert.Unit.ETHER);

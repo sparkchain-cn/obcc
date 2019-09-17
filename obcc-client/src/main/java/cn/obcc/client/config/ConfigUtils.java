@@ -12,12 +12,10 @@ import cn.obcc.utils.base.StringUtils;
  **/
 public class ConfigUtils {
 
-
     public static ObccConfig initConfig(String clientId, String nodeurl, ObccConfig config) {
         if (config == null) {
             config = new ObccConfig();
         }
-
         config.setClientId(clientId);
 
         if (StringUtils.isNotNullOrEmpty(nodeurl)) {

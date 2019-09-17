@@ -14,8 +14,14 @@ import lombok.Data;
 public class BizState {
 
     private String bizId;
+    //hash或##srcAddr+##nonce
     private String hash;
     private String recId;
+
+    //没有返回Hash
+   // private String srcAddr;
+   // private String none;
+
     private boolean single = true;
     private ETransferStatus status;
 

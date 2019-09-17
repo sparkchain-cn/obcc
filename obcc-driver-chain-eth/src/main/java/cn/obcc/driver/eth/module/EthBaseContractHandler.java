@@ -54,7 +54,7 @@ public class EthBaseContractHandler extends BaseContractHandler<Web3j> implement
     }
 
     @Override
-    public String encodeConstructor(String abi, List<String> params) throws Exception {
+    public String encodeConstructor(String abi, List<Object> params) throws Exception {
         List<String> types = AbiParser.getConstructorInputTypes(abi);
         List<Type> deployParams = ContractEncoder.genInputParams(types, params);
         String hex = FunctionEncoder.encodeConstructor(deployParams);
@@ -63,7 +63,7 @@ public class EthBaseContractHandler extends BaseContractHandler<Web3j> implement
 
 
     @Override
-    public String getInvokeHexData(String abi, String fnName, List<String> inputValues) throws Exception {
+    public String getInvokeHexData(String abi, String fnName, List<Object> inputValues) throws Exception {
 
         List<String> inputTypes = AbiParser.getFunctionInputTypes(abi, fnName);
         List<String> outputTypes = AbiParser.getFunctionOutputTypes(abi, fnName);
@@ -87,7 +87,7 @@ public class EthBaseContractHandler extends BaseContractHandler<Web3j> implement
 
     @Override
     public String invoke(String bizId, ContractInfo contractInfo, SrcAccount srcAccount,
-                         ExProps config, IUpchainFn<BlockTxInfo> fn, String methodName, List<String> params) throws Exception {
+                         ExProps config, IUpchainFn<BlockTxInfo> fn, String methodName, List<Object> params) throws Exception {
 
         try {
             String hex = getInvokeHexData(contractInfo.getAbi(), methodName, params);
@@ -117,7 +117,7 @@ public class EthBaseContractHandler extends BaseContractHandler<Web3j> implement
 
     @Override
     public String query(String srcAddr, ContractInfo contractInfo, ExProps config,
-                        String methodName, List<String> params) throws Exception {
+                        String methodName, List<Object> params) throws Exception {
 
         String hex = getInvokeHexData(contractInfo.getAbi(), methodName, params);
 

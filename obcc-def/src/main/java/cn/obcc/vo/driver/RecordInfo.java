@@ -28,7 +28,6 @@ public class RecordInfo extends Entity {
     private long id;
     //重发不在driver,driver只有网络IOException才重试
     private String bizId;
-
     //每个bizId在一条链上
     private String chainCode;
 
@@ -58,7 +57,11 @@ public class RecordInfo extends Entity {
     private List<TxRecv> txRecvList = new ArrayList<>();
     private String gasPrice;
     private String gasLimit;
+    //链接收时的区块高度
+    private String recvBlockHeight;
     private String nonce;
+    private String errorCode;
+    private String errorMsg;
     //多条流水，合并上面的数据
     private String txRecvJson;
 
@@ -73,6 +76,8 @@ public class RecordInfo extends Entity {
 
     //transfer state
     private ETransferStatus state;
+
+
 
     public List<TxConSensus> getComputedConSensusList() {
         List<TxConSensus> list = JSON.parseArray(consensusJson, TxConSensus.class);

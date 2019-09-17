@@ -19,8 +19,6 @@ public class LedgerStatement extends BaseStatement implements ILedgerStatement {
 
     @Override
     public void createAccount(@NonNull String bizId, @NonNull String username, @NonNull String pwd) throws Exception {
-
-        //只做特有的部分
         ExProps exProps = new ExProps() {{
             setRecordInfo(new RecordInfo() {{
                 setStmtType(EStmtType.LEDGER_CREATE_USER);
@@ -32,30 +30,24 @@ public class LedgerStatement extends BaseStatement implements ILedgerStatement {
 
     @Override
     public void activate(@NonNull String bizId, @NonNull String username, @NonNull long tokenCount) throws Exception {
-        getDriver().getStateMonitor().checkAndSetBizId(bizId);
+        checkBizId(bizId);
         SrcAccount account = new SrcAccount();
         account.setSrcAddr(config.getTokenCreateAccount().getKey());
         account.setSecret(config.getTokenCreateAccount().getVal());
         AccountInfo dest = getAccountInfo(username);
-
-        IUpchainFn fn1 = (bizId1, hash, upchainType, state, resp) -> {
-            //todo:
-        };
         //只做特有的部分
         ExProps exProps = new ExProps() {{
             setRecordInfo(new RecordInfo() {{
                 setStmtType(EStmtType.LEDGER_CREATE_USER);
-                // setSrcAccount(account.getSrcAddr());
                 setDestUser(username);
-                //  setDestAccount(dest.getAddress());
             }});
         }};
-        getDriver().getAccountHandler().transfer(bizId, account, tokenCount + "", dest.getAddress(), exProps, fn1);
+        getDriver().getAccountHandler().transfer(bizId, account, tokenCount + "", dest.getAddress(), exProps, null);
     }
 
     @Override
     public void createToken(@NonNull String bizId, @NonNull String tokenCode, @NonNull String tokenName, @NonNull long count) throws Exception {
-        getDriver().getStateMonitor().checkAndSetBizId(bizId);
+        checkBizId(bizId);
         SrcAccount account = new SrcAccount();
         account.setSrcAddr(config.getTokenCreateAccount().getKey());
         account.setSecret(config.getTokenCreateAccount().getVal());
@@ -65,7 +57,6 @@ public class LedgerStatement extends BaseStatement implements ILedgerStatement {
         ExProps exProps = new ExProps() {{
             setRecordInfo(new RecordInfo() {{
                 setStmtType(EStmtType.LEDGER_CREATE_USER);
-                // setSrcAccount(account.getSrcAddr());
                 setToken(tokenCode);
             }});
         }};
@@ -75,29 +66,24 @@ public class LedgerStatement extends BaseStatement implements ILedgerStatement {
     @Override
     public void send(String bizId, String tokenCode, String srcUsername,
                      String destUsername, long count, String memo, ITokenSendFn fn) throws Exception {
-        getDriver().getStateMonitor().checkAndSetBizId(bizId);
+        checkBizId(bizId);
         SrcAccount account = new SrcAccount();
         account.setSrcAddr(config.getTokenCreateAccount().getKey());
         account.setSecret(config.getTokenCreateAccount().getVal());
-        IUpchainFn fn1 = (bizId1, hash, upchainType, state, resp) -> {
-
-        };
         TokenInfo tokenInfo = getDriver().getTokenHandler().getToken(tokenCode);
         if (tokenInfo == null) {
             throw ObccException.create(EExceptionCode.RETURN_NULL_OR_EMPTY, "tokencode:{0} 找不到TokenInfo对象", tokenCode);
         }
-
         //只做特有的部分
         ExProps exProps = new ExProps() {{
             setRecordInfo(new RecordInfo() {{
                 setStmtType(EStmtType.LEDGER_TOKEN_SEND);
                 setSrcUser(srcUsername);
                 setDestUser(destUsername);
-                // setSrcAccount(account.getSrcAddr());
                 setToken(tokenCode);
             }});
         }};
-        getDriver().getTokenHandler().transfer(bizId, account, tokenInfo, null, tokenCode, exProps, fn1);
+        getDriver().getTokenHandler().transfer(bizId, account, tokenInfo, null, tokenCode, exProps, null);
 
     }
 
@@ -108,7 +94,6 @@ public class LedgerStatement extends BaseStatement implements ILedgerStatement {
         if (tokenCode == null || tokenCode.equals(config.getChain().getToken())) {
             return getDriver().getAccountHandler().getBalance(info.getAddress(), new ExProps());
         }
-
         TokenInfo tokenInfo = getDriver().getTokenHandler().getToken(tokenCode);
         if (tokenInfo == null) {
             throw ObccException.create(EExceptionCode.RETURN_NULL_OR_EMPTY, "tokencode:{0} 找不到TokenInfo对象", tokenCode);
@@ -121,7 +106,6 @@ public class LedgerStatement extends BaseStatement implements ILedgerStatement {
     public Page<Object> getBills(String username, String tokenCode, String destUsername, String limit) throws Exception {
         // TODO
         throw new RuntimeException("un impl.");
-        // return null;
     }
 
     protected AccountInfo getAccountInfo(String name) throws Exception {

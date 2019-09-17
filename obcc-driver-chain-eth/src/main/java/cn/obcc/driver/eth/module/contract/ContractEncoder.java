@@ -26,19 +26,19 @@ public class ContractEncoder {
     public static Logger logger = LoggerFactory.getLogger(ContractEncoder.class);
 
     //region common invoke
-    public static String getFnEncodeData(String functionName, List<String> inputTypes, List<String> inputValues, List<String> outputTypes) {
+    public static String getFnEncodeData(String functionName, List<String> inputTypes, List<Object> inputValues, List<String> outputTypes) {
         Function function = genFnEncodeData(functionName, inputTypes, inputValues, outputTypes);
         return FunctionEncoder.encode(function);
     }
 
-    public static Function genFnEncodeData(String functionName, List<String> inputTypes, List<String> inputValues, List<String> outputTypes) {
+    public static Function genFnEncodeData(String functionName, List<String> inputTypes, List<Object> inputValues, List<String> outputTypes) {
         List<Type> inputParameters = genInputParams(inputTypes, inputValues);
         List<TypeReference<?>> outputParameters = genOutputParams(outputTypes);
         Function function = new Function(functionName, inputParameters, outputParameters);
         return function;
     }
 
-    public static List<Type> genInputParams(List<String> types, List<String> values) {
+    public static List<Type> genInputParams(List<String> types, List<Object> values) {
 //		if(types.size() != values.size()){
 //			throw new Exception("The size of type list doesn't equal to the size of value list!");
 //		}
@@ -65,20 +65,20 @@ public class ContractEncoder {
         return inputParameters;
     }
 
-    private static Type genInputParam(String type, String value) {
+    private static Type genInputParam(String type, Object value) {
         if ("address".equalsIgnoreCase(type)) {
-            Address param = new Address(value);
+            Address param = new Address((String) value);
             return param;
         } else if ("uint256".equalsIgnoreCase(type)) {
 //			BigInteger amountBInt = Convert.toSha(value, Convert.Unit.MC).toBigInteger();
-            BigInteger amount = BigInteger.valueOf(Long.parseLong(value));
+            BigInteger amount = BigInteger.valueOf((Long) value);
             Uint256 param = new Uint256(amount);
             return param;
         } else if ("string".equalsIgnoreCase(type)) {
-            Utf8String param = new Utf8String(value);
+            Utf8String param = new Utf8String((String) value);
             return param;
         } else if ("bool".equalsIgnoreCase(type)) {
-            Bool param = new Bool(Boolean.parseBoolean(value));
+            Bool param = new Bool((Boolean) value);
             return param;
         } else {
             return null;

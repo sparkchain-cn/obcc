@@ -55,6 +55,10 @@ public class ObccException extends BizException {
 
     }
 
+    public boolean isError(EExceptionCode code) {
+        return code == errorCodeEnum ? true : false;
+    }
+
     public EExceptionCode getErrorCodeEnum() {
         return errorCodeEnum;
     }

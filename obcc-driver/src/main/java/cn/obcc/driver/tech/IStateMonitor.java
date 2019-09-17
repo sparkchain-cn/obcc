@@ -22,6 +22,10 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public interface IStateMonitor<T> extends IChainHandler<T> {
 
+    //todo:采用redis进行
+    //bizId->bizId
+    public static Map<String, String> BizIdMap = new ConcurrentHashMap<String, String>();
+
     //hash->state
     public static ExpiringMap<String, BizState> StateMap = ExpiringMap.builder()
             .variableExpiration()
@@ -32,9 +36,8 @@ public interface IStateMonitor<T> extends IChainHandler<T> {
             .variableExpiration()
             .build();
 
-    //todo:采用redis进行
-    //bizId->bizId
-    public static Map<String, String> BizIdMap = new ConcurrentHashMap<String, String>();
+
+
 
     public void checkAndSetBizId(String bizId) throws Exception;
 

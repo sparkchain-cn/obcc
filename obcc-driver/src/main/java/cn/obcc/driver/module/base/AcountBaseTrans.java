@@ -19,6 +19,7 @@ import cn.obcc.vo.driver.TxRecv;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.channels.Pipe;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,75 +35,80 @@ public class AcountBaseTrans {
     public static final Logger logger = LoggerFactory.getLogger(AcountBaseTrans.class);
 
     private static void checkTransfer(ChainPipe pipe, IChainDriver driver, IAccountHandler accountHandler) throws Exception {
+
         SrcAccount account = pipe.getSrcAccount();
-        String bizId = pipe.getBizId();
+
         if (StringUtils.isNullOrEmpty(pipe.getDestAddr())) {
             throw ObccException.create(EExceptionCode.PARAMETER_INVALID, "DestAddr is empty.");
         }
-        //区块回调的处理
-        //  driver.getCallbackRegister().register(bizId, pipe.getCallbackFn());
-
         //账户的格式 处理
         account.setSrcAddr(JunctionUtils.hexAddrress(account.getSrcAddr()));
-        final String destAddr = JunctionUtils.hexAddrress(pipe.getDestAddr());
+        String destAddr = JunctionUtils.hexAddrress(pipe.getDestAddr());
+
         // 1 、检测地址和私钥的正确性
         boolean flag = accountHandler.checkAccount(account, pipe.getConfig());
+
         if (flag == false) {
             throw ObccException.create(EExceptionCode.ACCOUNT_SECRET_NOT_FOLLOW_ADDR,
                     "private key and address can not agree.");
         }
     }
 
-    private static void transferOne(String memo, ChainPipe pipe, List<String> hashs,
-                                    IChainDriver driver, BaseAccountHandler accountHandler) {
+    private static String transferOne(String memo, ChainPipe pipe, IChainDriver driver, BaseAccountHandler accountHandler) throws Exception {
         ChainPipe p1 = pipe.copy();
         p1.getSrcAccount().setMemos(memo);
         String hash = transferOne(pipe, driver, accountHandler);
-        hashs.add(hash);
+        //  hashs.add(hash);
+        return hash;
     }
 
 
-    private static String transferOne(ChainPipe pipe, IChainDriver driver, BaseAccountHandler accountHandler) {
+    private static String transferOne(ChainPipe p1, IChainDriver driver, BaseAccountHandler accountHandler) throws Exception {
+        TxRecv recv = new TxRecv();
         try {
-            ChainPipe p1 = pipe;
-            List txRecvList = p1.getConfig().getRecordInfo().getTxRecvList();
-            //2、计算nonce,如果传入的没有，那么就直接计算
+            //1、计算nonce,如果传入的没有，那么就直接计算
             if (StringUtils.isNullOrEmpty(p1.getSrcAccount().getNonce())) {
-                Long nonce = driver.getNonceCalculator()
-                        .getNonce(p1.getSrcAccount().getSrcAddr(), p1.getConfig());
+                Long nonce = driver.getNonceCalculator().getNonce(p1.getSrcAccount().getSrcAddr(), p1.getConfig());
                 p1.getSrcAccount().setNonce(nonce.toString());
             }
-            //4、计算 gas
+            //2、计算 gas
             accountHandler.calGas(p1.getSrcAccount(), p1.getAmount(), p1.getDestAddr(), p1.getConfig());
-            // 5、transfer
-            String hash = accountHandler.onTransfer(p1);
-            //try Transfer之后的结果
-            txRecvList.add(new TxRecv() {{
-                setHash(hash);
-                setNonce(p1.getSrcAccount().getNonce());
-                setGasLimit(p1.getSrcAccount().getGasLimit() + "");
-                setGasPrice(p1.getSrcAccount().getGasPrice() + "");
-            }});
-            //6、hash deal
-            if (StringUtils.isNotNullOrEmpty(hash)) {
-                // register into state
-                driver.getStateMonitor().setHashState(hash, new BizState(p1.getBizId(), hash,
-                        pipe.getConfig().getRecordInfo().getId() + "", ETransferStatus.STATE_CHAIN_ACCEPT));
-                //状态回调
-                pipe.getCallbackFn().exec(pipe.getBizId(), hash,
-                        pipe.getConfig().getUpchainType(), ETransferStatus.STATE_CHAIN_ACCEPT_HALF, p1.getConfig().getRecordInfo());
+            //3、transfer
+            recv.setHash(accountHandler.onTransfer(p1));
+        } catch (Exception e1) {
+            if (e1 instanceof ObccException) {
+                recv.setErrorCode(((ObccException) e1).getErrorCode());
+                recv.setErrorMsg(((ObccException) e1).getMsg());
+            } else {
+                recv.setErrorMsg(e1.getMessage());
+                recv.setErrorCode(EExceptionCode.UNDEAL_ERROR + "");
             }
-            return hash;
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-        return null;
+        //4 try transfer之后的结果,传给状态回调函数进行处理，在accountHandler中transfer中
+        recv = buildTxRecv(p1, recv);
+        p1.getConfig().getRecordInfo().getTxRecvList().add(recv);
+        //5、 register into state
+        BizStateExcutor.setHashState(driver, p1, recv.getHash(), ETransferStatus.STATE_CHAIN_ACCEPT);
+        //6、状态回调
+        StateCbExcutor.call(p1, recv.getHash(), ETransferStatus.STATE_CHAIN_ACCEPT_HALF, p1.getConfig().getRecordInfo());
+        return recv.getHash();
+
+    }
+
+
+    private static TxRecv buildTxRecv(ChainPipe p1, TxRecv recv) {
+        recv.setNonce(p1.getSrcAccount().getNonce());
+        recv.setGasLimit(p1.getSrcAccount().getGasLimit() + "");
+        recv.setGasPrice(p1.getSrcAccount().getGasPrice() + "");
+        return recv;
+
     }
 
     public static String multiTransfer(ChainPipe pipe, IChainDriver driver, BaseAccountHandler accountHandler) throws Exception {
-        String hashStrs = null;
+
+        RecordInfo recordInfo = pipe.getConfig().getRecordInfo();
+
         try {
-            RecordInfo recordInfo = pipe.getConfig().getRecordInfo();
             //1.check
             checkTransfer(pipe, driver, accountHandler);
             //2.区块回调的处理
@@ -113,7 +119,8 @@ public class AcountBaseTrans {
                 if (pipe.getConfig().isNeedHandleMemo()) {
                     pipe.getSrcAccount().setMemos(driver.getMemoParser().encodeOne(pipe.getBizId(), pipe.getSrcAccount().getMemos()));
                 }
-                hashStrs = transferOne(pipe, driver, accountHandler);
+                String hash = transferOne(pipe, driver, accountHandler);
+                recordInfo.setHashs(hash);
                 recordInfo.setTxSize(1);
 
             } else {
@@ -121,37 +128,31 @@ public class AcountBaseTrans {
                 List<String> memos = driver.getMemoParser().encode(pipe.getBizId(), pipe.getSrcAccount().getMemos());
                 recordInfo.setTxSize(memos.size());
 
-                List<String> hashs = new ArrayList<>();
                 //每个memo的记录执行
-                memos.stream().forEach((memo) -> {
-                    transferOne(memo, pipe, hashs, driver, accountHandler);
-                });
-                //合并
-                hashStrs = StringUtils.join(hashs, ",");
+                List<String> hashList = new ArrayList<>();
+                for (String memo : memos) {
+                    hashList.add(transferOne(memo, pipe, driver, accountHandler));
+                }
+                recordInfo.setHashs(StringUtils.cat(hashList, ","));
             }
 
-            recordInfo.setHashs(hashStrs);
+            //注册biz State
+            BizStateExcutor.setBizState(driver, pipe, recordInfo.getHashs(), ETransferStatus.STATE_CHAIN_ACCEPT);
 
-            driver.getStateMonitor().setBizState(pipe.getBizId(),
-                    new BizState(pipe.getBizId(), hashStrs,
-                            pipe.getConfig().getRecordInfo().getId() + "", ETransferStatus.STATE_CHAIN_ACCEPT));
-            //状态回调
-            pipe.getCallbackFn().exec(pipe.getBizId(), hashStrs,
-                    pipe.getConfig().getUpchainType(), ETransferStatus.STATE_CHAIN_ACCEPT, pipe.getConfig().getRecordInfo());
-
-            return hashStrs;
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error("上链出错", e);
-            //todo:分情况：明确的错误
-            driver.getCallbackRegister().unRegister(pipe.getBizId());
-            //todo:分情况设状态，状态超时写入数据库
-            driver.getStateMonitor().setBizState(pipe.getBizId(),
-                    new BizState(pipe.getBizId(), hashStrs,
-                            pipe.getConfig().getRecordInfo().getId() + "", ETransferStatus.STATE_CHAIN_DEFINITE_FAILURE));
+        } catch (Exception e1) {
+            if (e1 instanceof ObccException) {
+                recordInfo.setErrorCode(((ObccException) e1).getErrorCode());
+                recordInfo.setErrorMsg(((ObccException) e1).getMsg());
+            } else {
+                recordInfo.setErrorMsg(e1.getMessage());
+                recordInfo.setErrorCode(EExceptionCode.UNDEAL_ERROR + "");
+            }
         }
 
-        return null;
+        //状态回调
+        StateCbExcutor.call(pipe, recordInfo.getHashs(), ETransferStatus.STATE_CHAIN_ACCEPT, pipe.getConfig().getRecordInfo());
+        return recordInfo.getHashs();
+
     }
 
 

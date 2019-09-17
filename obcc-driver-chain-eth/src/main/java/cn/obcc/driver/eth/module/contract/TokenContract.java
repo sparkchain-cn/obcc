@@ -115,7 +115,7 @@ public class TokenContract {
 	//region new methods
 	public static String getContractTransferData(String destAddr, String amount) {
 		List<String> inputTypes = new ArrayList<>();
-		List<String> inputValues = new ArrayList<>();
+		List<Object> inputValues = new ArrayList<>();
 		inputTypes.add("address");
 		inputValues.add(destAddr);
 		inputTypes.add("uint256");
@@ -130,7 +130,7 @@ public class TokenContract {
 
 	public static String getContractTransferData(String destAddr, String amount, String memos) {
 		List<String> inputTypes = new ArrayList<>();
-		List<String> inputValues = new ArrayList<>();
+		List<Object> inputValues = new ArrayList<>();
 		inputTypes.add("address");
 		inputValues.add(destAddr);
 		inputTypes.add("uint256");
@@ -147,7 +147,7 @@ public class TokenContract {
 
 	public static String getContractBalanceData(String owner) {
 		List<String> inputTypes = new ArrayList<>();
-		List<String> inputValues = new ArrayList<>();
+		List<Object> inputValues = new ArrayList<>();
 		inputTypes.add("address");
 		inputValues.add(owner);
 

@@ -41,21 +41,21 @@ public class StorageStatement extends BaseStatement implements IStorageStatement
     }
 
     @Override
-    public void store(@NonNull String bizid, @NonNull String msg, EStoreType type) throws Exception {
-        getDriver().getStateMonitor().checkAndSetBizId(bizid);
+    public void store(@NonNull String bizId, @NonNull String msg, EStoreType type) throws Exception {
+        checkBizId(bizId);
         if (type == EStoreType.FileSystem) {
-            FileStorage.store(bizid, msg, config, getDriver());
+            FileStorage.store(bizId, msg, config, getDriver());
 
         } else if (type == EStoreType.Ipfs) {
-            IpfsStorage.store(bizid, msg, config, getDriver());
+            IpfsStorage.store(bizId, msg, config, getDriver());
         } else {
-            MemoStorage.store(bizid, msg, config, getDriver());
+            MemoStorage.store(bizId, msg, config, getDriver());
         }
     }
 
     @Override
     public void store(String bizId, File file, EStoreType type) throws Exception {
-        getDriver().getStateMonitor().checkAndSetBizId(bizId);
+        checkBizId(bizId);
         if (type == EStoreType.FileSystem) {
             FileStorage.store(bizId, new FileInputStream(file), config, getDriver());
 
@@ -94,39 +94,39 @@ public class StorageStatement extends BaseStatement implements IStorageStatement
         return sb.toString();
     }
 
-    private RecordInfo findRecord(String bizid) throws Exception {
-        RecordInfo recordInfo = getDriver().getLocalDb().getRecordInfoDao().getByProp("biz_id", bizid);
+    private RecordInfo findRecord(String bizId) throws Exception {
+        RecordInfo recordInfo = getDriver().getLocalDb().getRecordInfoDao().getByProp("biz_id", bizId);
         return recordInfo;
     }
 
-    private RecordInfo checkAndGet(String bizid) throws Exception {
-        RecordInfo recordInfo = findRecord(bizid);
+    private RecordInfo checkAndGet(String bizId) throws Exception {
+        RecordInfo recordInfo = findRecord(bizId);
         if (recordInfo == null) {
-            throw ObccException.create(EExceptionCode.PARAMETER_INVALID, "bizId:{} can not find recordInfo", bizid);
+            throw ObccException.create(EExceptionCode.PARAMETER_INVALID, "bizId:{} can not find recordInfo", bizId);
         }
         if (recordInfo.getMsgType() == null) {
-            throw ObccException.create(EExceptionCode.PARAMETER_INVALID, "bizId:{}  find recordInfo type is null", bizid);
+            throw ObccException.create(EExceptionCode.PARAMETER_INVALID, "bizId:{}  find recordInfo type is null", bizId);
         }
 
         if (recordInfo.getStoreType() == null) {
-            throw ObccException.create(EExceptionCode.PARAMETER_INVALID, "bizId:{}  find recordInfo type is null", bizid);
+            throw ObccException.create(EExceptionCode.PARAMETER_INVALID, "bizId:{}  find recordInfo type is null", bizId);
         }
         return recordInfo;
     }
 
     @Override
-    public InputStream download(String bizid) throws Exception {
-        RecordInfo recordInfo = checkAndGet(bizid);
+    public InputStream download(String bizId) throws Exception {
+        RecordInfo recordInfo = checkAndGet(bizId);
 
         if (!recordInfo.getMsgType().equals(EMsgType.File.getName())) {
-            logger.error("bizId:{}  find recordInfo type is not file type,is {}", bizid, recordInfo.getMsgType());
+            logger.error("bizId:{}  find recordInfo type is not file type,is {}", bizId, recordInfo.getMsgType());
             return null;
         }
 
-        BizTxInfo txInfos = getState(bizid);
+        BizTxInfo txInfos = getState(bizId);
         // StringBuffer sb = new StringBuffer();
         if (txInfos == null || txInfos.getRecordInfos() == null || txInfos.getRecordInfos().size() == 0) {
-            logger.error("bizId:{}  can not find tx from the chain", bizid);
+            logger.error("bizId:{}  can not find tx from the chain", bizId);
             return null;
         }
         BlockTxInfo ri = txInfos.getRecordInfos().get(0);
@@ -144,18 +144,18 @@ public class StorageStatement extends BaseStatement implements IStorageStatement
             return IpfsStorage.getFile(sb.toString(), config, driver);
         } else if (recordInfo.getStoreType().equals(EStoreType.FileSystem)) {
             //sha1s
-            return new FileInputStream(FileStorage.getFile(config.getLocalFilePath(), bizid, sb.toString()));
+            return new FileInputStream(FileStorage.getFile(config.getLocalFilePath(), bizId, sb.toString()));
 
         }
 
-        logger.error("bizId:{}  downfile occur unkown exception. storage tyep  is {}", bizid, recordInfo.getStoreType());
+        logger.error("bizId:{}  downfile occur unkown exception. storage tyep  is {}", bizId, recordInfo.getStoreType());
         return null;
     }
 
 
     @Override
-    public boolean verifyMsg(@NonNull String bizid, @NonNull String msg) throws Exception {
-        String oldMsg = view(bizid);
+    public boolean verifyMsg(@NonNull String bizId, @NonNull String msg) throws Exception {
+        String oldMsg = view(bizId);
         if (msg.equals(oldMsg)) {
             return true;
         }
@@ -164,8 +164,8 @@ public class StorageStatement extends BaseStatement implements IStorageStatement
 
 
     @Override
-    public boolean verifyFile(@NonNull String bizid, @NonNull String sha1) throws Exception {
-        InputStream file = download(bizid);
+    public boolean verifyFile(@NonNull String bizId, @NonNull String sha1) throws Exception {
+        InputStream file = download(bizId);
         String newSha1 = FileSafeUtils.getSha1(file);
         return sha1.equals(newSha1);
     }

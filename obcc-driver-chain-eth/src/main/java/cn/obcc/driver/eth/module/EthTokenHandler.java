@@ -28,7 +28,7 @@ public class EthTokenHandler extends BaseTokenHandler<Web3j> implements ITokenHa
         return DefaultSolToken.DEFAULT_TOKEN_STR;
     }
     @Override
-    protected boolean check(TokenInfo token, String methodName, List<String> params) throws Exception {
+    protected boolean check(TokenInfo token, String methodName, List<Object> params) throws Exception {
         if (token == null) {
             throw ObccException.create(EExceptionCode.PARAMETER_INVALID, "token params is null");
             // return false;

@@ -47,7 +47,7 @@ public abstract class BaseTokenHandler<T> extends BaseHandler<T> implements ITok
                             String tokenName, String tokenCode, Long tokenSupply,
                             IUpchainFn<BlockTxInfo> fn, ExProps config) throws Exception {
 
-        List<String> params = new ArrayList<String>() {{
+        List<Object> params = new ArrayList<Object>() {{
             add(tokenName);
             add(tokenCode);
             add(tokenSupply + "");
@@ -162,7 +162,7 @@ public abstract class BaseTokenHandler<T> extends BaseHandler<T> implements ITok
             return null;
         }
         String hexValue = getDriver().getContractHandler().query(address, contractInfo, config, "balanceOf",
-                new ArrayList<String>() {{
+                new ArrayList<Object>() {{
                     add(address);
                 }});
 
@@ -176,7 +176,7 @@ public abstract class BaseTokenHandler<T> extends BaseHandler<T> implements ITok
     }
 
 
-    protected abstract boolean check(TokenInfo token, String methodName, List<String> params) throws Exception;
+    protected abstract boolean check(TokenInfo token, String methodName, List<Object> params) throws Exception;
 
     /**
      * transfer(address _to, uint256 _value)
@@ -195,7 +195,7 @@ public abstract class BaseTokenHandler<T> extends BaseHandler<T> implements ITok
     public String transfer(String bizId, SrcAccount account, TokenInfo token, String destAccount,
                            String amount, ExProps config, IUpchainFn<BlockTxInfo> fn) throws Exception {
         String methodName = "transfer";
-        List<String> parmas = new ArrayList<String>() {
+        List<Object> parmas = new ArrayList<Object>() {
             {
                 add(destAccount);
                 add(amount);
@@ -223,7 +223,7 @@ public abstract class BaseTokenHandler<T> extends BaseHandler<T> implements ITok
     public String burn(String bizId, SrcAccount account, TokenInfo token,
                        String amount, ExProps config, IUpchainFn<BlockTxInfo> fn) throws Exception {
         String methodName = "burn";
-        List<String> parmas = new ArrayList<String>() {
+        List<Object> parmas = new ArrayList<Object>() {
             {
                 add(amount);
             }
@@ -248,7 +248,7 @@ public abstract class BaseTokenHandler<T> extends BaseHandler<T> implements ITok
     public String supply(String bizId, SrcAccount account, TokenInfo token,
                          String amount, ExProps config, IUpchainFn<BlockTxInfo> fn) throws Exception {
         String methodName = "supply";
-        List<String> parmas = new ArrayList<String>() {
+        List<Object> parmas = new ArrayList<Object>() {
             {
                 add(amount);
             }
@@ -275,7 +275,7 @@ public abstract class BaseTokenHandler<T> extends BaseHandler<T> implements ITok
     public String approve(String bizId, SrcAccount account, TokenInfo token, String spenderAddr, String
             amount, ExProps config, IUpchainFn<BlockTxInfo> fn) throws Exception {
         String methodName = "approve";
-        List<String> parmas = new ArrayList<String>() {
+        List<Object> parmas = new ArrayList<Object>() {
             {
                 add(spenderAddr);
                 add(amount);
@@ -303,7 +303,7 @@ public abstract class BaseTokenHandler<T> extends BaseHandler<T> implements ITok
     public String transferFrom(String bizId, SrcAccount account, TokenInfo token, String srcAddr, String toAddr,
                                String amount, ExProps config, IUpchainFn<BlockTxInfo> fn) throws Exception {
         String methodName = "transferFrom";
-        List<String> parmas = new ArrayList<String>() {
+        List<Object> parmas = new ArrayList<Object>() {
             {
                 add(srcAddr);
                 add(toAddr);

@@ -17,5 +17,7 @@ public class TxRecv implements Serializable {
     private String gasPrice;
     private String gasLimit;
     private String nonce;
+    private String errorCode;
+    private String errorMsg;
 
 }

@@ -54,6 +54,9 @@ public class RecordExcutor {
             r.setGasLimit(txRecv.getGasLimit());
             r.setGasPrice(txRecv.getGasPrice());
             r.setNonce(txRecv.getNonce());
+            r.setErrorCode(txRecv.getErrorCode());
+            r.setErrorMsg(txRecv.getErrorMsg());
+
             r.setTxRecvJson(JSON.toJSONString(r.getTxRecvList()));
 
             recordInfoDao.update(r.getId(), new HashMap<String, Object>() {{
@@ -61,6 +64,8 @@ public class RecordExcutor {
                 put("gasLimit", r.getGasLimit());
                 put("gasPrice", r.getGasPrice());
                 put("nonce", r.getNonce());
+                put("errorCode", r.getErrorCode());
+                put("errorMsg", r.getErrorMsg());
                 put("txRecvJson", r.getTxRecvJson());
                 put("state", ETransferStatus.STATE_CHAIN_ACCEPT);
             }});

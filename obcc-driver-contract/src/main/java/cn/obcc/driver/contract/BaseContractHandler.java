@@ -106,7 +106,7 @@ public abstract class BaseContractHandler<T> extends BaseHandler<T> implements I
 
     @Override
     public String deploy(@NonNull String bizId, @NonNull SrcAccount srcAccount, @NonNull ContractInfo contractInfo,
-                         IUpchainFn<BlockTxInfo> fn, ExProps config, List<String> params) throws Exception {
+                         IUpchainFn<BlockTxInfo> fn, ExProps config, List<Object> params) throws Exception {
         try {
             String hex = getDeployHexData(contractInfo.getBin(), contractInfo.getAbi(), params);
             srcAccount.setMemos(hex);
@@ -149,7 +149,7 @@ public abstract class BaseContractHandler<T> extends BaseHandler<T> implements I
 
     @Override
     public String invoke(@NonNull String bizId, ContractInfo contractInfo, @NonNull SrcAccount srcAccount,
-                         ExProps config, IUpchainFn<BlockTxInfo> fn, @NonNull String methodName, List<String> params) throws Exception {
+                         ExProps config, IUpchainFn<BlockTxInfo> fn, @NonNull String methodName, List<Object> params) throws Exception {
         try {
             String hex = getInvokeHexData(contractInfo.getAbi(), methodName, params);
             srcAccount.setMemos(hex);
