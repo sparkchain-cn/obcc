@@ -14,27 +14,27 @@ import cn.obcc.vo.driver.AccountInfo;
 public class AccountInfoDaoBase extends BaseJdbcTemplateDao<AccountInfo, Long> implements JdbcDao<AccountInfo, Long>, java.io.Serializable {
 
 
-    ////todo:
-    @Override
-    public String getCreateSql(){
-        return " CREATE TABLE " + this.tableName() + " (" +
-                primaryKeyName() + "  bigint(80) NOT NULL," +
-                " biz_id varchar(200) DEFAULT NULL," +
-                " user_name varchar(200) DEFAULT NULL," +
-                " password varchar(200) DEFAULT NULL," +
-                " address varchar(200) DEFAULT NULL," +
-                " secret varchar(200) DEFAULT NULL," +
-                " PRIMARY KEY (`" + primaryKeyName() + "`) )";
-    }
-    @Override
-    public String primaryKeyName() {
-        //return JdbcUtil.findIdNameForClz(entityClass);
-        return "id";
-    }
-    @Override
-    public String tableName() {
-        return "account_info";
-        // return JdbcUtil.findTabelNameFromClz(entityClass);
-    }
+ ////todo:
+//    @Override
+//    public String getCreateSql(){
+//        return " CREATE TABLE " + this.tableName() + " (" +
+//                primaryKeyName() + "  bigint(80) NOT NULL," +
+//                " biz_id varchar(200) DEFAULT NULL," +
+//                " user_name varchar(200) DEFAULT NULL," +
+//                " password varchar(200) DEFAULT NULL," +
+//                " address varchar(200) DEFAULT NULL," +
+//                " secret varchar(200) DEFAULT NULL," +
+//                " PRIMARY KEY (`" + primaryKeyName() + "`) )";
+//    }
+//    @Override
+//    public String primaryKeyName() {
+//        //return JdbcUtil.findIdNameForClz(entityClass);
+//        return "id";
+//    }
+//    @Override
+//    public String tableName() {
+//        return "account_info";
+//        // return JdbcUtil.findTabelNameFromClz(entityClass);
+//    }
 
 }

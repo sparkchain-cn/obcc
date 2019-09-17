@@ -31,28 +31,28 @@ public class RecordInfoDaoBase extends BaseJdbcTemplateDao<RecordInfo, Long> imp
         return Long.parseLong(v) > 0 ? true : false;
     }
 
-    ////todo:
-    @Override
-    public String getCreateSql() {
-        return " CREATE TABLE " + this.tableName() + " (" +
-                primaryKeyName() + "  bigint(80) NOT NULL," +
-                " biz_id varchar(200) DEFAULT NULL," +
-                " hashs varchar(200) DEFAULT NULL," +
-                " user_name varchar(200) DEFAULT NULL," +
-                " state int DEFAULT NULL," +
-                " PRIMARY KEY (`" + primaryKeyName() + "`) )";
-    }
-
-    @Override
-    public String primaryKeyName() {
-        //return JdbcUtil.findIdNameForClz(entityClass);
-        return "id";
-    }
-
-    @Override
-    public String tableName() {
-        return "record_info";
-        // return JdbcUtil.findTabelNameFromClz(entityClass);
-    }
+//    ////todo:
+//    @Override
+//    public String getCreateSql() {
+//        return " CREATE TABLE " + this.tableName() + " (" +
+//                primaryKeyName() + "  bigint(80) NOT NULL," +
+//                " biz_id varchar(200) DEFAULT NULL," +
+//                " hashs varchar(200) DEFAULT NULL," +
+//                " user_name varchar(200) DEFAULT NULL," +
+//                " state int DEFAULT NULL," +
+//                " PRIMARY KEY (`" + primaryKeyName() + "`) )";
+//    }
+//
+//    @Override
+//    public String primaryKeyName() {
+//        //return JdbcUtil.findIdNameForClz(entityClass);
+//        return "id";
+//    }
+//
+//    @Override
+//    public String tableName() {
+//        return "record_info";
+//        // return JdbcUtil.findTabelNameFromClz(entityClass);
+//    }
 
 }

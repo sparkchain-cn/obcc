@@ -63,12 +63,9 @@ public abstract class BaseJdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java
 
     }
 
-
     private void initEntity() {
         entityClass = ClassUtils.getSuperClassGenricType(getClass());
-
     }
-
 
     @Override
     public void add(@NonNull T object) {
@@ -313,7 +310,7 @@ public abstract class BaseJdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java
 
     public boolean exist(String tableName) {
         String sql = String.format("SELECT count(*) FROM sqlite_master WHERE type='table' AND name= '%s'", tableName);
-        String count = getValue(sql,new Object[]{});
+        String count = getValue(sql, new Object[]{});
         if (StringUtils.isNotNullOrEmpty(count) && Integer.parseInt(count) > 0) {
             return true;
         }
@@ -401,10 +398,51 @@ public abstract class BaseJdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java
         return jdbcTemplate;
     }
 
-    ////todo:
-    public abstract String getCreateSql();
 
-    //        try {
+    public String getCreateSql() {
+        StringBuffer sb = new StringBuffer();
+        sb.append(" CREATE TABLE " + this.tableName() + " ( ");
+
+        entityClzDistill.forEach((key, cnr) -> {
+            if (cnr.getColumnName().equals(primaryKeyName())) {
+                sb.append(primaryKeyName() + "  bigint(80) NOT NULL , ");
+            }
+            sb.append(" " + cnr.getColumnName() + " ");
+            String type = cnr.getField().getType().getSimpleName();
+            //" user_name varchar(200) DEFAULT NULL," +
+            if ("String".equals(type)) {
+                sb.append(" varchar ( " + cnr.getColumn().length() + " ) ");
+            } else if ("int".equals(type) || "Integer".equals(type)) {
+                sb.append(" int  " + cnr.getColumn().length() + "  ");
+            } else if ("long".equals(type) || "Long".equals(type)) {
+                sb.append(" bigint(" + 80 + ")  ");
+            } else if ("float".equals(type) || "Float".equals(type)) {
+                sb.append(" float ( " + cnr.getColumn().length() + ",10" + " ) ");
+            } else if ("double".equals(type) || "Double".equals(type)) {
+                sb.append(" double ( " + cnr.getColumn().length() + ",10" + " ) ");
+            } else if ("Boolean".equals(type) || "boolean".equals(type)) {
+                sb.append(" bit  ");
+            } else if ("BigDecimal".equals(type) || "decimal".equals(type)) {
+                sb.append(" decimal( " + cnr.getColumn().length() + ",10" + " ) ");
+            } else if ("Date".equals(type)) {
+                sb.append(" date ");
+            } else if (cnr.getField().getType().isEnum()) {
+                sb.append(" varchar ( " + cnr.getColumn().length() + " ) ");
+            } else {
+                sb.append(" varchar ( " + cnr.getColumn().length() + " ) ");
+            }
+
+            sb.append(" DEFAULT NULL, ");
+
+        });
+
+        sb.append(" PRIMARY KEY (`" + primaryKeyName() + "`) )");
+
+        return sb.toString();
+    }
+}
+
+//        try {
 //            synchronized (this) {
 //                if (entity == null) {
 //                    entity = entityClass.newInstance();
@@ -416,4 +454,4 @@ public abstract class BaseJdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java
 //        } catch (IllegalAccessException e) {
 //            throw new RuntimeException(e);
 //        }
-}
+
