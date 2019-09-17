@@ -7,10 +7,14 @@ import cn.obcc.driver.module.fn.IUpchainFn;
 import cn.obcc.driver.vo.SrcAccount;
 import cn.obcc.exception.ObccException;
 import cn.obcc.exception.enums.EExceptionCode;
+import cn.obcc.exception.enums.EMsgType;
+import cn.obcc.exception.enums.EStmtType;
+import cn.obcc.exception.enums.EStoreType;
 import cn.obcc.stmt.storage.StorageStatement;
 import cn.obcc.utils.FileSafeUtils;
 import cn.obcc.utils.FileUtils;
 import cn.obcc.vo.KeyValue;
+import cn.obcc.vo.driver.RecordInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,19 +57,16 @@ public class FileStorage {
 
         };
 
-        driver.getAccountHandler().transfer(bizId, account, "0", d.getKey(), new ExProps(), fn);
+        //只做特有的部分
+        ExProps exProps = new ExProps() {{
+            setRecordInfo(new RecordInfo() {{
+                setStmtType(EStmtType.STORAGE);
+                setMsgType(EMsgType.File);
+                setStoreType(EStoreType.FileSystem);
+            }});
+        }};
+        driver.getAccountHandler().transfer(bizId, account, "0", d.getKey(), exProps, fn);
     }
-//
-//
-//    private static List<String> split(InputStream inputStream, ObccConfig config, IChainDriver driver) throws Exception {
-//        String str = FileUtils.inputStreamToString(inputStream);
-//        // todo:if file is too big,then split it
-//        return new ArrayList<String>() {{
-//            add(str);
-//        }};
-//    }
-
-
 
     public static File getFile(String path, String bizId, String sha1) throws Exception {
         String pathName = path + File.pathSeparator + bizId;

@@ -1,11 +1,8 @@
 package cn.obcc.driver.base;
 
 import cn.obcc.config.ObccConfig;
-import cn.obcc.connect.pool.ChainClientPoolFactory;
 import cn.obcc.driver.IChainDriver;
 import cn.obcc.driver.IChainHandler;
-import cn.obcc.driver.tech.register.BaseCallbackRegister;
-import cn.obcc.driver.tech.register.ICallbackRegister;
 
 public class BaseHandler<T> implements IChainHandler<T> {
 
@@ -41,5 +38,7 @@ public class BaseHandler<T> implements IChainHandler<T> {
         return this.driver;
     }
 
+    public void onAfterInit() throws Exception {
+    }
 
 }

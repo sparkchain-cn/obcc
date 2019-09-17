@@ -94,6 +94,11 @@
             <artifactId>obcc-driver-contract</artifactId>
             <version>${chain.version}</version>
         </dependency>
+        <dependency>
+            <groupId>cn.obcc</groupId>
+            <artifactId>obcc-driver-state</artifactId>
+            <version>${chain.version}</version>
+        </dependency>
 
 
         <dependency>
@@ -104,7 +109,7 @@
         </dependency>
         <dependency>
             <groupId>cn.obcc</groupId>
-            <artifactId> obcc-local-db-sqlite</artifactId>
+            <artifactId>obcc-local-db-sqlite</artifactId>
             <version>${chain.version}</version>
             <scope>test</scope>
         </dependency>

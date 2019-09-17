@@ -75,7 +75,7 @@ public class SpeedAdjuster<T> extends BaseHandler<T> implements ISpeedAdjuster<T
     private void invoke(ChainPipe pipe) throws Exception {
         logger.debug("排队出列：" + JSON.toJSONString(pipe));
         if (pipe.getChainTxType() == EChainTxType.Orign) {
-            getDriver().getAccountHandler().doTransfer(pipe);
+            getDriver().getAccountHandler().transferSync(pipe);
         }
     }
 

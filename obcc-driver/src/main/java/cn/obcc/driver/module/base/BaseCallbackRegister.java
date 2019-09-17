@@ -1,7 +1,8 @@
-package cn.obcc.driver.tech.register;
+package cn.obcc.driver.module.base;
 
 import cn.obcc.driver.base.BaseHandler;
 import cn.obcc.driver.module.fn.IUpchainFn;
+import cn.obcc.driver.ICallbackRegister;
 import cn.obcc.exception.ObccException;
 import cn.obcc.exception.enums.EExceptionCode;
 import net.jodah.expiringmap.ExpirationPolicy;

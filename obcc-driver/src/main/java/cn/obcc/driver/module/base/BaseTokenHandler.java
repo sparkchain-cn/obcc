@@ -6,7 +6,6 @@ import cn.obcc.driver.ITokenParse;
 import cn.obcc.driver.base.BaseHandler;
 import cn.obcc.driver.module.ITokenHandler;
 import cn.obcc.driver.module.fn.IUpchainFn;
-import cn.obcc.driver.module.token.DefaultTokenParse;
 import cn.obcc.driver.utils.ConvertUtils;
 import cn.obcc.driver.vo.CompileResult;
 import cn.obcc.driver.vo.ContractRec;
@@ -40,7 +39,7 @@ public abstract class BaseTokenHandler<T> extends BaseHandler<T> implements ITok
     public void createToken(String bizId, SrcAccount account, String tokenName, String tokenCode, Long tokenSupply,
                             IUpchainFn<BlockTxInfo> fn, ExProps config) throws Exception {
 
-         createToken(bizId, account, null, null, tokenName, tokenCode, tokenSupply, fn, config);
+        createToken(bizId, account, null, null, tokenName, tokenCode, tokenSupply, fn, config);
     }
 
     @Override
@@ -116,7 +115,7 @@ public abstract class BaseTokenHandler<T> extends BaseHandler<T> implements ITok
     public boolean isExistToken(String contractAddr) throws Exception {
         //todo:修改
         String count = getDriver().getLocalDb().getTokenInfoDao()
-                .getValue("select count(1) from token_info where contractAddress='" + contractAddr + "'");
+                .getValue("select count(1) from token_info where contract_address= ? ", new Object[]{contractAddr});
         if (Long.parseLong(count) > 0) {
             return true;
         }

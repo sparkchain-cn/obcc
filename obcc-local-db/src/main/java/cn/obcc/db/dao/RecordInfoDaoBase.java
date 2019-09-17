@@ -4,6 +4,8 @@ import cn.obcc.db.base.JdbcDao;
 import cn.obcc.db.base.BaseJdbcTemplateDao;
 import cn.obcc.vo.driver.RecordInfo;
 
+import java.util.List;
+
 /**
  * @author pengrk
  * @version 1.0
@@ -13,6 +15,21 @@ import cn.obcc.vo.driver.RecordInfo;
  **/
 public class RecordInfoDaoBase extends BaseJdbcTemplateDao<RecordInfo, Long> implements JdbcDao<RecordInfo, Long>, java.io.Serializable {
 
+
+    public String getBizIdPreLikeSize(String bizId) throws Exception {
+        String v = getValue("select count(1) from record_info where biz_id like ?", new Object[]{bizId + "%"});
+        return v;
+    }
+
+    public List<RecordInfo> getBizIdPreLike(String bizId) throws Exception {
+        List<RecordInfo> list = query("biz_id like ?", new Object[]{bizId + "%"});
+        return list;
+    }
+
+    public boolean existBizId(String bizId) {
+        String v = getValue("select count(1) from record_info where biz_id= ? ", new Object[]{bizId + "%"});
+        return Long.parseLong(v) > 0 ? true : false;
+    }
 
     ////todo:
     @Override

@@ -21,7 +21,6 @@ public interface IBlockHandler<T> extends IChainHandler<T> {
      */
     public Long getInterval() throws Exception;
 
-
     /**
      * 取得最新的区块高度
      *

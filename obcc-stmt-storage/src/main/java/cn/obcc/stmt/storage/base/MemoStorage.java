@@ -5,8 +5,12 @@ import cn.obcc.config.ObccConfig;
 import cn.obcc.driver.IChainDriver;
 import cn.obcc.driver.module.fn.IUpchainFn;
 import cn.obcc.driver.vo.SrcAccount;
+import cn.obcc.exception.enums.EMsgType;
+import cn.obcc.exception.enums.EStmtType;
+import cn.obcc.exception.enums.EStoreType;
 import cn.obcc.utils.base.StringUtils;
 import cn.obcc.vo.KeyValue;
+import cn.obcc.vo.driver.RecordInfo;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -33,7 +37,15 @@ public class MemoStorage {
 
         };
 
-        driver.getAccountHandler().transfer(bizId, account, "0", d.getKey(), new ExProps(), fn);
+        //只做特有的部分
+        ExProps exProps = new ExProps() {{
+            setRecordInfo(new RecordInfo() {{
+                setStmtType(EStmtType.STORAGE);
+                setMsgType(EMsgType.Msg);
+                setStoreType(EStoreType.Memo);
+            }});
+        }};
+        driver.getAccountHandler().transfer(bizId, account, "0", d.getKey(),exProps, fn);
     }
 
 

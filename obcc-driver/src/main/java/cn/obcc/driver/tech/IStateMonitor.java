@@ -8,6 +8,10 @@ import cn.obcc.vo.BizState;
 import cn.obcc.vo.RetData;
 import net.jodah.expiringmap.ExpiringMap;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * 链的状态，交易的状态（queue,pending)
  *
@@ -23,9 +27,25 @@ public interface IStateMonitor<T> extends IChainHandler<T> {
             .variableExpiration()
             .build();
 
+    //bizId->state
     public static ExpiringMap<String, BizState> BizStateMap = ExpiringMap.builder()
             .variableExpiration()
             .build();
+
+    //todo:采用redis进行
+    //bizId->bizId
+    public static Map<String, String> BizIdMap = new ConcurrentHashMap<String, String>();
+
+    public void checkAndSetBizId(String bizId) throws Exception;
+
+    public void checkAndsupplyBizId(String bizId) throws Exception;
+
+    public void checkBizId(String bizId) throws Exception;
+
+    public void setBizId(String bizId) throws Exception;
+
+    public boolean existBizId(String bizId) throws Exception;
+
 
     public void setBizState(String bizId, BizState bizState) throws Exception;
 
@@ -35,13 +55,14 @@ public interface IStateMonitor<T> extends IChainHandler<T> {
 
     public void delBizState(String bizId) throws Exception;
 
-    public void setState(String hash, BizState status) throws Exception;
 
-    public BizState getState(String hash) throws Exception;
+    public void setHashState(String hash, BizState status) throws Exception;
 
-    public boolean exist(String hash) throws Exception;
+    public BizState getHashState(String hash) throws Exception;
 
-    public void delState(String hash) throws Exception;
+    public boolean existHash(String hash) throws Exception;
+
+    public void delHashState(String hash) throws Exception;
 
 
     /**

@@ -24,6 +24,10 @@ public class TokenInfo extends Entity {
     private String contractAbi;
     private String contractAddress;
     private int state;
+    //该类名的类必须实现ITokenParse接口
+    private String parseClsName;
+    //转币的方法名
+    private String transferName = "transfer";
+    //private String chainCode;
 
-  
 }

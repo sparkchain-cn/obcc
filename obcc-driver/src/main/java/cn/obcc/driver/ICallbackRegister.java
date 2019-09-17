@@ -1,4 +1,4 @@
-package cn.obcc.driver.tech.register;
+package cn.obcc.driver;
 
 import cn.obcc.driver.module.fn.IUpchainFn;
 

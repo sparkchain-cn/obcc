@@ -18,7 +18,7 @@ public interface IDbStatement extends IStatement {
 
     public String createTable(String tableName, TableDefine define) throws Exception;
 
-    public void createProcedure(String procedureName, String procedureContent, List<String> params) throws Exception;
+    public String createProcedure(String procedureName, String procedureContent, List<String> params) throws Exception;
 
     /*********************************************************************/
 

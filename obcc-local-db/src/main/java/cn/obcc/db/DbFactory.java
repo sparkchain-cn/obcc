@@ -19,6 +19,7 @@ public class DbFactory {
     TokenInfoDaoBase tokenInfoDao;
     RecordInfoDaoBase recordInfoDao;
     TxInfoDaoBase txInfoDao;
+    TableInfoDaoBase tableInfoDao;
 
 
     private DbFactory(ObccConfig config) throws Exception {
@@ -39,9 +40,11 @@ public class DbFactory {
         recordInfoDao = new RecordInfoDaoBase();
         recordInfoDao.init(config);
         recordInfoDao.createTable();
-        txInfoDao=new TxInfoDaoBase();
+        txInfoDao = new TxInfoDaoBase();
         txInfoDao.init(config);
         txInfoDao.createTable();
+        tableInfoDao.init(config);
+        tableInfoDao.createTable();
 
     }
 
@@ -68,5 +71,12 @@ public class DbFactory {
         return tokenInfoDao;
     }
 
-    public TxInfoDaoBase getTxInfoDao(){return txInfoDao;}
+    public TxInfoDaoBase getTxInfoDao() {
+        return txInfoDao;
+    }
+
+    public TableInfoDaoBase getTableInfoDao() {
+        return tableInfoDao;
+    }
+
 }

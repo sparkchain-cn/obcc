@@ -1,39 +1,36 @@
 package cn.obcc.config;
 
 import cn.obcc.exception.enums.EUpchainType;
+import cn.obcc.vo.driver.RecordInfo;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Data
-public class ExProps {
-
-    public static final String INIT_TYPE = "1";
-    public static final String DYNC_TYPE = "2";
-    public static final String MANUL_TYPE = "4";
-
-    private String appid;
-
-    private String sparkHash;
-
-    Map<String, Object> params;
-
-    private List<String> uuids = new ArrayList<>();
-
-    private String type;
+@NoArgsConstructor
+//@EqualsAndHashCode
+public class ExProps implements Serializable {
 
     //是否是需要拆分
     private boolean needSplit = true;
     //是需要encode memo
     private boolean needHandleMemo = true;
 
-    EUpchainType upchainType = EUpchainType.Transfer;
+    private EUpchainType upchainType = EUpchainType.Transfer;
 
+    //传递过程，到transfer中保存到数据中去
+    private RecordInfo recordInfo;
 
-    public ExProps() {
-    }
+    private String appid;
+    private String sparkHash;
+    Map<String, Object> params;
+    private List<String> uuids = new ArrayList<>();
+    private String type;
 
 }

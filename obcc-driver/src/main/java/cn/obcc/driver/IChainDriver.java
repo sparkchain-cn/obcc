@@ -5,7 +5,6 @@ import cn.obcc.connect.builder.ChainClientBuilder;
 import cn.obcc.db.DbFactory;
 import cn.obcc.driver.module.*;
 import cn.obcc.driver.tech.*;
-import cn.obcc.driver.tech.register.ICallbackRegister;
 
 /**
  * @author mgicode

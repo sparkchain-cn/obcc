@@ -248,8 +248,8 @@ public abstract class BaseJdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java
     }
 
     @Override
-    public String getValue(String sql) {
-        return getJdbcTemplate().getValue(sql);
+    public String getValue(String sql, Object[] params) {
+        return getJdbcTemplate().getValue(sql, params);
     }
 
     @Override
@@ -272,10 +272,22 @@ public abstract class BaseJdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java
             }
             return sBuffer.toString();
         }
-
         return null;
-
     }
+
+    @Override
+    public List<String> getValues(String sql, Object[] params) {
+        final StringBuffer sBuffer = new StringBuffer();
+        RowMapper rMapper = new RowMapper() {
+            @Override
+            public String mapRow(ResultSet rs, int index) throws SQLException {
+                return String.valueOf(rs.getObject(1));
+            }
+        };
+        List<String> list = getJdbcTemplate().query(sql, params, rMapper);
+        return list;
+    }
+
 
     @Override
     public void delete(String conditionSql, Object[] params) {
@@ -301,7 +313,7 @@ public abstract class BaseJdbcTemplateDao<T, PK> implements JdbcDao<T, PK>, java
 
     public boolean exist(String tableName) {
         String sql = String.format("SELECT count(*) FROM sqlite_master WHERE type='table' AND name= '%s'", tableName);
-        String count = getValue(sql);
+        String count = getValue(sql,new Object[]{});
         if (StringUtils.isNotNullOrEmpty(count) && Integer.parseInt(count) > 0) {
             return true;
         }

@@ -46,16 +46,19 @@ public interface JdbcDao<T, PK> {
     public List<T> query(String conditionSql, Object[] params);
 
 
-
     public List<T> findByProp(String name, Object value);
 
 
     public T getById(PK id);
+
     public T get(String conditionSql, Object[] params);
 
     public T getByProp(String name, Object value);
 
-    public String getValue(String sql);
+    public String getValue(String sql, Object[] params);
+
+    public List<String> getValues(String sql, Object[] params);
+
     /**
      * 使用sql语句进行查询
      *

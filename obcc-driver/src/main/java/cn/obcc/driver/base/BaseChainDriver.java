@@ -3,18 +3,16 @@ package cn.obcc.driver.base;
 import cn.obcc.config.ObccConfig;
 import cn.obcc.connect.pool.ChainClientPoolFactory;
 import cn.obcc.db.DbFactory;
-import cn.obcc.db.base.JdbcDao;
 import cn.obcc.driver.IChainDriver;
 import cn.obcc.driver.module.*;
 import cn.obcc.driver.tech.*;
-import cn.obcc.driver.tech.register.BaseCallbackRegister;
-import cn.obcc.driver.tech.register.ICallbackRegister;
+import cn.obcc.driver.module.base.BaseCallbackRegister;
+import cn.obcc.driver.ICallbackRegister;
 import cn.obcc.exception.enums.EDriverHandlerType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public abstract class BaseChainDriver<T> implements IChainDriver<T> {
@@ -47,6 +45,13 @@ public abstract class BaseChainDriver<T> implements IChainDriver<T> {
                 handlerMap.get(key).initObccConfig(obccConfig, this);
             } catch (InstantiationException e) {
                 e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        handlerMap.forEach((key, handler) -> {
+            try {
+                handler.onAfterInit();
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -32,14 +32,14 @@ public class AccountTransfer {
     public static final Logger logger = LoggerFactory.getLogger(AccountTransfer.class);
 
 
-    public static EthSendTransaction trySendTx(SrcAccount account, BigInteger amount, String destAddress,
+    public static EthSendTransaction trySendTx(SrcAccount srcAccount, BigInteger amount, String destAddress,
                                                INonceCalculator nonceCalculator, ExProps config, Web3j web3j) throws Exception {
         EthSendTransaction result = null;
         int i = 0;
-        BigInteger nowSeq = BigInteger.valueOf(Long.parseLong(account.getNonce()));
+        BigInteger nowSeq = BigInteger.valueOf(Long.parseLong(srcAccount.getNonce()));
         while (i <= 20) {
             i++;
-            result = sendTx(web3j, account, amount, destAddress);
+            result = sendTx(web3j, srcAccount, amount, destAddress);
             if (result == null) {
                 throw ObccException.create(EExceptionCode.RETURN_NULL_OR_EMPTY,
                         "web3j mcSendRawTransaction return null object(McSendTransaction).");
@@ -52,18 +52,20 @@ public class AccountTransfer {
             if (isNouceLowError(err.getMessage())) {
                 //"nonce too low";//在区块上，
                 nowSeq = nowSeq.add(BigInteger.valueOf(1L));
-                nonceCalculator.adjustNonce(account.getSrcAddr(), nowSeq.longValue(), config);
+                nonceCalculator.adjustNonce(srcAccount.getSrcAddr(), nowSeq.longValue(), config);
+                srcAccount.setNonce(nowSeq + "");
                 continue;
             } else if (isInNouceQueueError(err.getMessage())) {
                 // known transaction";//在队列中，nonce存在，参数不同，说明不是冲掉
                 nowSeq = nowSeq.add(BigInteger.valueOf(1L));
-                nonceCalculator.adjustNonce(account.getSrcAddr(), nowSeq.longValue(), config);
+                nonceCalculator.adjustNonce(srcAccount.getSrcAddr(), nowSeq.longValue(), config);
+                srcAccount.setNonce(nowSeq + "");
                 continue;
             } else if (isUnderPriceError(err.getMessage())) {
                 // "replacement transaction underpriced";
                 // 在队列中，nonce存在，参数相同，说明要冲掉，但是冲掉费用过低,增加其limit
-                Long gasLimit = account.getGasLimit().longValue() * (1 + EthConstants.SafeFactor / 100);
-                account.setGasLimit(gasLimit);
+                Long gasLimit = srcAccount.getGasLimit().longValue() * (1 + EthConstants.SafeFactor / 100);
+                srcAccount.setGasLimit(gasLimit);
                 continue;
             }
         }

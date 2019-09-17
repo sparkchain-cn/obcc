@@ -5,11 +5,13 @@ import cn.obcc.driver.module.fn.IUpchainFn;
 import cn.obcc.driver.vo.SrcAccount;
 import cn.obcc.exception.ObccException;
 import cn.obcc.exception.enums.EExceptionCode;
+import cn.obcc.exception.enums.EStmtType;
 import cn.obcc.stmt.ILedgerStatement;
 import cn.obcc.stmt.base.BaseStatement;
 import cn.obcc.stmt.fn.ITokenSendFn;
 import cn.obcc.vo.Page;
 import cn.obcc.vo.driver.AccountInfo;
+import cn.obcc.vo.driver.RecordInfo;
 import cn.obcc.vo.driver.TokenInfo;
 import lombok.NonNull;
 
@@ -17,13 +19,20 @@ public class LedgerStatement extends BaseStatement implements ILedgerStatement {
 
     @Override
     public void createAccount(@NonNull String bizId, @NonNull String username, @NonNull String pwd) throws Exception {
-        getDriver().getAccountHandler().createAccount(bizId, username, pwd);
+
+        //只做特有的部分
+        ExProps exProps = new ExProps() {{
+            setRecordInfo(new RecordInfo() {{
+                setStmtType(EStmtType.LEDGER_CREATE_USER);
+            }});
+        }};
+        getDriver().getAccountHandler().createAccount(bizId, username, pwd, exProps);
     }
 
 
     @Override
     public void activate(@NonNull String bizId, @NonNull String username, @NonNull long tokenCount) throws Exception {
-
+        getDriver().getStateMonitor().checkAndSetBizId(bizId);
         SrcAccount account = new SrcAccount();
         account.setSrcAddr(config.getTokenCreateAccount().getKey());
         account.setSecret(config.getTokenCreateAccount().getVal());
@@ -32,22 +41,41 @@ public class LedgerStatement extends BaseStatement implements ILedgerStatement {
         IUpchainFn fn1 = (bizId1, hash, upchainType, state, resp) -> {
             //todo:
         };
-        getDriver().getAccountHandler().transfer(bizId, account, tokenCount + "", dest.getAddress(), new ExProps(), fn1);
+        //只做特有的部分
+        ExProps exProps = new ExProps() {{
+            setRecordInfo(new RecordInfo() {{
+                setStmtType(EStmtType.LEDGER_CREATE_USER);
+                // setSrcAccount(account.getSrcAddr());
+                setDestUser(username);
+                //  setDestAccount(dest.getAddress());
+            }});
+        }};
+        getDriver().getAccountHandler().transfer(bizId, account, tokenCount + "", dest.getAddress(), exProps, fn1);
     }
 
     @Override
     public void createToken(@NonNull String bizId, @NonNull String tokenCode, @NonNull String tokenName, @NonNull long count) throws Exception {
+        getDriver().getStateMonitor().checkAndSetBizId(bizId);
         SrcAccount account = new SrcAccount();
         account.setSrcAddr(config.getTokenCreateAccount().getKey());
         account.setSecret(config.getTokenCreateAccount().getVal());
         IUpchainFn fn = (bizId1, hash, upchainType, state, resp) -> {
         };
-        getDriver().getTokenHandler().createToken(bizId, account, tokenName, tokenCode, count, fn, new ExProps());
+        //只做特有的部分
+        ExProps exProps = new ExProps() {{
+            setRecordInfo(new RecordInfo() {{
+                setStmtType(EStmtType.LEDGER_CREATE_USER);
+                // setSrcAccount(account.getSrcAddr());
+                setToken(tokenCode);
+            }});
+        }};
+        getDriver().getTokenHandler().createToken(bizId, account, tokenName, tokenCode, count, fn, exProps);
     }
 
     @Override
     public void send(String bizId, String tokenCode, String srcUsername,
                      String destUsername, long count, String memo, ITokenSendFn fn) throws Exception {
+        getDriver().getStateMonitor().checkAndSetBizId(bizId);
         SrcAccount account = new SrcAccount();
         account.setSrcAddr(config.getTokenCreateAccount().getKey());
         account.setSecret(config.getTokenCreateAccount().getVal());
@@ -58,7 +86,18 @@ public class LedgerStatement extends BaseStatement implements ILedgerStatement {
         if (tokenInfo == null) {
             throw ObccException.create(EExceptionCode.RETURN_NULL_OR_EMPTY, "tokencode:{0} 找不到TokenInfo对象", tokenCode);
         }
-        getDriver().getTokenHandler().transfer(bizId, account, tokenInfo, null, tokenCode, new ExProps(), fn1);
+
+        //只做特有的部分
+        ExProps exProps = new ExProps() {{
+            setRecordInfo(new RecordInfo() {{
+                setStmtType(EStmtType.LEDGER_TOKEN_SEND);
+                setSrcUser(srcUsername);
+                setDestUser(destUsername);
+                // setSrcAccount(account.getSrcAddr());
+                setToken(tokenCode);
+            }});
+        }};
+        getDriver().getTokenHandler().transfer(bizId, account, tokenInfo, null, tokenCode, exProps, fn1);
 
     }
 

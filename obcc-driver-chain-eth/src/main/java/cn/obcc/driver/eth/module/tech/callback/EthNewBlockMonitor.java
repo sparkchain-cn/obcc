@@ -3,7 +3,6 @@ package cn.obcc.driver.eth.module.tech.callback;
 import cn.obcc.config.ObccConfig;
 import cn.obcc.driver.IChainDriver;
 import cn.obcc.driver.eth.module.tech.common.BlockTxInfoParser;
-import cn.obcc.utils.HexUtils;
 import cn.obcc.vo.driver.BlockTxInfo;
 import io.reactivex.Flowable;
 import io.reactivex.disposables.Disposable;
@@ -11,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.Transaction;
-import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +57,7 @@ public class EthNewBlockMonitor {
     private BlockTxInfo supportUpchain(Transaction t) throws Exception {
         String hash = t.getHash();
 
-        if (driver.getStateMonitor().exist(hash)) {
+        if (driver.getStateMonitor().existHash(hash)) {
             //过滤非本应用的
             if (!t.getInput().startsWith(config.getMemoPreHex())) {
                 return null;

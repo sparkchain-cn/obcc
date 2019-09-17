@@ -15,14 +15,19 @@ public class BizState {
 
     private String bizId;
     private String hash;
+    private String recId;
     private boolean single = true;
     private ETransferStatus status;
 
-    public BizState(String bizId, String hash, ETransferStatus status) {
+    public BizState() {
+    }
+
+    public BizState(String bizId, String hash, String recId, ETransferStatus status) {
         this.bizId = bizId;
         this.hash = hash;
+        this.recId = recId;
         this.status = status;
-        if (this.hash!=null&&this.hash.contains(",")) {
+        if (this.hash != null && this.hash.contains(",")) {
             this.single = false;
         }
     }

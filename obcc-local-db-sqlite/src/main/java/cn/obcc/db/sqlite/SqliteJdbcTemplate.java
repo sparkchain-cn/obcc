@@ -79,10 +79,10 @@ public class SqliteJdbcTemplate implements IJdbcTemplate {
     }
 
     @Override
-    public String getValue(String sql) {
+    public String getValue(String sql, Object[] params) {
         String s = null;
         try {
-            s = dbOperator.queryForSingle(sql);
+            s = dbOperator.getValue(sql, params);
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {

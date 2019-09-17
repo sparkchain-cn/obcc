@@ -30,7 +30,6 @@ public class StorageStatement extends BaseStatement implements IStorageStatement
         store(bizid, msg, EStoreType.Memo);
     }
 
-
     @Override
     public void store(String bizid, File file) throws Exception {
         store(bizid, file, EStoreType.FileSystem);
@@ -43,6 +42,7 @@ public class StorageStatement extends BaseStatement implements IStorageStatement
 
     @Override
     public void store(@NonNull String bizid, @NonNull String msg, EStoreType type) throws Exception {
+        getDriver().getStateMonitor().checkAndSetBizId(bizid);
         if (type == EStoreType.FileSystem) {
             FileStorage.store(bizid, msg, config, getDriver());
 
@@ -54,14 +54,15 @@ public class StorageStatement extends BaseStatement implements IStorageStatement
     }
 
     @Override
-    public void store(String bizid, File file, EStoreType type) throws Exception {
+    public void store(String bizId, File file, EStoreType type) throws Exception {
+        getDriver().getStateMonitor().checkAndSetBizId(bizId);
         if (type == EStoreType.FileSystem) {
-            FileStorage.store(bizid, new FileInputStream(file), config, getDriver());
+            FileStorage.store(bizId, new FileInputStream(file), config, getDriver());
 
         } else if (type == EStoreType.Ipfs) {
-            IpfsStorage.store(bizid, new FileInputStream(file), config, getDriver());
+            IpfsStorage.store(bizId, new FileInputStream(file), config, getDriver());
         } else {
-            MemoStorage.store(bizid, new FileInputStream(file), config, getDriver());
+            MemoStorage.store(bizId, new FileInputStream(file), config, getDriver());
         }
 
     }
@@ -101,17 +102,14 @@ public class StorageStatement extends BaseStatement implements IStorageStatement
     private RecordInfo checkAndGet(String bizid) throws Exception {
         RecordInfo recordInfo = findRecord(bizid);
         if (recordInfo == null) {
-            // logger.error("bizId:{} can not find recordInfo", bizid);
             throw ObccException.create(EExceptionCode.PARAMETER_INVALID, "bizId:{} can not find recordInfo", bizid);
         }
-        if (StringUtils.isNullOrEmpty(recordInfo.getMsgType())) {
+        if (recordInfo.getMsgType() == null) {
             throw ObccException.create(EExceptionCode.PARAMETER_INVALID, "bizId:{}  find recordInfo type is null", bizid);
-            //  logger.error("bizId:{}  find recordInfo type is null", bizid);
         }
 
-        if (StringUtils.isNullOrEmpty(recordInfo.getStoreType())) {
+        if (recordInfo.getStoreType() == null) {
             throw ObccException.create(EExceptionCode.PARAMETER_INVALID, "bizId:{}  find recordInfo type is null", bizid);
-            //  logger.error("bizId:{}  find recordInfo type is null", bizid);
         }
         return recordInfo;
     }

@@ -34,7 +34,8 @@ public interface IJdbcTemplate {
 
     public <T> List<T> query(String sql, Object[] params, RowMapper<T> rm);
 
-    public String getValue(String sql);
+    //public String getValue(String sql);
+    public String getValue(String sql,Object[] params);
 
     /**
      * 执行数据库更新sql语句

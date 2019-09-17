@@ -56,6 +56,7 @@ public enum ETransferStatus {
      * 区块链共识成功
      */
     STATE_CHAIN_CONSENSUS("chain_consensus", 8),
+    STATE_CHAIN_HALF_CONSENSUS("chain_half_consensus", 16),
     /**
      * 区块链共识失败
      */

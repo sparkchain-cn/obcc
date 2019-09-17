@@ -76,7 +76,7 @@ public class DbOperator {
         return rsList;
     }
 
-    public <T> String queryForSingle(String sql)
+    public <T> String getValue(String sql,Object[] params)
             throws SQLException, ClassNotFoundException {
         logger.debug("查询SQL:" + sql);
         //System.out.println(sql);
@@ -86,6 +86,7 @@ public class DbOperator {
         try {
             connection = this.openConn();
             PreparedStatement statement = connection.prepareStatement(sql);
+            holdParams(statement, params);
             resultSet = statement.executeQuery();
             String obj = resultSet.getString(1);
 //              if (TypeUtil.isString(cls)) {

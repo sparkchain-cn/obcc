@@ -32,9 +32,9 @@ public class CallbackListener<T> extends BaseHandler<T> implements ICallbackList
 
     @Override
     public void notify(BlockTxInfo txInfo) throws Exception {
-        if (callBackNotify.filter(txInfo) == true) {
+      //  if (callBackNotify.filter(txInfo) == true) {
             callBackNotify.notify(txInfo);
-        }
+       // }
     }
 
     @Override

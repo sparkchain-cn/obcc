@@ -16,6 +16,7 @@ import cn.obcc.uuid.UuidUtils;
 import cn.obcc.vo.driver.BlockTxInfo;
 import cn.obcc.vo.driver.ContractInfo;
 import com.alibaba.fastjson.JSON;
+import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +41,9 @@ public abstract class BaseContractHandler<T> extends BaseHandler<T> implements I
     public CompileResult compile(String bizId, String contract, ExProps config) throws Exception {
         CompileResult contractCompile = ContractCompiler.compile(contract, getObccConfig());
         contractCompile.setBizId(bizId);
-        if (contractCompile.getState() == -1) {return contractCompile;}
+        if (contractCompile.getState() == -1) {
+            return contractCompile;
+        }
         //每个合约保存
         contractCompile.getContractBinList().stream().forEach((contractBin) -> {
             ContractInfo contractInfo = new ContractInfo();
@@ -82,12 +85,9 @@ public abstract class BaseContractHandler<T> extends BaseHandler<T> implements I
      * @throws Exception
      */
     @Override
-    public ContractInfo getContract(@NotEmpty String contractAddr) throws Exception {
-        if (StringUtils.isNullOrEmpty(contractAddr)) {return null;}
-        return getDriver().getLocalDb().getContractInfoDao()
-                .get(" contract_addr = ? ", new Object[]{contractAddr});
+    public ContractInfo getContract(@NonNull String contractAddr) throws Exception {
+        return getDriver().getLocalDb().getContractInfoDao().getContractByAddr(contractAddr);
     }
-
 
     /**
      * 外部的合约加到本地数据库中来
@@ -98,14 +98,14 @@ public abstract class BaseContractHandler<T> extends BaseHandler<T> implements I
      * @throws Exception
      */
     @Override
-    public Boolean addContract(@NotEmpty String bizId, @NotNull ContractInfo info) throws Exception {
+    public Boolean addContract(@NonNull String bizId, @NonNull ContractInfo info) throws Exception {
         info.setBizId(bizId + info.getName());
         getDriver().getLocalDb().getContractInfoDao().add(info);
         return true;
     }
 
     @Override
-    public String deploy(@NotEmpty String bizId, @NotNull SrcAccount srcAccount, @NotNull ContractInfo contractInfo,
+    public String deploy(@NonNull String bizId, @NonNull SrcAccount srcAccount, @NonNull ContractInfo contractInfo,
                          IUpchainFn<BlockTxInfo> fn, ExProps config, List<String> params) throws Exception {
         try {
             String hex = getDeployHexData(contractInfo.getBin(), contractInfo.getAbi(), params);
@@ -148,8 +148,8 @@ public abstract class BaseContractHandler<T> extends BaseHandler<T> implements I
     }
 
     @Override
-    public String invoke(String bizId, ContractInfo contractInfo,
-                         SrcAccount srcAccount, ExProps config, IUpchainFn<BlockTxInfo> fn, String methodName, List<String> params) throws Exception {
+    public String invoke(@NonNull String bizId, ContractInfo contractInfo, @NonNull SrcAccount srcAccount,
+                         ExProps config, IUpchainFn<BlockTxInfo> fn, @NonNull String methodName, List<String> params) throws Exception {
         try {
             String hex = getInvokeHexData(contractInfo.getAbi(), methodName, params);
             srcAccount.setMemos(hex);

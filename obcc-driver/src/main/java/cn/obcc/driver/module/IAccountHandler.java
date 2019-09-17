@@ -33,7 +33,7 @@ public interface IAccountHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public AccountInfo createAccount(String bizId, String username, String pwd) throws Exception;
+    public AccountInfo createAccount(String bizId, String username, String pwd, ExProps config) throws Exception;
 
     /**
      * @param pipe 参数
@@ -41,7 +41,7 @@ public interface IAccountHandler<T> extends IChainHandler<T> {
      * @return hash:交易的返回的hashs,其它参数每个链不一样,如果memo的过大，会自动拆分成多条上链。
      * @throws Exception
      */
-    public String doTransfer(ChainPipe pipe) throws Exception;
+    public String transferSync(ChainPipe pipe) throws Exception;
 
     /**
      * @param pipe

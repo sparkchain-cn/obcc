@@ -1,12 +1,17 @@
 package cn.obcc.vo.driver;
 
+import cn.obcc.exception.enums.EMsgType;
+import cn.obcc.exception.enums.EStmtType;
+import cn.obcc.exception.enums.EStoreType;
+import cn.obcc.exception.enums.ETransferStatus;
 import cn.obcc.vo.BcMemo;
 import cn.obcc.vo.Entity;
+import com.alibaba.fastjson.JSON;
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author pengrk
@@ -23,24 +28,58 @@ public class RecordInfo extends Entity {
     private long id;
     //重发不在driver,driver只有网络IOException才重试
     private String bizId;
-    private String hashs;
-    private String userName;
-
-    private String storeType;//memo,IPFS,fileSys
-
-    private String msgType;//msg,file
-
-    private String lastHashs;
-
-    private int state;//
 
     //每个bizId在一条链上
     private String chainCode;
 
+    private EStmtType stmtType;
+    private EStoreType storeType = EStoreType.Memo;
+    private EMsgType msgType = EMsgType.Msg;
+
+    //对表记录更新时使用
+    private String orignRecordId;
+    private String orignBizId;
+    private long updateOrder;//更新的第几次
+
+    private String srcUser;
+    private String srcAccount;
+    private String token;
+    private String amount;
+    private String destUser;
+    private String destAccount;
+    private String contractAddr;
+    private String memo;
+
+    //流水条数
+    private int txSize;
+    private String hashs;
+
+    @Transient
+    private List<TxRecv> txRecvList = new ArrayList<>();
+    private String gasPrice;
+    private String gasLimit;
+    private String nonce;
+    //多条流水，合并上面的数据
+    private String txRecvJson;
+
+    @Transient
+    private List<TxConSensus> txConSensusList = new ArrayList<>();
     //每个bizId多条记录的blockNumber以，分隔
-    private String blockNumbers;
+    private String blockNumber;    //多次相关
+    private String gasUsed;
+    private String chainTxState;
+    //多条流水时合并上面
+    private String consensusJson;
 
-    private String data;//原始的memo
+    //transfer state
+    private ETransferStatus state;
 
+    public List<TxConSensus> getComputedConSensusList() {
+        List<TxConSensus> list = JSON.parseArray(consensusJson, TxConSensus.class);
+        if (list == null) {
+            list = new ArrayList<>();
+        }
+        return list;
+    }
 
 }

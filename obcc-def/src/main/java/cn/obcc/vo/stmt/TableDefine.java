@@ -1,5 +1,6 @@
 package cn.obcc.vo.stmt;
 
+import com.alibaba.fastjson.JSON;
 import lombok.Data;
 
 import java.lang.reflect.Array;
@@ -10,9 +11,11 @@ import java.util.List;
 public class TableDefine {
 
     private String name;
-    private List<Column> columns=new ArrayList<Column>();
+    private List<Column> columns = new ArrayList<Column>();
 
-
+    public String toJson() {
+        return JSON.toJSONString(this);
+    }
 
     public void parseData(Object data) {
 

@@ -9,17 +9,19 @@ import cn.obcc.driver.vo.ChainPipe;
 import cn.obcc.driver.vo.SrcAccount;
 
 import cn.obcc.exception.ObccException;
-import cn.obcc.exception.enums.EExceptionCode;
-import cn.obcc.exception.enums.ETransferStatus;
+import cn.obcc.exception.enums.*;
+import cn.obcc.utils.base.StringUtils;
 import cn.obcc.uuid.UuidUtils;
 import cn.obcc.vo.BizState;
-import cn.obcc.vo.driver.AccountInfo;
+import cn.obcc.vo.driver.*;
 import cn.obcc.config.ExProps;
-import cn.obcc.vo.driver.BlockTxInfo;
+import com.alibaba.fastjson.JSON;
+import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotEmpty;
+import java.util.*;
 
 /**
  * @author pengrk
@@ -32,10 +34,10 @@ public abstract class BaseAccountHandler<T> extends BaseHandler<T> implements IA
     public static final Logger logger = LoggerFactory.getLogger(BaseAccountHandler.class);
 
 
-    public abstract String onTransfer(ChainPipe pipe) throws Exception;
+    protected abstract String onTransfer(ChainPipe pipe) throws Exception;
 
     @Override
-    public AccountInfo createAccount(String bizId, String username, String pwd) throws Exception {
+    public AccountInfo createAccount(String bizId, String username, String pwd, ExProps config) throws Exception {
         //创建完成调用 db保存
         Account ret = this.createAccount();
         if (ret == null) {
@@ -64,34 +66,59 @@ public abstract class BaseAccountHandler<T> extends BaseHandler<T> implements IA
 
     @Override
     public String transfer(ChainPipe pipe) throws Exception {
-
+        //判断缓存中存在，数据库中不存在
+        driver.getStateMonitor().checkAndsupplyBizId(pipe.getBizId());
+        RecordExcutor.saveRecord(pipe, driver);
         getDriver().getSpeedAdjuster().offer(pipe);
 
         getDriver().getStateMonitor().setBizState(pipe.getBizId(),
-                new BizState(pipe.getBizId(), null, ETransferStatus.STATE_SPC_QUEUE));
+                new BizState(pipe.getBizId(), null,
+                        pipe.getConfig().getRecordInfo().getId() + "", ETransferStatus.STATE_SPC_QUEUE));
+        IUpchainFn fn = pipe.getCallbackFn();
+
+        pipe.setCallbackFn(new IUpchainFn() {
+            @Override
+            public void exec(String bizId, String hash, EUpchainType upchainType, ETransferStatus state, Object resp) throws Exception {
+                if (state == ETransferStatus.STATE_CHAIN_ACCEPT) {
+                    RecordInfo r = (RecordInfo) resp;
+                    RecordExcutor.chainRecvUpdate(r, driver);
+                } else if (state == ETransferStatus.STATE_CHAIN_CONSENSUS) {
+                    BlockTxInfo txInfo = (BlockTxInfo) resp;
+                    RecordExcutor.consenseUpdate(txInfo, driver);
+                }
+                if (fn != null) {
+                    fn.exec(bizId, hash, upchainType, state, resp);
+                }
+            }
+        });
+
         //状态回调
-        pipe.getCallbackFn().exec(pipe.getBizId(), null,
-                pipe.getConfig().getUpchainType(), ETransferStatus.STATE_SPC_QUEUE, null);
+        pipe.getCallbackFn().exec(pipe.getBizId(), null, pipe.getConfig().
+                getUpchainType(), ETransferStatus.STATE_SPC_QUEUE, null);
 
         return UuidUtils.get() + "";
     }
 
     @Override
-    public String doTransfer(ChainPipe pipe) throws Exception {
+    public String transferSync(ChainPipe pipe) throws Exception {
 
-        getDriver().getStateMonitor().setBizState(pipe.getBizId(), new BizState(pipe.getBizId(), null, ETransferStatus.STATE_WRITE_CHAIN));
+        getDriver().getStateMonitor().setBizState(pipe.getBizId(),
+                new BizState(pipe.getBizId(), null,
+                        pipe.getConfig().getRecordInfo().getId() + "", ETransferStatus.STATE_WRITE_CHAIN));
         //状态回调
-        pipe.getCallbackFn().exec(pipe.getBizId(), null,   pipe.getConfig().getUpchainType(), ETransferStatus.STATE_WRITE_CHAIN, null);
+        pipe.getCallbackFn().exec(pipe.getBizId(), null,
+                pipe.getConfig().getUpchainType(), ETransferStatus.STATE_WRITE_CHAIN, null);
 
         return AcountBaseTrans.multiTransfer(pipe, getDriver(), this);
     }
+
     @Override
     public BizTxInfo getTxByBizId(String bizId, ExProps config) throws Exception {
         return AccountBaseTx.getTxByBizId(bizId, config, getDriver(), this);
     }
 
     @Override
-    public BizTxInfo getTxByHashs(@NotEmpty String hashs, ExProps config) throws Exception {
+    public BizTxInfo getTxByHashs(@NonNull String hashs, ExProps config) throws Exception {
         return AccountBaseTx.getTxByHashs(hashs, config, this);
     }
 

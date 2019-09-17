@@ -1,15 +1,19 @@
-package cn.obcc.driver.tech.base;
+package cn.obcc.driver.state;
 
 import cn.obcc.driver.base.BaseHandler;
 import cn.obcc.driver.module.base.BaseAccountHandler;
 import cn.obcc.driver.tech.IStateMonitor;
+import cn.obcc.exception.ObccException;
+import cn.obcc.exception.enums.EExceptionCode;
 import cn.obcc.utils.base.StringUtils;
 import cn.obcc.vo.BizState;
+import cn.obcc.vo.driver.RecordInfo;
 import net.jodah.expiringmap.ExpirationPolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -21,6 +25,57 @@ import java.util.concurrent.TimeUnit;
  **/
 public abstract class BaseStateMonitor<T> extends BaseHandler<T> implements IStateMonitor<T> {
     public static final Logger logger = LoggerFactory.getLogger(BaseAccountHandler.class);
+
+    @Override
+    public void checkAndSetBizId(String bizId) throws Exception {
+        checkBizId(bizId);
+        setBizId(bizId);
+    }
+
+    @Override
+    public void checkBizId(String bizId) throws Exception {
+        if (existBizId(bizId)) {
+            throw ObccException.create(EExceptionCode.EXIST_BIZID,
+                    " bizid:{} has exist in cache,maybe you have unfinished biz.", bizId);
+        }
+    }
+    @Override
+    public void checkAndsupplyBizId(String bizId) throws Exception {
+        //直接调用
+        if (!existBizId(bizId)) {
+            setBizId(bizId);
+        }
+        boolean flag = getDriver().getLocalDb().getRecordInfoDao().existBizId(bizId);
+        if (flag == true) {
+            throw ObccException.create(EExceptionCode.EXIST_BIZID,
+                    " bizid:{} has exist in db,maybe you have unfinished biz.", bizId);
+        }
+
+        //throw ObccException.create(EExceptionCode.EXIST_BIZID,
+        // " bizid:{} has not exist in cache,maybe you have unfinished biz.", bizId);
+
+    }
+
+    @Override
+    public void setBizId(String bizId) throws Exception {
+        IStateMonitor.BizIdMap.put(bizId, bizId);
+    }
+
+    @Override
+    public boolean existBizId(String bizId) throws Exception {
+        return IStateMonitor.BizIdMap.containsKey(bizId);
+    }
+
+    @Override
+    public void onAfterInit() throws Exception {
+        RecordInfo r;
+        List<String> list = getDriver().getLocalDb().
+                getRecordInfoDao().getValues(" select biz_id from record_info ", new Object[]{});
+        list.stream().forEach((s) -> {
+            IStateMonitor.BizIdMap.put(s, s);
+        });
+    }
+
 
     @Override
     public void setBizState(String bizId, BizState bizState) throws Exception {
@@ -49,14 +104,16 @@ public abstract class BaseStateMonitor<T> extends BaseHandler<T> implements ISta
     @Override
     public void delBizState(String bizId) throws Exception {
         BizState state = getBizState(bizId);
-        if (state == null) {return;}
+        if (state == null) {
+            return;
+        }
         IStateMonitor.BizStateMap.remove(bizId);
         if (state.isSingle()) {
-            delState(state.getHash());
+            delHashState(state.getHash());
         } else {
             Arrays.stream(state.getHash().split(",")).forEach((hash) -> {
                 try {
-                    delState(hash);
+                    delHashState(hash);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -65,7 +122,7 @@ public abstract class BaseStateMonitor<T> extends BaseHandler<T> implements ISta
     }
 
     @Override
-    public void setState(String hash, BizState status) throws Exception {
+    public void setHashState(String hash, BizState status) throws Exception {
         if (StringUtils.isNullOrEmpty(hash)) {
             logger.warn("set hash state,but the hash is null or empty.");
             return;
@@ -74,7 +131,7 @@ public abstract class BaseStateMonitor<T> extends BaseHandler<T> implements ISta
     }
 
     @Override
-    public BizState getState(String hash) throws Exception {
+    public BizState getHashState(String hash) throws Exception {
         if (!IStateMonitor.StateMap.containsKey(hash)) {
             logger.warn("IStateMonitor.StateMap no exist hash:{} 's key.", hash);
             return null;
@@ -83,12 +140,12 @@ public abstract class BaseStateMonitor<T> extends BaseHandler<T> implements ISta
     }
 
     @Override
-    public boolean exist(String hash) throws Exception {
+    public boolean existHash(String hash) throws Exception {
         return IStateMonitor.StateMap.containsKey(hash);
     }
 
     @Override
-    public void delState(String hash) throws Exception {
+    public void delHashState(String hash) throws Exception {
         IStateMonitor.StateMap.remove(hash);
     }
 

@@ -37,6 +37,7 @@
         <module>obcc-local-db</module>
         <module>obcc-local-db-sqlite</module>
         <module>obcc-local-db-mysql</module>
+        <module>obcc-driver-state</module>
 
 
     </modules>
