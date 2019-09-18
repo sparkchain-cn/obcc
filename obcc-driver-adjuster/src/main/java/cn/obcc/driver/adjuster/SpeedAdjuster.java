@@ -6,7 +6,6 @@ import cn.obcc.driver.IChainHandler;
 import cn.obcc.driver.base.BaseHandler;
 import cn.obcc.driver.tech.ISpeedAdjuster;
 import cn.obcc.driver.vo.ChainPipe;
-import cn.obcc.exception.enums.EChainTxType;
 import cn.obcc.vo.KeyValue;
 import com.alibaba.fastjson.JSON;
 import net.jodah.expiringmap.ExpirationPolicy;
@@ -29,7 +28,7 @@ public class SpeedAdjuster<T> extends BaseHandler<T> implements ISpeedAdjuster<T
     public static final Logger logger = LoggerFactory.getLogger(SpeedAdjuster.class);
 
     private boolean flag = true;
-    //bizId-->srcAddr
+    //bizId-->srcAddr(Account)
     public Queue<KeyValue<String>> queues = new LinkedList<>();
     //srcAddr-->[....ChainPipe2,ChainPipe1]
     public ExpiringMap<String, Queue<ChainPipe>> map = ExpiringMap.builder()
@@ -54,7 +53,7 @@ public class SpeedAdjuster<T> extends BaseHandler<T> implements ISpeedAdjuster<T
                         invoke(pipe);
                     }
                 }
-                Thread.sleep(300);
+                Thread.sleep(config.getAdjustInterval());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -74,9 +73,7 @@ public class SpeedAdjuster<T> extends BaseHandler<T> implements ISpeedAdjuster<T
 
     private void invoke(ChainPipe pipe) throws Exception {
         logger.debug("排队出列：" + JSON.toJSONString(pipe));
-        //  if (pipe.getChainTxType() == EChainTxType.Orign) {
-        getDriver().getAccountHandler().transferSync(pipe);
-        // }
+        getDriver().getAccountHandler().syncTransfer(pipe);
     }
 
     @Override
@@ -86,7 +83,7 @@ public class SpeedAdjuster<T> extends BaseHandler<T> implements ISpeedAdjuster<T
 
     @Override
     public void offer(ChainPipe pipe) throws Exception {
-        String account = pipe.getSrcAccount().getSrcAddr();
+        String account = pipe.getFromAccount().getSrcAddr();
         //每个account中多次交易进行队列排序
         if (!map.containsKey(account)) {
             map.put(account, new LinkedList<ChainPipe>(), ExpirationPolicy.ACCESSED, 20, TimeUnit.MINUTES);
@@ -96,7 +93,7 @@ public class SpeedAdjuster<T> extends BaseHandler<T> implements ISpeedAdjuster<T
         //不然会有时间差导致queues出队时，map中还没有写入
         //构建bizId-->account的队列
         queues.offer(new KeyValue<String>() {{
-            setKey(pipe.getBizId());
+            setKey(pipe.getBizState().getBizId());
             setVal(account);
         }});
     }

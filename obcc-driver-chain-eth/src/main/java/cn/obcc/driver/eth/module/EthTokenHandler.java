@@ -1,6 +1,7 @@
 package cn.obcc.driver.eth.module;
 
-import cn.obcc.driver.contract.solc.core.AbiParser;
+import cn.obcc.driver.contract.solc.abi.AbiFormatParser;
+import cn.obcc.driver.contract.solc.utils.AbiFuncUtils;
 import cn.obcc.driver.eth.module.token.DefaultSolToken;
 import cn.obcc.driver.module.ITokenHandler;
 import cn.obcc.driver.module.base.BaseTokenHandler;
@@ -27,6 +28,7 @@ public class EthTokenHandler extends BaseTokenHandler<Web3j> implements ITokenHa
     public String getDefaultTokenContents() throws Exception {
         return DefaultSolToken.DEFAULT_TOKEN_STR;
     }
+
     @Override
     protected boolean check(TokenInfo token, String methodName, List<Object> params) throws Exception {
         if (token == null) {
@@ -34,14 +36,14 @@ public class EthTokenHandler extends BaseTokenHandler<Web3j> implements ITokenHa
             // return false;
         }
 
-        boolean flag = AbiParser.exist(token.getContractAbi(), methodName);
+        boolean flag = AbiFuncUtils.exist(token.getContractAbi(), methodName);
         if (flag == false) {
             throw ObccException.create(EExceptionCode.CONTENT_NOT_FOUND,
                     "合约{0}中名称为{1}方法没有找到.", token.getContractAddress(), methodName);
             //return false;
         }
 
-        List<String> names = AbiParser.getFunctionInputNames(token.getContractAbi(), methodName);
+        List<String> names = AbiFormatParser.getFunctionInputNames(token.getContractAbi(), methodName);
         //参数为空的check
         if ((names == null || names.size() == 0) && (params == null || params.size() == 0)) {
             return true;

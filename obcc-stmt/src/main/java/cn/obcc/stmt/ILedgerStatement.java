@@ -10,25 +10,25 @@ public interface ILedgerStatement extends IStatement {
      * 直接激活<br>
      * pengrk created or updated at 2019年8月22日 上午11:27:23
      */
-    public void createAccount(String bizId, String username, String pwd) throws Exception;
+    public String createAccount(String bizId, String username, String pwd) throws Exception;
 
     /**
      * 给指定用户激活的原生币数 ,主要用于gas不够<br>
      * pengrk created or updated at 2019年8月22日 上午11:29:01
      */
-    public void activate(String bizId, String username, long tokenCount) throws Exception;
+    public String activate(String bizId, String username, long tokenCount) throws Exception;
 
     /**
      * 发布指定数量的积分<br>
      * pengrk created or updated at 2019年8月22日 上午11:37:01
      */
-    public void createToken(String bizId, String tokenCode, String tokenname, long count) throws Exception;
+    public String createToken(String bizId, String tokenCode, String tokenname, long count) throws Exception;
 
     /**
      * 积分转让<br>
      * pengrk created or updated at 2019年8月22日 上午11:37:35
      */
-    public void send(String bizId, String tokenCode, String srcUser, String destUser, long count, String memo,
+    public String send(String bizId, String tokenCode, String srcUser, String destUser, long count, String memo,
                      ITokenSendFn fn) throws Exception;
 
     /**

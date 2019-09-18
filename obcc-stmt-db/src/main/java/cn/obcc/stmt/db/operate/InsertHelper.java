@@ -1,13 +1,11 @@
 package cn.obcc.stmt.db.operate;
 
-import cn.obcc.config.ExProps;
+import cn.obcc.config.ExConfig;
 import cn.obcc.config.ObccConfig;
 import cn.obcc.driver.IChainDriver;
-import cn.obcc.driver.module.fn.IUpchainFn;
-import cn.obcc.driver.vo.SrcAccount;
+import cn.obcc.driver.vo.FromAccount;
 import cn.obcc.exception.ObccException;
 import cn.obcc.exception.enums.EExceptionCode;
-import cn.obcc.exception.enums.EStmtType;
 import cn.obcc.vo.KeyValue;
 import cn.obcc.vo.driver.RecordInfo;
 import com.alibaba.fastjson.JSON;
@@ -32,19 +30,13 @@ public class InsertHelper {
 
         KeyValue<String> v = config.getStorageSrcAccount();
         KeyValue<String> d = config.getStorageDestAccount();
-        SrcAccount account = new SrcAccount() {{
+        FromAccount account = new FromAccount() {{
             setSrcAddr(v.getKey());
             setSecret(v.getVal());
             setMemos(JSON.toJSONString(map));
         }};
 
-        //只做特有的部分
-        ExProps exProps = new ExProps() {{
-            setRecordInfo(new RecordInfo() {{
-                setStmtType(EStmtType.Db_TABLE_INSERT);
-            }});
-        }};
-        return driver.getAccountHandler().transfer(bizId, account,  d.getKey(), exProps);
+        return driver.getAccountHandler().text(bizId, account, d.getKey());
     }
 
 

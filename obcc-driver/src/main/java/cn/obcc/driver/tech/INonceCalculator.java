@@ -1,8 +1,7 @@
 package cn.obcc.driver.tech;
 
 import cn.obcc.driver.IChainHandler;
-import cn.obcc.config.ExProps;
-import cn.obcc.vo.RetData;
+import cn.obcc.config.ExConfig;
 
 public interface INonceCalculator<T> extends IChainHandler<T> {
 
@@ -15,10 +14,10 @@ public interface INonceCalculator<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public Long getNonce(String address, ExProps config) throws Exception;
+    public Long getNonce(String address, ExConfig config) throws Exception;
 
 
-    public Long adjustNonce(String address, Long num, ExProps config) throws Exception;
+    public Long adjustNonce(String address, Long num, ExConfig config) throws Exception;
 
 
     public Long getNonceFromChain(String address) throws Exception;

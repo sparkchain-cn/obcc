@@ -1,7 +1,7 @@
 package cn.obcc.driver.eth.module;
 
 import cn.obcc.config.ObccConfig;
-import cn.obcc.config.ExProps;
+import cn.obcc.config.ExConfig;
 import cn.obcc.db.DbFactory;
 import cn.obcc.driver.eth.EthChainDriver;
 import cn.obcc.driver.eth.conn.builder.EthClientBuilderTest;
@@ -90,7 +90,7 @@ public class EthBlockHandlerTest {
     @Test
     public void testGetBlockInfo() throws Exception {
         Web3j web3j = ethBlockHandler.getClient();
-        BlockInfo blockInfo = ethBlockHandler.getBlockInfo(ethBlockHandler.getBlockHeight(), new ExProps());
+        BlockInfo blockInfo = ethBlockHandler.getBlockInfo(ethBlockHandler.getBlockHeight(), new ExConfig());
         Assert.assertNotNull(blockInfo);
 
         logger.debug("block Info:" + JSON.toJSONString(blockInfo));
@@ -99,13 +99,13 @@ public class EthBlockHandlerTest {
     @Test
     public void testGetBlockTxInfo() throws Exception {
         Web3j web3j = ethBlockHandler.getClient();
-        BlockInfo blockInfo = ethBlockHandler.getBlockInfo(ethBlockHandler.getBlockHeight(), new ExProps());
+        BlockInfo blockInfo = ethBlockHandler.getBlockInfo(ethBlockHandler.getBlockHeight(), new ExConfig());
         Assert.assertNotNull(blockInfo);
 
         if (!blockInfo.getTransactions().isEmpty()) {
             String hash = blockInfo.getTransactions().get(0);
             try {
-                BlockTxInfo txInfo = ethBlockHandler.getBlockTxInfo(hash, new ExProps());
+                BlockTxInfo txInfo = ethBlockHandler.getBlockTxInfo(hash, new ExConfig());
                 Assert.assertNotNull(txInfo);
                 Assert.assertEquals(txInfo.getHash(), hash);
                 logger.debug("block Info:" + JSON.toJSONString(txInfo));

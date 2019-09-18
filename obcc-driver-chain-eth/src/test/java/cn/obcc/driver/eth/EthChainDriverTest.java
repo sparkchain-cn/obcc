@@ -2,7 +2,7 @@ package cn.obcc.driver.eth;
 
 import cn.obcc.config.ObccConfig;
 import cn.obcc.db.DbFactory;
-import cn.obcc.driver.eth.conn.builder.EthClientBuilderBase;
+import cn.obcc.driver.eth.conn.builder.EthClientBuilder;
 import cn.obcc.driver.eth.module.*;
 import cn.obcc.driver.eth.module.tech.*;
 import cn.obcc.driver.module.*;
@@ -177,7 +177,7 @@ public class EthChainDriverTest {
     @Test
     public void testGetChainClientBuilderClz() throws Exception {
         Class handler = chainDriver.getChainClientBuilderClz();
-        Assert.assertEquals(handler, EthClientBuilderBase.class);
+        Assert.assertEquals(handler, EthClientBuilder.class);
 
     }
 

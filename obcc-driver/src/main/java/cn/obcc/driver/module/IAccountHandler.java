@@ -1,11 +1,10 @@
 package cn.obcc.driver.module;
 
 import cn.obcc.driver.IChainHandler;
-import cn.obcc.driver.module.fn.IUpchainFn;
+import cn.obcc.driver.module.fn.IStateListener;
 import cn.obcc.driver.vo.*;
-import cn.obcc.config.ExProps;
+import cn.obcc.config.ExConfig;
 import cn.obcc.vo.driver.AccountInfo;
-import cn.obcc.vo.RetData;
 import cn.obcc.vo.driver.BlockTxInfo;
 
 /**
@@ -33,7 +32,7 @@ public interface IAccountHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public AccountInfo createAccount(String bizId, String username, String pwd, ExProps config) throws Exception;
+    public AccountInfo createAccount(String bizId, String username, String pwd, ExConfig config) throws Exception;
 
     /**
      * @param pipe 参数
@@ -41,7 +40,7 @@ public interface IAccountHandler<T> extends IChainHandler<T> {
      * @return hash:交易的返回的hashs,其它参数每个链不一样,如果memo的过大，会自动拆分成多条上链。
      * @throws Exception
      */
-    public String transferSync(ChainPipe pipe) throws Exception;
+    public String syncTransfer(ChainPipe pipe) throws Exception;
 
     /**
      * @param pipe
@@ -53,13 +52,12 @@ public interface IAccountHandler<T> extends IChainHandler<T> {
     /**
      * @param account
      * @param amount
-     * @param destAddress
+     * @param destAddr
      * @param config
      * @return
      * @throws Exception
      */
-    public Long[] calGas(SrcAccount account, String amount,
-                         String destAddress, ExProps config) throws Exception;
+    public Long[] calGas(FromAccount account, String amount, String destAddr, ExConfig config) throws Exception;
 
 
     /**
@@ -68,28 +66,34 @@ public interface IAccountHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public boolean checkAccount(SrcAccount account, ExProps config) throws Exception;
+    public boolean checkAccount(FromAccount account, ExConfig config) throws Exception;
 
-    /**
-     * @param bizId
-     * @param account
-     * @param amount
-     * @param destAddress
-     * @param config
-     * @param callback
-     * @return
-     * @throws Exception
-     */
-    public String transfer(String bizId, SrcAccount account, String amount,
-                           String destAddress, ExProps config, IUpchainFn<BlockTxInfo> callback) throws Exception;
 
-    public default String transfer(String bizId, SrcAccount account,
-                                   String destAddress, ExProps config, IUpchainFn<BlockTxInfo> callback) throws Exception {
-        return transfer(bizId, account, "0", destAddress, config, callback);
+    public default String pay(String bizId, FromAccount account, String amount, String destAddr) throws Exception {
+        return pay(bizId, account, amount, destAddr, null);
     }
 
-    public default String transfer(String bizId, SrcAccount account, String destAddress, ExProps config) throws Exception {
-        return transfer(bizId, account, "0", destAddress, config, null);
+    public default String pay(String bizId, FromAccount account, String amount, String destAddr, IStateListener callback) throws Exception {
+        ExConfig config = new ExConfig();
+        config.setNeedSplit(false);
+        return pay(bizId, account, amount, destAddr, callback, config);
+    }
+    //  public String pay(String bizId, FromAccount account, String amount, String destAddr, IStateListener callback, ExConfig config) throws Exception;
+
+    public String pay(String bizId, FromAccount account, String amount, String destAddr, IStateListener callback, ExConfig config) throws Exception;
+
+
+    public default String text(String bizId, FromAccount account, String destAddr) throws Exception {
+        return text(bizId, account, destAddr, null);
+    }
+
+    public default String text(String bizId, FromAccount account, String destAddr, IStateListener callback) throws Exception {
+        return text(bizId, account, destAddr, callback, null);
+    }
+
+
+    public default String text(String bizId, FromAccount account, String destAddr, IStateListener callback, ExConfig config) throws Exception {
+        return pay(bizId, account, "0", destAddr, callback, config);
     }
 
     /**
@@ -101,17 +105,17 @@ public interface IAccountHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public BizTxInfo getTxByBizId(String bizId, ExProps config) throws Exception;
+    public BizTxInfo getTxByBizId(String bizId, ExConfig config) throws Exception;
 
     /**
      * 异步取，特别是文件上链，其可能有几千个，最好采用异步。
      *
-     * @param hashs
+     * @param hashes
      * @param config
      * @return
      * @throws Exception
      */
-    public BizTxInfo getTxByHashs(String hashs, ExProps config) throws Exception;
+    public BizTxInfo getTxByHashes(String hashes, ExConfig config) throws Exception;
 
 
     /**
@@ -122,7 +126,7 @@ public interface IAccountHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public BlockTxInfo getTxByHash(String hash, ExProps config) throws Exception;
+    public BlockTxInfo getTxByHash(String hash, ExConfig config) throws Exception;
 
 
     /**
@@ -135,6 +139,6 @@ public interface IAccountHandler<T> extends IChainHandler<T> {
      * freezed:String 冻结金额<br>
      * currency:String 货币名称<br>
      */
-    public String getBalance(String address, ExProps config) throws Exception;
+    public String getBalance(String address, ExConfig config) throws Exception;
 
 }

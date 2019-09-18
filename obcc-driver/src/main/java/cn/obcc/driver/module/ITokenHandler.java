@@ -1,15 +1,10 @@
 package cn.obcc.driver.module;
 
 import cn.obcc.driver.IChainHandler;
-import cn.obcc.driver.module.fn.IUpchainFn;
+import cn.obcc.driver.module.fn.IStateListener;
 import cn.obcc.driver.vo.*;
-import cn.obcc.vo.driver.BlockTxInfo;
-import cn.obcc.vo.driver.ContractInfo;
 import cn.obcc.vo.driver.TokenInfo;
-import cn.obcc.config.ExProps;
-
-import java.math.BigInteger;
-import java.util.ArrayList;
+import cn.obcc.config.ExConfig;
 
 /**
  * @author mgicode
@@ -19,19 +14,33 @@ import java.util.ArrayList;
  */
 public interface ITokenHandler<T> extends IChainHandler<T> {
 
-    public void createToken(String bizId, SrcAccount account, String tokenName, String tokenCode, Long tokenSupply,
-                            IUpchainFn<BlockTxInfo> fn, ExProps config) throws Exception;
+    public default String createToken(String bizId, FromAccount account, String tokenName, String tokenCode, Long tokenSupply, ExConfig config) throws Exception {
+        return createToken(bizId, account, tokenName, tokenCode, tokenSupply, null, config);
+    }
+
+    public default String createToken(String bizId, FromAccount account, String tokenName, String tokenCode, Long tokenSupply) throws Exception {
+        return createToken(bizId, account, tokenName, tokenCode, tokenSupply, (IStateListener) null);
+    }
+
+    public default String createToken(String bizId, FromAccount account, String tokenName, String tokenCode, Long tokenSupply,
+                                      IStateListener fn) throws Exception {
+        return createToken(bizId, account, tokenName, tokenCode, tokenSupply, fn, null);
+    }
+
+    public String createToken(String bizId, FromAccount account, String tokenName, String tokenCode, Long tokenSupply,
+                              IStateListener fn, ExConfig config) throws Exception;
 
     /**
-     * 调用合约编译，deploy，写到文件或sqlite中 pengrk created or updated at 2019年8月23日 下午5:28:03
+     * 调用合约编译，deploy，写到文件或sqlite中
+     * pengrk created or updated at 2019年8月23日 下午5:28:03
      *
      * @param config
      * @return
      * @throws Exception
      */
-    void createToken(String bizId, SrcAccount account, String contract, String contractName,
+    String createToken(String bizId, FromAccount account, String contract, String contractName,
                      String tokenName, String tokenCode, Long tokenSupply,
-                     IUpchainFn<BlockTxInfo> fn, ExProps config) throws Exception;
+                     IStateListener fn, ExConfig config) throws Exception;
 
     /**
      * 已经存在的token，add上去
@@ -76,11 +85,25 @@ public interface ITokenHandler<T> extends IChainHandler<T> {
     public TokenRec parseTxInfo(String contractAddr, ContractRec rec) throws Exception;
 
 
-    public String balanceOf(TokenInfo token, String address, ExProps config) throws Exception;
+    public String balanceOf(TokenInfo token, String address, ExConfig config) throws Exception;
 
+    public default String transfer(String bizId, FromAccount account, TokenInfo token,
+                                   String destAccount, String amount, ExConfig config) throws Exception {
+        return transfer(bizId, account, token, destAccount, amount, (IStateListener) null, config);
+    }
 
-    public String transfer(String bizId, SrcAccount account, TokenInfo token,
-                           String destAccount, String amount, ExProps config, IUpchainFn<BlockTxInfo> fn) throws Exception;
+    public default String transfer(String bizId, FromAccount account, TokenInfo token,
+                                   String destAccount, String amount) throws Exception {
+        return transfer(bizId, account, token, destAccount, amount, (IStateListener) null);
+    }
+
+    public default String transfer(String bizId, FromAccount account, TokenInfo token,
+                                   String destAccount, String amount, IStateListener fn) throws Exception {
+        return transfer(bizId, account, token, destAccount, amount, fn, null);
+    }
+
+    public String transfer(String bizId, FromAccount account, TokenInfo token,
+                           String destAccount, String amount, IStateListener fn, ExConfig config) throws Exception;
 
 
     /**
@@ -95,8 +118,8 @@ public interface ITokenHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public String burn(String bizId, SrcAccount account, TokenInfo token,
-                       String amount, ExProps config, IUpchainFn<BlockTxInfo> fn) throws Exception;
+    public String burn(String bizId, FromAccount account, TokenInfo token,
+                       String amount, IStateListener fn, ExConfig config) throws Exception;
 
     /**
      * @param bizId
@@ -107,8 +130,8 @@ public interface ITokenHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public String supply(String bizId, SrcAccount account, TokenInfo token,
-                         String amount, ExProps config, IUpchainFn<BlockTxInfo> fn) throws Exception;
+    public String supply(String bizId, FromAccount account, TokenInfo token,
+                         String amount, IStateListener fn, ExConfig config) throws Exception;
 
     /**
      * approve(address _spender, uint256 _value)
@@ -122,8 +145,8 @@ public interface ITokenHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public String approve(String bizId, SrcAccount account, TokenInfo token, String spenderAddr, String
-            amount, ExProps config, IUpchainFn<BlockTxInfo> fn) throws Exception;
+    public String approve(String bizId, FromAccount account, TokenInfo token, String spenderAddr, String
+            amount, IStateListener fn, ExConfig config) throws Exception;
 
     /**
      * transferFrom(address _from, address _to, uint256 _value)
@@ -136,8 +159,8 @@ public interface ITokenHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public String transferFrom(String bizId, SrcAccount account, TokenInfo token, String srcAddr,
-                               String toAddr, String amount, ExProps config, IUpchainFn<BlockTxInfo> fn) throws Exception;
+    public String transferFrom(String bizId, FromAccount account, TokenInfo token, String srcAddr,
+                               String toAddr, String amount, IStateListener fn, ExConfig config) throws Exception;
 
 
 }

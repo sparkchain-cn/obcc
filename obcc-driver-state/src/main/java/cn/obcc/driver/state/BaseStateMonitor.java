@@ -39,6 +39,7 @@ public abstract class BaseStateMonitor<T> extends BaseHandler<T> implements ISta
                     " bizid:{} has exist in cache,maybe you have unfinished biz.", bizId);
         }
     }
+
     @Override
     public void checkAndsupplyBizId(String bizId) throws Exception {
         //直接调用
@@ -108,17 +109,15 @@ public abstract class BaseStateMonitor<T> extends BaseHandler<T> implements ISta
             return;
         }
         IStateMonitor.BizStateMap.remove(bizId);
-        if (state.isSingle()) {
-            delHashState(state.getHash());
-        } else {
-            Arrays.stream(state.getHash().split(",")).forEach((hash) -> {
-                try {
-                    delHashState(hash);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
-        }
+
+        Arrays.stream(state.getHashes().split(",")).forEach((hash) -> {
+            try {
+                delHashState(hash);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
     }
 
     @Override

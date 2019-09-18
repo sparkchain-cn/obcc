@@ -4,25 +4,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cn.obcc.config.ExProps;
+import cn.obcc.config.ExConfig;
 import cn.obcc.db.dao.TableInfoDaoBase;
-import cn.obcc.driver.module.fn.IUpchainFn;
-import cn.obcc.driver.vo.SrcAccount;
+import cn.obcc.driver.vo.FromAccount;
 import cn.obcc.exception.ObccException;
 import cn.obcc.exception.enums.EDbOperaType;
 import cn.obcc.exception.enums.EExceptionCode;
-import cn.obcc.exception.enums.EStmtType;
 import cn.obcc.stmt.IDbStatement;
 import cn.obcc.stmt.base.BaseStatement;
 import cn.obcc.stmt.db.operate.BizIdExector;
 import cn.obcc.stmt.db.operate.InsertHelper;
 import cn.obcc.stmt.db.operate.TableBuilder;
-import cn.obcc.utils.base.StringUtils;
-import cn.obcc.uuid.UuidUtils;
 import cn.obcc.vo.KeyValue;
 import cn.obcc.vo.driver.ContractInfo;
 import cn.obcc.vo.driver.RecordInfo;
-import cn.obcc.vo.driver.TableInfo;
 import cn.obcc.vo.stmt.TableDefinition;
 import com.alibaba.fastjson.JSON;
 import lombok.NonNull;
@@ -88,21 +83,13 @@ public class DbStatement extends BaseStatement implements IDbStatement {
 
         KeyValue<String> v = config.getStorageSrcAccount();
         KeyValue<String> d = config.getStorageDestAccount();
-        SrcAccount account = new SrcAccount() {{
+        FromAccount account = new FromAccount() {{
             setSrcAddr(v.getKey());
             setSecret(v.getVal());
             setMemos(JSON.toJSONString(map));
         }};
-        //只做特有的部分
-        ExProps exProps = new ExProps() {{
-            setRecordInfo(new RecordInfo() {{
-                setStmtType(EStmtType.Db_TABLE_UPDATE);
-                setOrignRecordId(orignRecordInfo.getId() + "");
-                setOrignBizId(orignRecordInfo.getBizId());
-                setUpdateOrder(updateCount + 1);
-            }});
-        }};
-        return driver.getAccountHandler().transfer(bizId, account, d.getKey(), exProps);
+
+        return driver.getAccountHandler().text(bizId, account, d.getKey());
     }
 
 
@@ -135,17 +122,17 @@ public class DbStatement extends BaseStatement implements IDbStatement {
         ContractInfo ci = driver.getContractHandler().getContract(bizId, procedureName);
 
         KeyValue<String> v = config.getStorageSrcAccount();
-        SrcAccount account = new SrcAccount() {{
+        FromAccount account = new FromAccount() {{
             setSrcAddr(v.getKey());
             setSecret(v.getVal());
         }};
         //只做特有的部分
-        ExProps exProps = new ExProps() {{
-            setRecordInfo(new RecordInfo() {{
-                setStmtType(EStmtType.Db_PROC_EXEC);
-            }});
+        ExConfig exConfig = new ExConfig() {{
+//            setRecordInfo(new RecordInfo() {{
+//                setStmtType(EStmtType.Db_PROC_EXEC);
+//            }});
         }};
-        return driver.getContractHandler().invoke(bizId, ci, account, exProps, null, method, params);
+        return driver.getContractHandler().invoke(bizId, ci, account, method, params, null, exConfig);
 
     }
 

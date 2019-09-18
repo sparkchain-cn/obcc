@@ -1,6 +1,6 @@
 package cn.obcc.driver.contract.solc.core;
 
-import cn.obcc.driver.contract.solc.vo.ContractInfo;
+import cn.obcc.driver.contract.solc.vo.CompileVo;
 import cn.obcc.driver.vo.ContractBin;
 import cn.obcc.utils.base.StringUtils;
 import cn.obcc.utils.shell.ShellUtils;
@@ -11,11 +11,12 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class SolcCompiler {
-    public static final Logger logger = LoggerFactory.getLogger(SolcCompiler.class);
+public class ContractCompiler {
+    public static final Logger logger = LoggerFactory.getLogger(ContractCompiler.class);
     //region contants
 //    static String solcPath = "E:\\work\\Research\\solidity\\solc\\run\\";
 //    static String tempPath = "E:\\work\\Research\\solidity\\solc\\run\\result\\";
+
     final static String SolcFile = "solc.exe";
     final static String SolExtension = ".sol";
     final static String BinExtension = ".bin";
@@ -42,7 +43,7 @@ public class SolcCompiler {
 
     }
 
-    private static void compile(String solcCmdPath, String solFilePath, String resultPath, ContractInfo vo) {
+    private static void compile(String solcCmdPath, String solFilePath, String resultPath, CompileVo vo) {
         try {
             String compileResult = ShellUtils.runShell(solcCmdPath + " " + solFilePath
                     + " --bin --abi --overwrite --optimize -o " + resultPath);
@@ -55,11 +56,9 @@ public class SolcCompiler {
 
     }
 
-    public static ContractInfo compile(String sourceCode, String solcPath, String tempPath, Boolean deleteTemp) {
+    public static CompileVo compile(String sourceCode, String solcPath, String tempPath, Boolean deleteTemp) {
         //output
-        ContractInfo vo = new ContractInfo();
-        // Map<String, Object> result = new HashMap<>();
-        // result.put("source", sourceCode);
+        CompileVo vo = new CompileVo();
         vo.setSource(sourceCode);
 
         String fileNamePrefix = getFileName();

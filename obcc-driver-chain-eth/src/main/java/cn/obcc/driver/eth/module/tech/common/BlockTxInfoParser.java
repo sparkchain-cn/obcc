@@ -8,7 +8,7 @@ import cn.obcc.driver.module.ITokenHandler;
 import cn.obcc.driver.vo.ContractRec;
 import cn.obcc.driver.vo.TokenRec;
 import cn.obcc.exception.enums.EChainTxType;
-import cn.obcc.exception.enums.ETransferStatus;
+import cn.obcc.exception.enums.ETransferState;
 import cn.obcc.utils.base.DateUtils;
 import cn.obcc.utils.base.StringUtils;
 import cn.obcc.vo.BcMemo;
@@ -154,18 +154,18 @@ public class BlockTxInfoParser {
      * @param state
      * @return
      */
-    public static ETransferStatus getState(String state) {
+    public static ETransferState getState(String state) {
         if (StringUtils.isNullOrEmpty(state)) {
-            return ETransferStatus.STATE_CHAIN_DEFINITE_FAILURE;
+            return ETransferState.STATE_CHAIN_DEFINITE_FAILURE;
         }
         if ("1".equals(state) || "0x1".equalsIgnoreCase(state)) {
-            return ETransferStatus.STATE_SPC_SUCCESS;
+            return ETransferState.STATE_SPC_SUCCESS;
         } else if ("0".equals(state)) {
-            return ETransferStatus.STATE_CHAIN_DEFINITE_FAILURE;
+            return ETransferState.STATE_CHAIN_DEFINITE_FAILURE;
         }
         // tr.getStatus().equalsIgnoreCase("1")
 
-        return ETransferStatus.STATE_CHAIN_DEFINITE_FAILURE;
+        return ETransferState.STATE_CHAIN_DEFINITE_FAILURE;
 
     }
 

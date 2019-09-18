@@ -1,8 +1,9 @@
 package cn.obcc.driver.contract.solc.test;
 
-import cn.obcc.driver.contract.solc.core.AbiParser;
-import cn.obcc.driver.contract.solc.core.SolcCompiler;
-import cn.obcc.driver.contract.solc.vo.ContractInfo;
+import cn.obcc.driver.contract.solc.abi.AbiFormatParser;
+import cn.obcc.driver.contract.solc.core.ContractCompiler;
+import cn.obcc.driver.contract.solc.utils.AbiFuncUtils;
+import cn.obcc.driver.contract.solc.vo.CompileVo;
 import com.alibaba.fastjson.JSONObject;
 
 import org.testng.annotations.BeforeClass;
@@ -154,26 +155,26 @@ public class MoacSmartContractTest {
         // mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
     }
 
-    @Test
-    public void testAbiGetFunctionInputs() throws IOException {
-        Map<String, String> map;
-
-        map = AbiParser.getFunctionInputs(ABI, "balanceOf");
-        System.out.println("balanceOf:" + map);
-        assert (map.size() == 1 && map.get("_owner").equalsIgnoreCase("address"));
-
-        map = AbiParser.getFunctionInputs(ABI, "transfer");
-        System.out.println("transfer:" + map);
-        assert (map.size() == 3 && map.get("_value").equalsIgnoreCase("uint256"));
-    }
-
-    @Test
-    public void testAbiGetFunctionOutputs() throws IOException {
-        Map<String, String> map;
-        map = AbiParser.getFunctionOutputs(ABI, "balanceOf");
-        System.out.println("balanceOf:" + map);
-        assert (map.size() == 1 && map.get("balance").equalsIgnoreCase("uint256"));
-    }
+//    @Test
+//    public void testAbiGetFunctionInputs() throws IOException {
+//        Map<String, String> map;
+//
+//        map = AbiFuncUtils.getInputs(ABI, "balanceOf");
+//        System.out.println("balanceOf:" + map);
+//        assert (map.size() == 1 && map.get("_owner").equalsIgnoreCase("address"));
+//
+//        map = AbiFormatParser.getFunctionInputs(ABI, "transfer");
+//        System.out.println("transfer:" + map);
+//        assert (map.size() == 3 && map.get("_value").equalsIgnoreCase("uint256"));
+//    }
+//
+//    @Test
+//    public void testAbiGetFunctionOutputs() throws IOException {
+//        Map<String, String> map;
+//        map = AbiFormatParser.getFunctionOutputs(ABI, "balanceOf");
+//        System.out.println("balanceOf:" + map);
+//        assert (map.size() == 1 && map.get("balance").equalsIgnoreCase("uint256"));
+//    }
 
 //    @Test
 //    public void testGetEncodeData() {
@@ -412,12 +413,12 @@ public class MoacSmartContractTest {
 
         //region compile
         // Map<String, Object> map;
-        ContractInfo vo;
+        CompileVo vo;
         String source = contractCode_v_0_4_24;
         String solcPath = "c:\\solc\\run\\";
         String tempPath = "c:\\solc\\run\\result\\";
         boolean deleteTemp = true;
-        vo = SolcCompiler.compile(source, solcPath, tempPath, deleteTemp);
+        vo = ContractCompiler.compile(source, solcPath, tempPath, deleteTemp);
 //        System.out.println("testCompile:" + map);
 
         String compiled_spc_bin = (vo.getMap().get("SpcToken")).getBinary();

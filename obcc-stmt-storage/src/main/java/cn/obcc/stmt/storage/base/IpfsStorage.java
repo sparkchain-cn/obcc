@@ -1,23 +1,18 @@
 package cn.obcc.stmt.storage.base;
 
-import cn.obcc.config.ExProps;
+import cn.obcc.config.ExConfig;
 import cn.obcc.config.ObccConfig;
 import cn.obcc.driver.IChainDriver;
-import cn.obcc.driver.module.fn.IUpchainFn;
-import cn.obcc.driver.vo.SrcAccount;
-import cn.obcc.exception.enums.EMsgType;
-import cn.obcc.exception.enums.EStmtType;
-import cn.obcc.exception.enums.EStoreType;
-import cn.obcc.utils.FileSafeUtils;
+import cn.obcc.driver.module.fn.IStateListener;
+import cn.obcc.driver.vo.FromAccount;
 import cn.obcc.utils.FileUtils;
 import cn.obcc.utils.IpfsUtils;
 import cn.obcc.utils.base.StringUtils;
+import cn.obcc.vo.BizState;
 import cn.obcc.vo.KeyValue;
-import cn.obcc.vo.driver.RecordInfo;
 import lombok.NonNull;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -53,24 +48,13 @@ public class IpfsStorage {
 
         KeyValue<String> v = config.getStorageSrcAccount();
         KeyValue<String> d = config.getStorageDestAccount();
-        SrcAccount account = new SrcAccount() {{
+        FromAccount account = new FromAccount() {{
             setSrcAddr(v.getKey());
             setSecret(v.getVal());
             setMemos(hashsStr);
         }};
 
-        IUpchainFn fn = (bizId1, hash, upchainType, state, resp) -> {
-
-        };
-        //只做特有的部分
-        ExProps exProps = new ExProps() {{
-            setRecordInfo(new RecordInfo() {{
-                setStmtType(EStmtType.STORAGE);
-                setMsgType(EMsgType.File);
-                setStoreType(EStoreType.Ipfs);
-            }});
-        }};
-        driver.getAccountHandler().transfer(bizId, account, "0", d.getKey(), exProps, fn);
+        driver.getAccountHandler().text(bizId, account, d.getKey());
 
 
     }

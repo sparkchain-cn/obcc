@@ -1,10 +1,13 @@
 package cn.obcc.driver.module.base;
 
+import cn.obcc.config.ObccConfig;
 import cn.obcc.db.dao.RecordInfoDaoBase;
 import cn.obcc.driver.IChainDriver;
 import cn.obcc.driver.vo.ChainPipe;
-import cn.obcc.exception.enums.ETransferStatus;
+import cn.obcc.exception.enums.ETransferState;
+import cn.obcc.utils.base.StringUtils;
 import cn.obcc.uuid.UuidUtils;
+import cn.obcc.vo.BizState;
 import cn.obcc.vo.driver.BlockTxInfo;
 import cn.obcc.vo.driver.RecordInfo;
 import cn.obcc.vo.driver.TxConSensus;
@@ -12,6 +15,7 @@ import cn.obcc.vo.driver.TxRecv;
 import com.alibaba.fastjson.JSON;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,26 +28,27 @@ import java.util.List;
  **/
 public class RecordExcutor {
 
-    public static void saveRecord(ChainPipe pipe, IChainDriver driver) throws Exception {
+    public static RecordInfo saveRecord(ChainPipe pipe, IChainDriver driver, ObccConfig config) throws Exception {
 
-        if (pipe.getConfig().getRecordInfo() == null) {
-            pipe.getConfig().setRecordInfo(new RecordInfo());
+        if (pipe.getRecordInfo() == null) {
+            pipe.setRecordInfo(new RecordInfo());
         }
-        RecordInfo recordInfo = pipe.getConfig().getRecordInfo();
+        RecordInfo recordInfo = pipe.getRecordInfo();
         recordInfo.setId(UuidUtils.get());
-
+        if (StringUtils.isNullOrEmpty(recordInfo.getToken())) {
+            recordInfo.setToken(config.getChain().getToken());
+        }
         //ETransferStatus.STATE_WAIT
-        recordInfo.setBizId(pipe.getBizId());
-        recordInfo.setChainCode(pipe.getChainCode());
-        recordInfo.setMemo(pipe.getSrcAccount().getMemos());
+        recordInfo.setMemo(pipe.getFromAccount().getMemos());
 
-        recordInfo.setSrcAccount(pipe.getSrcAccount().getSrcAddr());
+        recordInfo.setSrcAccount(pipe.getFromAccount().getSrcAddr());
         recordInfo.setDestAccount(pipe.getDestAddr());
         recordInfo.setContractAddr(pipe.getContractAddr());
         recordInfo.setAmount(pipe.getAmount());
-        recordInfo.setState(ETransferStatus.STATE_WAIT);
-
+        recordInfo.setState(ETransferState.STATE_WAIT);
+        recordInfo.setCreateTime(new Date());
         driver.getLocalDb().getRecordInfoDao().add(recordInfo);
+        return recordInfo;
 
     }
 
@@ -67,24 +72,24 @@ public class RecordExcutor {
                 put("errorCode", r.getErrorCode());
                 put("errorMsg", r.getErrorMsg());
                 put("txRecvJson", r.getTxRecvJson());
-                put("state", ETransferStatus.STATE_CHAIN_ACCEPT);
+                put("state", ETransferState.STATE_CHAIN_ACCEPT);
             }});
         } else {
             r.setTxRecvJson(JSON.toJSONString(r.getTxRecvList()));
             recordInfoDao.update(r.getId(), new HashMap<String, Object>() {{
                 put("txSize", r.getTxSize());
                 put("txRecvJson", r.getTxRecvJson());
-                put("state", ETransferStatus.STATE_CHAIN_ACCEPT);
+                put("state", ETransferState.STATE_CHAIN_ACCEPT);
             }});
         }
 
     }
 
-    public static void consenseUpdate(BlockTxInfo txInfo, IChainDriver driver) throws Exception {
+    public static void consenseUpdate(BizState bizState, BlockTxInfo txInfo, IChainDriver driver) throws Exception {
 
         String recId = txInfo.getRecId();
         RecordInfoDaoBase recordInfoDao = driver.getLocalDb().getRecordInfoDao();
-        if (txInfo.isSingle()) {
+        if (bizState.getTxSize() == 1) {
             List<TxConSensus> list = new ArrayList<>();
             TxConSensus cs = new TxConSensus() {{
                 setHash(txInfo.getHash());
@@ -98,7 +103,7 @@ public class RecordExcutor {
                 put("chainTxState", cs.getChainTxState());
                 put("blockNumber", cs.getBlockNumber());
                 put("consensusJson", JSON.toJSONString(list));
-                put("state", ETransferStatus.STATE_CHAIN_CONSENSUS);
+                put("state", ETransferState.STATE_CHAIN_CONSENSUS);
             }});
         } else {
             List<TxConSensus> list = recordInfoDao.getById(Long.parseLong(recId)).getComputedConSensusList();
@@ -109,15 +114,16 @@ public class RecordExcutor {
                 setBlockNumber(txInfo.getBlockNumber());
             }};
             list.add(cs);
-            if (txInfo.isLast()) {
+            //最后一条
+            if (bizState.getTxSize() == bizState.getConsensusSize()) {
                 recordInfoDao.update(Long.parseLong(recId), new HashMap<String, Object>() {{
                     put("consensusJson", JSON.toJSONString(list));
-                    put("state", ETransferStatus.STATE_CHAIN_CONSENSUS);
+                    put("state", ETransferState.STATE_CHAIN_CONSENSUS);
                 }});
             } else {
                 recordInfoDao.update(Long.parseLong(recId), new HashMap<String, Object>() {{
                     put("consensusJson", JSON.toJSONString(list));
-                    put("state", ETransferStatus.STATE_CHAIN_HALF_CONSENSUS);
+                    put("state", ETransferState.STATE_CHAIN_HALF_CONSENSUS);
                 }});
             }
         }

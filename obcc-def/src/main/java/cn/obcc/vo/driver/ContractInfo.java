@@ -15,15 +15,15 @@ import java.util.Map;
 public class ContractInfo extends Entity {
     @Id
     private long id;
-    private String bizId; //unique
+    private String pkgName;
 
     private String name;
 
     private String content;
     private String abi;
     private String bin;
-    //{"transfer":"0x2323233","burn":"03de3scdds"}
-    private String methodNameIdMapStr;
+    //{"0x2323233":"transfer":,"03de3scdds":"burn"}
+    private String methodIdNameMapStr;
 
     private String hash;
     private String contractAddr;
@@ -36,6 +36,6 @@ public class ContractInfo extends Entity {
 
     @Transient
     public Map<String, String> getMethodIdNameMap() {
-        return (Map<String, String>) JSON.parse(getMethodNameIdMapStr());
+        return (Map<String, String>) JSON.parse(getMethodIdNameMapStr());
     }
 }

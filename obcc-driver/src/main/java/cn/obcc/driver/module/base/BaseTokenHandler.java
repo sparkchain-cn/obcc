@@ -1,23 +1,24 @@
 package cn.obcc.driver.module.base;
 
-import cn.obcc.config.ExProps;
+import cn.obcc.config.ExConfig;
 import cn.obcc.db.utils.BeanUtils;
 import cn.obcc.driver.ITokenParse;
 import cn.obcc.driver.base.BaseHandler;
 import cn.obcc.driver.module.ITokenHandler;
-import cn.obcc.driver.module.fn.IUpchainFn;
+import cn.obcc.driver.module.fn.IStateListener;
 import cn.obcc.driver.utils.ConvertUtils;
 import cn.obcc.driver.vo.CompileResult;
 import cn.obcc.driver.vo.ContractRec;
-import cn.obcc.driver.vo.SrcAccount;
+import cn.obcc.driver.vo.FromAccount;
 import cn.obcc.driver.vo.TokenRec;
-import cn.obcc.exception.enums.ETransferStatus;
-import cn.obcc.exception.enums.EUpchainType;
+import cn.obcc.exception.enums.ETransferState;
 import cn.obcc.utils.base.StringUtils;
 import cn.obcc.uuid.UuidUtils;
+import cn.obcc.vo.BizState;
 import cn.obcc.vo.driver.BlockTxInfo;
 import cn.obcc.vo.driver.ContractInfo;
 import cn.obcc.vo.driver.TokenInfo;
+import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,16 +37,17 @@ public abstract class BaseTokenHandler<T> extends BaseHandler<T> implements ITok
     public static final Logger logger = LoggerFactory.getLogger(BaseTokenHandler.class);
 
     @Override
-    public void createToken(String bizId, SrcAccount account, String tokenName, String tokenCode, Long tokenSupply,
-                            IUpchainFn<BlockTxInfo> fn, ExProps config) throws Exception {
+    public String createToken(@NonNull String bizId, @NonNull FromAccount account,
+                              @NonNull String tokenName, @NonNull String tokenCode, @NonNull Long tokenSupply,
+                              IStateListener fn, @NonNull ExConfig config) throws Exception {
 
-        createToken(bizId, account, null, null, tokenName, tokenCode, tokenSupply, fn, config);
+        return createToken(bizId, account, null, null, tokenName, tokenCode, tokenSupply, fn, config);
     }
 
     @Override
-    public void createToken(String bizId, SrcAccount account, String contract, String contractName,
-                            String tokenName, String tokenCode, Long tokenSupply,
-                            IUpchainFn<BlockTxInfo> fn, ExProps config) throws Exception {
+    public String createToken(@NonNull String bizId, @NonNull FromAccount account, @NonNull String contract, String contractName,
+                              String tokenName, String tokenCode, Long tokenSupply,
+                              IStateListener fn, ExConfig config) throws Exception {
 
         List<Object> params = new ArrayList<Object>() {{
             add(tokenName);
@@ -60,7 +62,7 @@ public abstract class BaseTokenHandler<T> extends BaseHandler<T> implements ITok
         //成功
         if (compileResult.getState() != 1) {
             logger.error("编译失败，bizid:{}，{}", bizId, compileResult.getCompileException());
-            return;
+            return null;
         }
         //采用默认的名称
         if (StringUtils.isNullOrEmpty(contractName)) {
@@ -73,34 +75,34 @@ public abstract class BaseTokenHandler<T> extends BaseHandler<T> implements ITok
         ContractInfo info = getDriver().getContractHandler().getContract(bizId, contractName);
         if (info == null) {
             logger.error("根据bizId:{} 和contractName:{}不能找到合约", bizId, contractName);
-            return;
+            return null;
         }
-        IUpchainFn fn1 = new IUpchainFn<BlockTxInfo>() {
-            @Override
-            public void exec(String bizId, String hash, EUpchainType upchainType, ETransferStatus state, BlockTxInfo resp) throws Exception {
-                if (state == ETransferStatus.STATE_CHAIN_CONSENSUS) {
-                    TokenInfo tokenInfo = new TokenInfo();
-                    tokenInfo.setBizId(bizId);
-                    tokenInfo.setHash(hash);
-                    tokenInfo.setContract(info.getContent());
-                    tokenInfo.setCode(tokenCode);
-                    tokenInfo.setName(tokenName);
-                    tokenInfo.setSupply(tokenSupply);
-                    tokenInfo.setPrecisions(18);
-                    tokenInfo.setContractAbi(info.getAbi());
-                    tokenInfo.setContractAddress(resp.getContractAddress());
-                    tokenInfo.setState(1);
+        IStateListener fn1 = (BizState bizState, Object resp) -> {
+            // String bizId, String hash, EUpchainType upchainType, ETransferState state,
+            if (bizState.getTransferState() == ETransferState.STATE_CHAIN_CONSENSUS) {
+                BlockTxInfo txInfo = (BlockTxInfo) resp;
+                TokenInfo tokenInfo = new TokenInfo();
+                tokenInfo.setBizId(bizId);
+                tokenInfo.setHash(bizState.getHashes());
+                tokenInfo.setContract(info.getContent());
+                tokenInfo.setCode(tokenCode);
+                tokenInfo.setName(tokenName);
+                tokenInfo.setSupply(tokenSupply);
+                tokenInfo.setPrecisions(18);
+                tokenInfo.setContractAbi(info.getAbi());
+                tokenInfo.setContractAddress(txInfo.getContractAddress());
+                tokenInfo.setState(1);
 
-                    getDriver().getLocalDb().getTokenInfoDao().add(tokenInfo);
-                }
-                if (fn != null) {
-                    fn.exec(bizId, hash, upchainType, state, (BlockTxInfo) resp);
-                }
+                getDriver().getLocalDb().getTokenInfoDao().add(tokenInfo);
             }
+            if (fn != null) {
+                fn.exec(bizState, resp);
+            }
+
         };
 
 
-        getDriver().getContractHandler().deploy(UuidUtils.get() + "", account, info, fn1, config, params);
+        return getDriver().getContractHandler().deploy(UuidUtils.get() + "", account, info, params, fn1, config);
 
     }
 
@@ -147,7 +149,7 @@ public abstract class BaseTokenHandler<T> extends BaseHandler<T> implements ITok
             //todo:cache it
             tokenParse = (ITokenParse) BeanUtils.newInstance(info.getParseClsName());
         } else {
-            tokenParse = new DefaultTokenParse();
+            tokenParse = new BaseTokenParse();
         }
 
         return tokenParse.parse(info, rec);
@@ -155,16 +157,12 @@ public abstract class BaseTokenHandler<T> extends BaseHandler<T> implements ITok
     }
 
     @Override
-    public String balanceOf(TokenInfo token, String address, ExProps config) throws Exception {
-        ContractInfo contractInfo = getDriver().getContractHandler().getContract(token.getContractAddress());
-        if (contractInfo == null) {
-            logger.error("在数据库中没有找到合约.");
-            return null;
-        }
-        String hexValue = getDriver().getContractHandler().query(address, contractInfo, config, "balanceOf",
+    public String balanceOf(TokenInfo token, String address, ExConfig config) throws Exception {
+        String hexValue = getDriver().getContractHandler().queryWithAddr(address,
+                token.getContractAddress(), "balanceOf",
                 new ArrayList<Object>() {{
                     add(address);
-                }});
+                }}, config);
 
         if (StringUtils.isNullOrEmpty(hexValue)) {
             logger.error("没有找到{}账户的余额", address);
@@ -192,8 +190,8 @@ public abstract class BaseTokenHandler<T> extends BaseHandler<T> implements ITok
      * @throws Exception
      */
     @Override
-    public String transfer(String bizId, SrcAccount account, TokenInfo token, String destAccount,
-                           String amount, ExProps config, IUpchainFn<BlockTxInfo> fn) throws Exception {
+    public String transfer(String bizId, FromAccount account, TokenInfo token, String destAccount,
+                           String amount, IStateListener fn, ExConfig config) throws Exception {
         String methodName = "transfer";
         List<Object> parmas = new ArrayList<Object>() {
             {
@@ -204,7 +202,7 @@ public abstract class BaseTokenHandler<T> extends BaseHandler<T> implements ITok
         check(token, methodName, parmas);
 
         ContractInfo contractInfo = getDriver().getContractHandler().getContract(token.getContractAddress());
-        return getDriver().getContractHandler().invoke(bizId, contractInfo, account, config, fn, methodName, parmas);
+        return getDriver().getContractHandler().invoke(bizId, contractInfo, account, methodName, parmas, fn, config);
     }
 
     /**
@@ -220,8 +218,8 @@ public abstract class BaseTokenHandler<T> extends BaseHandler<T> implements ITok
      * @throws Exception
      */
     @Override
-    public String burn(String bizId, SrcAccount account, TokenInfo token,
-                       String amount, ExProps config, IUpchainFn<BlockTxInfo> fn) throws Exception {
+    public String burn(String bizId, FromAccount account, TokenInfo token,
+                       String amount, IStateListener fn, ExConfig config) throws Exception {
         String methodName = "burn";
         List<Object> parmas = new ArrayList<Object>() {
             {
@@ -231,7 +229,7 @@ public abstract class BaseTokenHandler<T> extends BaseHandler<T> implements ITok
         check(token, methodName, parmas);
 
         ContractInfo contractInfo = getDriver().getContractHandler().getContract(token.getContractAddress());
-        return getDriver().getContractHandler().invoke(bizId, contractInfo, account, config, fn, methodName, parmas);
+        return getDriver().getContractHandler().invoke(bizId, contractInfo, account, methodName, parmas, fn, config);
 
     }
 
@@ -245,8 +243,8 @@ public abstract class BaseTokenHandler<T> extends BaseHandler<T> implements ITok
      * @throws Exception
      */
     @Override
-    public String supply(String bizId, SrcAccount account, TokenInfo token,
-                         String amount, ExProps config, IUpchainFn<BlockTxInfo> fn) throws Exception {
+    public String supply(String bizId, FromAccount account, TokenInfo token,
+                         String amount, IStateListener fn, ExConfig config) throws Exception {
         String methodName = "supply";
         List<Object> parmas = new ArrayList<Object>() {
             {
@@ -256,7 +254,7 @@ public abstract class BaseTokenHandler<T> extends BaseHandler<T> implements ITok
         check(token, methodName, parmas);
 
         ContractInfo contractInfo = getDriver().getContractHandler().getContract(token.getContractAddress());
-        return getDriver().getContractHandler().invoke(bizId, contractInfo, account, config, fn, methodName, parmas);
+        return getDriver().getContractHandler().invoke(bizId, contractInfo, account, methodName, parmas, fn, config);
     }
 
     /**
@@ -272,8 +270,8 @@ public abstract class BaseTokenHandler<T> extends BaseHandler<T> implements ITok
      * @throws Exception
      */
     @Override
-    public String approve(String bizId, SrcAccount account, TokenInfo token, String spenderAddr, String
-            amount, ExProps config, IUpchainFn<BlockTxInfo> fn) throws Exception {
+    public String approve(String bizId, FromAccount account, TokenInfo token, String spenderAddr, String
+            amount, IStateListener fn, ExConfig config) throws Exception {
         String methodName = "approve";
         List<Object> parmas = new ArrayList<Object>() {
             {
@@ -284,7 +282,7 @@ public abstract class BaseTokenHandler<T> extends BaseHandler<T> implements ITok
         check(token, methodName, parmas);
 
         ContractInfo contractInfo = getDriver().getContractHandler().getContract(token.getContractAddress());
-        return getDriver().getContractHandler().invoke(bizId, contractInfo, account, config, fn, methodName, parmas);
+        return getDriver().getContractHandler().invoke(bizId, contractInfo, account, methodName, parmas, fn, config);
 
     }
 
@@ -300,8 +298,8 @@ public abstract class BaseTokenHandler<T> extends BaseHandler<T> implements ITok
      * @throws Exception
      */
     @Override
-    public String transferFrom(String bizId, SrcAccount account, TokenInfo token, String srcAddr, String toAddr,
-                               String amount, ExProps config, IUpchainFn<BlockTxInfo> fn) throws Exception {
+    public String transferFrom(String bizId, FromAccount account, TokenInfo token, String srcAddr, String toAddr,
+                               String amount, IStateListener fn, ExConfig config) throws Exception {
         String methodName = "transferFrom";
         List<Object> parmas = new ArrayList<Object>() {
             {
@@ -313,7 +311,7 @@ public abstract class BaseTokenHandler<T> extends BaseHandler<T> implements ITok
         check(token, methodName, parmas);
 
         ContractInfo contractInfo = getDriver().getContractHandler().getContract(token.getContractAddress());
-        return getDriver().getContractHandler().invoke(bizId, contractInfo, account, config, fn, methodName, parmas);
+        return getDriver().getContractHandler().invoke(bizId, contractInfo, account, methodName, parmas, fn, config);
     }
 
 

@@ -1,9 +1,9 @@
 package cn.obcc.driver.eth.module.account;
 
-import cn.obcc.config.ExProps;
+import cn.obcc.config.ExConfig;
 import cn.obcc.driver.eth.EthConstants;
 import cn.obcc.driver.tech.INonceCalculator;
-import cn.obcc.driver.vo.SrcAccount;
+import cn.obcc.driver.vo.FromAccount;
 import cn.obcc.exception.ObccException;
 import cn.obcc.exception.enums.EExceptionCode;
 import cn.obcc.utils.base.StringUtils;
@@ -32,14 +32,14 @@ public class AccountTransfer {
     public static final Logger logger = LoggerFactory.getLogger(AccountTransfer.class);
 
 
-    public static EthSendTransaction trySendTx(SrcAccount srcAccount, BigInteger amount, String destAddress,
-                                               INonceCalculator nonceCalculator, ExProps config, Web3j web3j) throws Exception {
+    public static EthSendTransaction trySendTx(FromAccount fromAccount, BigInteger amount, String destAddress,
+                                               INonceCalculator nonceCalculator, ExConfig config, Web3j web3j) throws Exception {
         EthSendTransaction result = null;
         int i = 0;
-        BigInteger nowSeq = BigInteger.valueOf(Long.parseLong(srcAccount.getNonce()));
+        BigInteger nowSeq = BigInteger.valueOf(Long.parseLong(fromAccount.getNonce()));
         while (i <= 20) {
             i++;
-            result = sendTx(web3j, srcAccount, amount, destAddress);
+            result = sendTx(web3j, fromAccount, amount, destAddress);
             if (result == null) {
                 throw ObccException.create(EExceptionCode.RETURN_NULL_OR_EMPTY,
                         "web3j mcSendRawTransaction return null object(McSendTransaction).");
@@ -52,20 +52,20 @@ public class AccountTransfer {
             if (isNouceLowError(err.getMessage())) {
                 //"nonce too low";//在区块上，
                 nowSeq = nowSeq.add(BigInteger.valueOf(1L));
-                nonceCalculator.adjustNonce(srcAccount.getSrcAddr(), nowSeq.longValue(), config);
-                srcAccount.setNonce(nowSeq + "");
+                nonceCalculator.adjustNonce(fromAccount.getSrcAddr(), nowSeq.longValue(), config);
+                fromAccount.setNonce(nowSeq + "");
                 continue;
             } else if (isInNouceQueueError(err.getMessage())) {
                 // known transaction";//在队列中，nonce存在，参数不同，说明不是冲掉
                 nowSeq = nowSeq.add(BigInteger.valueOf(1L));
-                nonceCalculator.adjustNonce(srcAccount.getSrcAddr(), nowSeq.longValue(), config);
-                srcAccount.setNonce(nowSeq + "");
+                nonceCalculator.adjustNonce(fromAccount.getSrcAddr(), nowSeq.longValue(), config);
+                fromAccount.setNonce(nowSeq + "");
                 continue;
             } else if (isUnderPriceError(err.getMessage())) {
                 // "replacement transaction underpriced";
                 // 在队列中，nonce存在，参数相同，说明要冲掉，但是冲掉费用过低,增加其limit
-                Long gasLimit = srcAccount.getGasLimit().longValue() * (1 + EthConstants.SafeFactor / 100);
-                srcAccount.setGasLimit(gasLimit);
+                Long gasLimit = fromAccount.getGasLimit().longValue() * (1 + EthConstants.SafeFactor / 100);
+                fromAccount.setGasLimit(gasLimit);
                 continue;
             }
         }
@@ -73,7 +73,7 @@ public class AccountTransfer {
 
     }
 
-    public static EthSendTransaction sendTx(Web3j web3j, SrcAccount account, BigInteger amount, String destAddress) throws ObccException {
+    public static EthSendTransaction sendTx(Web3j web3j, FromAccount account, BigInteger amount, String destAddress) throws ObccException {
 
         String signedTransactionData = signEthTxData(
                 account.getSecret(), destAddress, BigInteger.valueOf(Long.parseLong(account.getNonce())),

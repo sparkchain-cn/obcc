@@ -17,9 +17,9 @@ import java.math.BigInteger;
  * @desc TODO
  * @date 2019/9/10 0010  9:04
  **/
-public class DefaultTokenParse implements ITokenParse {
+public class BaseTokenParse implements ITokenParse {
 
-    public static final Logger logger = LoggerFactory.getLogger(DefaultTokenParse.class);
+    public static final Logger logger = LoggerFactory.getLogger(BaseTokenParse.class);
 
     @Override
     public TokenRec parse(TokenInfo info, ContractRec rec) throws Exception {

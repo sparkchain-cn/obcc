@@ -12,7 +12,7 @@ import java.io.Serializable;
  * @date 2019/8/24 0024  17:25
  **/
 @Data
-public class SrcAccount implements Serializable {
+public class FromAccount implements Serializable {
 
     private String srcAddr;
     private String secret;

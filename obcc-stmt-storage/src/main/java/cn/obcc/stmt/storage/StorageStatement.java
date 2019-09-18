@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-import cn.obcc.config.ExProps;
+import cn.obcc.config.ExConfig;
 import cn.obcc.driver.vo.BizTxInfo;
 import cn.obcc.exception.ObccException;
 import cn.obcc.exception.enums.*;
@@ -14,7 +14,6 @@ import cn.obcc.stmt.storage.base.FileStorage;
 import cn.obcc.stmt.storage.base.IpfsStorage;
 import cn.obcc.stmt.storage.base.MemoStorage;
 import cn.obcc.utils.FileSafeUtils;
-import cn.obcc.utils.base.StringUtils;
 import cn.obcc.vo.driver.BlockTxInfo;
 import cn.obcc.vo.driver.RecordInfo;
 import lombok.NonNull;
@@ -70,7 +69,7 @@ public class StorageStatement extends BaseStatement implements IStorageStatement
 
     @Override
     public BizTxInfo getState(String bizid) throws Exception {
-        return getDriver().getAccountHandler().getTxByBizId(bizid, new ExProps());
+        return getDriver().getAccountHandler().getTxByBizId(bizid, new ExConfig());
     }
 
 

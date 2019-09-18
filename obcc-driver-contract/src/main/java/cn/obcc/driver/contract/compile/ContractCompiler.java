@@ -1,8 +1,8 @@
 package cn.obcc.driver.contract.compile;
 
 import cn.obcc.config.ObccConfig;
-import cn.obcc.driver.contract.solc.core.AbiParser;
-import cn.obcc.driver.contract.solc.core.SolcCompiler;
+import cn.obcc.driver.contract.solc.abi.AbiFormatParser;
+import cn.obcc.driver.contract.solc.vo.CompileVo;
 import cn.obcc.driver.vo.CompileResult;
 import cn.obcc.exception.ObccException;
 import cn.obcc.exception.enums.EContractType;
@@ -24,16 +24,12 @@ import java.util.Map;
 public class ContractCompiler {
     public static final Logger logger = LoggerFactory.getLogger(ContractCompiler.class);
 
-
-
-
     public static CompileResult compile(String contract, ObccConfig config) throws Exception {
         if (config.getContractType() == EContractType.SOLC) {
             return solcCompile(contract, config);
         }
         logger.error("合约类型{}不支持", config.getContractType());
         throw ObccException.create(EExceptionCode.CONTRACT_TYPE_NO_SUPPORT, "合约类型不支持");
-        //return null;
     }
 
     /**
@@ -45,8 +41,8 @@ public class ContractCompiler {
      */
     public static CompileResult solcCompile(String contract, ObccConfig config) {
         CompileResult contractInfo = new CompileResult();
-        cn.obcc.driver.contract.solc.vo.ContractInfo info;
-        info = SolcCompiler.compile(contract, config.getSolcPath(), config.getTempPath(), true);
+        CompileVo info;
+        info = cn.obcc.driver.contract.solc.core.ContractCompiler.compile(contract, config.getSolcPath(), config.getTempPath(), true);
         if (StringUtils.isNotNullOrEmpty(info.getException())) {
             contractInfo.setCompileException(info.getException());
             contractInfo.setCompileResult(info.getCompileResult());
@@ -58,8 +54,7 @@ public class ContractCompiler {
         return contractInfo;
     }
 
-    public static Map<String, String> getFunction(String methodName, String abi) {
-        return AbiParser.getFunctionInputs(abi, methodName);
-
-    }
+//    public static Map<String, String> getFunction(String methodName, String abi) {
+//        return AbiFormatParser.getFunctionInputs(abi, methodName);
+//    }
 }

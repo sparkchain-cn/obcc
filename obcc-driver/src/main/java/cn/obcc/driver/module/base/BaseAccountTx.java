@@ -1,6 +1,6 @@
 package cn.obcc.driver.module.base;
 
-import cn.obcc.config.ExProps;
+import cn.obcc.config.ExConfig;
 import cn.obcc.driver.IChainDriver;
 import cn.obcc.driver.vo.BizTxInfo;
 import cn.obcc.exception.ObccException;
@@ -21,10 +21,10 @@ import java.util.List;
  * @desc TODO
  * @date 2019/9/7 0007  17:41
  **/
-public class AccountBaseTx {
+public class BaseAccountTx {
 
 
-    public static BizTxInfo getTxByHashs(@NotEmpty String hashs, ExProps config, BaseAccountHandler baseAccountHandler) throws Exception {
+    public static BizTxInfo getTxByHashs(@NotEmpty String hashs, ExConfig config, BaseAccountHandler baseAccountHandler) throws Exception {
         if (StringUtils.isNullOrEmpty(hashs)) {return null;}
         List<BlockTxInfo> list = new ArrayList<>();
 
@@ -53,12 +53,12 @@ public class AccountBaseTx {
     }
 
 
-    public static BizTxInfo getTxByBizId(String bizId, ExProps config, IChainDriver driver, BaseAccountHandler baseAccountHandler) throws Exception {
+    public static BizTxInfo getTxByBizId(String bizId, ExConfig config, IChainDriver driver, BaseAccountHandler baseAccountHandler) throws Exception {
         RecordInfo recordInfo = driver.getLocalDb().getRecordInfoDao().get("biz_id=?", new Object[]{bizId});
         if (recordInfo == null) {
             throw ObccException.create(EExceptionCode.RETURN_NULL_OR_EMPTY, "根据BizId:" + bizId + "不能找到对应的hash");
         }
-        BizTxInfo bizInfos = getTxByHashs(recordInfo.getHashs(), config, baseAccountHandler);
+        BizTxInfo bizInfos = getTxByHashs(recordInfo.getHashes(), config, baseAccountHandler);
         return bizInfos;
     }
 }

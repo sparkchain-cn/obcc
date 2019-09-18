@@ -61,6 +61,7 @@ public class ObccConfig {
     private List<String> uuids = new ArrayList<>();
 
 
+    private long adjustInterval = 300;//   MilliSecond
     private KeyValue<String> tokenCreateAccount = new KeyValue<String>() {
         {
             setKey("0x787172b7f5e6465a06a699b2a88bb1143a01e138");

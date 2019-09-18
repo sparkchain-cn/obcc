@@ -3,8 +3,7 @@ package cn.obcc.driver.module;
 import cn.obcc.driver.IChainHandler;
 import cn.obcc.vo.driver.BlockInfo;
 import cn.obcc.vo.driver.BlockTxInfo;
-import cn.obcc.config.ExProps;
-import cn.obcc.vo.RetData;
+import cn.obcc.config.ExConfig;
 
 /**
  * @author mgicode
@@ -37,7 +36,7 @@ public interface IBlockHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public BlockInfo getBlockInfo(long blockHeight, ExProps config) throws Exception;
+    public BlockInfo getBlockInfo(long blockHeight, ExConfig config) throws Exception;
 
 
     /**
@@ -47,7 +46,7 @@ public interface IBlockHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public BlockTxInfo getBlockTxInfo(String hash, ExProps config) throws Exception;
+    public BlockTxInfo getBlockTxInfo(String hash, ExConfig config) throws Exception;
 
 
     /**

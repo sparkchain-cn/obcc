@@ -1,13 +1,10 @@
 package cn.obcc.driver.contract.test;
 
 import cn.obcc.config.ObccConfig;
-import cn.obcc.config.ExProps;
+import cn.obcc.config.ExConfig;
 import cn.obcc.driver.contract.BaseContractHandler;
-import cn.obcc.driver.module.fn.IUpchainFn;
-import cn.obcc.driver.vo.ChainPipe;
 import cn.obcc.driver.vo.CompileResult;
 import cn.obcc.driver.vo.ContractRec;
-import cn.obcc.driver.vo.SrcAccount;
 import cn.obcc.exception.enums.EContractType;
 import cn.obcc.vo.driver.ContractInfo;
 import org.testng.annotations.BeforeClass;
@@ -39,7 +36,7 @@ public class BaseContractHandlerTest {
             }
 
             @Override
-            public String query(String srcAddr, ContractInfo contractInfo, ExProps config, String methodName, List params) throws Exception {
+            public String query(String srcAddr, ContractInfo contractInfo, ExConfig config, String methodName, List params) throws Exception {
                 return null;
             }
 
@@ -89,7 +86,7 @@ public class BaseContractHandlerTest {
 
     @Test
     public void testCompiler() throws Exception {
-        CompileResult compile = handler.compile(System.currentTimeMillis() + "", testSolContent, new ExProps());
+        CompileResult compile = handler.compile(System.currentTimeMillis() + "", testSolContent, new ExConfig());
         System.out.println(compile);
     }
 

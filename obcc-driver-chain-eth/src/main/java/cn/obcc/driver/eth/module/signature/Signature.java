@@ -1,7 +1,7 @@
 package cn.obcc.driver.eth.module.signature;
 
 import cn.obcc.driver.vo.params.SignTxParams;
-import cn.obcc.config.ExProps;
+import cn.obcc.config.ExConfig;
 import cn.obcc.vo.RetData;
 import org.web3j.tx.gas.DefaultGasProvider;
 import org.web3j.tx.gas.StaticGasProvider;
@@ -11,7 +11,7 @@ import java.math.BigInteger;
 public class Signature {
 
     // region offline sign
-    public RetData<SignTxParams> getSignParams(String address, ExProps config) throws Exception {
+    public RetData<SignTxParams> getSignParams(String address, ExConfig config) throws Exception {
         SignTxParams params = new SignTxParams();
         params.setSourceAddress(address);
 

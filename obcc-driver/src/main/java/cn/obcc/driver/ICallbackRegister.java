@@ -1,6 +1,6 @@
 package cn.obcc.driver;
 
-import cn.obcc.driver.module.fn.IUpchainFn;
+import cn.obcc.driver.module.fn.IStateListener;
 
 /**
  * @author mgicode
@@ -18,7 +18,7 @@ public interface ICallbackRegister {
      * @param bizId
      * @param fn
      */
-    public void register(String bizId, IUpchainFn fn) throws Exception;
+    public void register(String bizId, IStateListener fn) throws Exception;
 
     /**
      *
@@ -34,7 +34,7 @@ public interface ICallbackRegister {
      * @param bizId
      * @return
      */
-    public IUpchainFn getCallbackFn(String bizId);
+    public IStateListener getStateListener(String bizId);
 
     /**
      * @param bizId

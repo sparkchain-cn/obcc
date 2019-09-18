@@ -1,18 +1,13 @@
 package cn.obcc.stmt.storage.base;
 
-import cn.obcc.config.ExProps;
+import cn.obcc.config.ExConfig;
 import cn.obcc.config.ObccConfig;
 import cn.obcc.driver.IChainDriver;
-import cn.obcc.driver.module.fn.IUpchainFn;
-import cn.obcc.driver.vo.SrcAccount;
-import cn.obcc.exception.enums.EMsgType;
-import cn.obcc.exception.enums.EStmtType;
-import cn.obcc.exception.enums.EStoreType;
-import cn.obcc.utils.base.StringUtils;
+import cn.obcc.driver.module.fn.IStateListener;
+import cn.obcc.driver.vo.FromAccount;
+import cn.obcc.vo.BizState;
 import cn.obcc.vo.KeyValue;
-import cn.obcc.vo.driver.RecordInfo;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
@@ -27,25 +22,13 @@ public class MemoStorage {
     public static void store(final String bizId, String msg, ObccConfig config, IChainDriver driver) throws Exception {
         KeyValue<String> v = config.getStorageSrcAccount();
         KeyValue<String> d = config.getStorageDestAccount();
-        SrcAccount account = new SrcAccount() {{
+        FromAccount account = new FromAccount() {{
             setSrcAddr(v.getKey());
             setSecret(v.getVal());
             setMemos(msg);
         }};
 
-        IUpchainFn fn = (bizId1, hash, upchainType, state, resp) -> {
-
-        };
-
-        //只做特有的部分
-        ExProps exProps = new ExProps() {{
-            setRecordInfo(new RecordInfo() {{
-                setStmtType(EStmtType.STORAGE);
-                setMsgType(EMsgType.Msg);
-                setStoreType(EStoreType.Memo);
-            }});
-        }};
-        driver.getAccountHandler().transfer(bizId, account, "0", d.getKey(),exProps, fn);
+        driver.getAccountHandler().text(bizId, account, d.getKey());
     }
 
 

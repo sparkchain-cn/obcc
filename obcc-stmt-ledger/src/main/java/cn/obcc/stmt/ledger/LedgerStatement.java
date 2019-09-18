@@ -1,89 +1,69 @@
 package cn.obcc.stmt.ledger;
 
-import cn.obcc.config.ExProps;
-import cn.obcc.driver.module.fn.IUpchainFn;
-import cn.obcc.driver.vo.SrcAccount;
+import cn.obcc.config.ExConfig;
+import cn.obcc.driver.module.fn.IStateListener;
+import cn.obcc.driver.vo.FromAccount;
 import cn.obcc.exception.ObccException;
 import cn.obcc.exception.enums.EExceptionCode;
-import cn.obcc.exception.enums.EStmtType;
 import cn.obcc.stmt.ILedgerStatement;
 import cn.obcc.stmt.base.BaseStatement;
 import cn.obcc.stmt.fn.ITokenSendFn;
+import cn.obcc.vo.BizState;
 import cn.obcc.vo.Page;
 import cn.obcc.vo.driver.AccountInfo;
-import cn.obcc.vo.driver.RecordInfo;
 import cn.obcc.vo.driver.TokenInfo;
 import lombok.NonNull;
 
 public class LedgerStatement extends BaseStatement implements ILedgerStatement {
 
     @Override
-    public void createAccount(@NonNull String bizId, @NonNull String username, @NonNull String pwd) throws Exception {
-        ExProps exProps = new ExProps() {{
-            setRecordInfo(new RecordInfo() {{
-                setStmtType(EStmtType.LEDGER_CREATE_USER);
-            }});
-        }};
-        getDriver().getAccountHandler().createAccount(bizId, username, pwd, exProps);
+    public String createAccount(@NonNull String bizId, @NonNull String username, @NonNull String pwd) throws Exception {
+        getDriver().getAccountHandler().createAccount(bizId, username, pwd, null);
+        return null;
     }
 
 
     @Override
-    public void activate(@NonNull String bizId, @NonNull String username, @NonNull long tokenCount) throws Exception {
+    public String activate(@NonNull String bizId, @NonNull String username, @NonNull long tokenCount) throws Exception {
         checkBizId(bizId);
-        SrcAccount account = new SrcAccount();
+        FromAccount account = new FromAccount();
         account.setSrcAddr(config.getTokenCreateAccount().getKey());
         account.setSecret(config.getTokenCreateAccount().getVal());
         AccountInfo dest = getAccountInfo(username);
-        //只做特有的部分
-        ExProps exProps = new ExProps() {{
-            setRecordInfo(new RecordInfo() {{
-                setStmtType(EStmtType.LEDGER_CREATE_USER);
-                setDestUser(username);
-            }});
-        }};
-        getDriver().getAccountHandler().transfer(bizId, account, tokenCount + "", dest.getAddress(), exProps, null);
+
+        return getDriver().getAccountHandler().pay(bizId, account, tokenCount + "", dest.getAddress());
     }
 
     @Override
-    public void createToken(@NonNull String bizId, @NonNull String tokenCode, @NonNull String tokenName, @NonNull long count) throws Exception {
+    public String createToken(@NonNull String bizId, @NonNull String tokenCode, @NonNull String tokenName, @NonNull long count) throws Exception {
         checkBizId(bizId);
-        SrcAccount account = new SrcAccount();
+        FromAccount account = new FromAccount();
         account.setSrcAddr(config.getTokenCreateAccount().getKey());
         account.setSecret(config.getTokenCreateAccount().getVal());
-        IUpchainFn fn = (bizId1, hash, upchainType, state, resp) -> {
-        };
-        //只做特有的部分
-        ExProps exProps = new ExProps() {{
-            setRecordInfo(new RecordInfo() {{
-                setStmtType(EStmtType.LEDGER_CREATE_USER);
-                setToken(tokenCode);
-            }});
-        }};
-        getDriver().getTokenHandler().createToken(bizId, account, tokenName, tokenCode, count, fn, exProps);
+
+        return getDriver().getTokenHandler().createToken(bizId, account, tokenName, tokenCode, count);
     }
 
     @Override
-    public void send(String bizId, String tokenCode, String srcUsername,
-                     String destUsername, long count, String memo, ITokenSendFn fn) throws Exception {
+    public String send(String bizId, String tokenCode, String srcUser,
+                       String destUser, long count, String memo, ITokenSendFn fn) throws Exception {
         checkBizId(bizId);
-        SrcAccount account = new SrcAccount();
-        account.setSrcAddr(config.getTokenCreateAccount().getKey());
-        account.setSecret(config.getTokenCreateAccount().getVal());
+
+        AccountInfo ai = getDriver().getLocalDb().getAccountInfoDao().getByProp("userName", srcUser);
+
+        FromAccount account = new FromAccount();
+        account.setSrcAddr(ai.getAddress());
+        account.setSecret(ai.getSecret());
+        account.setMemos(memo);
+
         TokenInfo tokenInfo = getDriver().getTokenHandler().getToken(tokenCode);
         if (tokenInfo == null) {
             throw ObccException.create(EExceptionCode.RETURN_NULL_OR_EMPTY, "tokencode:{0} 找不到TokenInfo对象", tokenCode);
         }
-        //只做特有的部分
-        ExProps exProps = new ExProps() {{
-            setRecordInfo(new RecordInfo() {{
-                setStmtType(EStmtType.LEDGER_TOKEN_SEND);
-                setSrcUser(srcUsername);
-                setDestUser(destUsername);
-                setToken(tokenCode);
-            }});
-        }};
-        getDriver().getTokenHandler().transfer(bizId, account, tokenInfo, null, tokenCode, exProps, null);
+
+        String destAddr = getDriver().getLocalDb().getAccountInfoDao().getByProp("userName", destUser).getAddress();
+
+        return getDriver().getTokenHandler().transfer(bizId, account, tokenInfo, destAddr, tokenCode, null, null);
 
     }
 
@@ -92,13 +72,13 @@ public class LedgerStatement extends BaseStatement implements ILedgerStatement {
     public String getBalance(@NonNull String username, String tokenCode) throws Exception {
         AccountInfo info = getAccountInfo(username);
         if (tokenCode == null || tokenCode.equals(config.getChain().getToken())) {
-            return getDriver().getAccountHandler().getBalance(info.getAddress(), new ExProps());
+            return getDriver().getAccountHandler().getBalance(info.getAddress(), new ExConfig());
         }
         TokenInfo tokenInfo = getDriver().getTokenHandler().getToken(tokenCode);
         if (tokenInfo == null) {
             throw ObccException.create(EExceptionCode.RETURN_NULL_OR_EMPTY, "tokencode:{0} 找不到TokenInfo对象", tokenCode);
         }
-        return getDriver().getTokenHandler().balanceOf(tokenInfo, info.getAddress(), new ExProps());
+        return getDriver().getTokenHandler().balanceOf(tokenInfo, info.getAddress(), new ExConfig());
 
     }
 

@@ -1,13 +1,11 @@
 package cn.obcc.driver.tech;
 
 import cn.obcc.driver.IChainHandler;
-import cn.obcc.driver.module.fn.IUpchainFn;
+import cn.obcc.driver.module.fn.IStateListener;
 import cn.obcc.driver.vo.params.SignTxParams;
 import cn.obcc.driver.vo.params.TxParams;
 import cn.obcc.driver.vo.SignTxData;
-import cn.obcc.config.ExProps;
-import cn.obcc.vo.RetData;
-import cn.obcc.vo.driver.BlockTxInfo;
+import cn.obcc.config.ExConfig;
 
 /**
  * @author mgicode
@@ -27,7 +25,7 @@ public interface ITxSignatureHandler<T> extends IChainHandler<T> {
      * @return
      */
     public SignTxParams getParams(String sourceAddress, String destinationAddress, String currency,
-                                           String amount, ExProps config) throws Exception;
+                                           String amount, ExConfig config) throws Exception;
 
     /**
      * @param transInfo
@@ -35,7 +33,7 @@ public interface ITxSignatureHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public SignTxData getData(TxParams transInfo, ExProps config) throws Exception;
+    public SignTxData getData(TxParams transInfo, ExConfig config) throws Exception;
 
     /**
      * 签名的数据提交
@@ -46,7 +44,7 @@ public interface ITxSignatureHandler<T> extends IChainHandler<T> {
      * @param config
      * @return
      */
-    public String sendData(String sourceAddress, String signedData, ExProps config)
+    public String sendData(String sourceAddress, String signedData, ExConfig config)
             throws Exception;
 
     /**
@@ -57,7 +55,7 @@ public interface ITxSignatureHandler<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public String sendData(String sourceAddress, String signedData, ExProps config,
-                                    IUpchainFn<BlockTxInfo> callback) throws Exception;
+    public String sendData(String sourceAddress, String signedData, ExConfig config,
+                                    IStateListener callback) throws Exception;
 
 }

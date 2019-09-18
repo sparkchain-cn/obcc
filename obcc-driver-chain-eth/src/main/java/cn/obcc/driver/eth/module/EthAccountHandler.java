@@ -1,6 +1,6 @@
 package cn.obcc.driver.eth.module;
 
-import cn.obcc.config.ExProps;
+import cn.obcc.config.ExConfig;
 import cn.obcc.driver.eth.module.account.AccountTransfer;
 import cn.obcc.driver.eth.module.tech.common.BlockTxInfoParser;
 import cn.obcc.driver.module.IAccountHandler;
@@ -8,7 +8,7 @@ import cn.obcc.driver.module.base.BaseAccountHandler;
 import cn.obcc.driver.utils.JunctionUtils;
 import cn.obcc.driver.vo.Account;
 import cn.obcc.driver.vo.ChainPipe;
-import cn.obcc.driver.vo.SrcAccount;
+import cn.obcc.driver.vo.FromAccount;
 import cn.obcc.exception.ObccException;
 import cn.obcc.exception.enums.EExceptionCode;
 import cn.obcc.vo.driver.BlockTxInfo;
@@ -59,7 +59,7 @@ public class EthAccountHandler extends BaseAccountHandler<Web3j> implements IAcc
 
 
     @Override
-    public Long[] calGas(SrcAccount account, String amount, String destAddress, ExProps config) throws Exception {
+    public Long[] calGas(FromAccount account, String amount, String destAddress, ExConfig config) throws Exception {
 
         Web3j web3j = getClient();
         if (account.getGasLimit() == null) {
@@ -88,7 +88,7 @@ public class EthAccountHandler extends BaseAccountHandler<Web3j> implements IAcc
     }
 
     @Override
-    public boolean checkAccount(SrcAccount account, ExProps config) throws Exception {
+    public boolean checkAccount(FromAccount account, ExConfig config) throws Exception {
         Credentials credentials = Credentials.create(account.getSecret());
         if (account.getSrcAddr().equalsIgnoreCase(credentials.getAddress())) {
             return true;
@@ -101,8 +101,8 @@ public class EthAccountHandler extends BaseAccountHandler<Web3j> implements IAcc
     public String onTransfer(ChainPipe pipe) throws Exception {
         // 把十进制的转换成ETH的Wei, 1ETH = 10^18 Wei
         BigInteger amount = Convert.toWei(pipe.getAmount(), Convert.Unit.ETHER).toBigInteger();
-        EthSendTransaction est = AccountTransfer.trySendTx(pipe.getSrcAccount(), amount,
-                pipe.getDestAddr(), driver.getNonceCalculator(), pipe.getConfig(), getClient());
+        EthSendTransaction est = AccountTransfer.trySendTx(pipe.getFromAccount(), amount,
+                pipe.getDestAddr(), driver.getNonceCalculator(), pipe.getExConfig(), getClient());
 
         Response.Error err = est.getError();
         if (err != null) {
@@ -115,7 +115,7 @@ public class EthAccountHandler extends BaseAccountHandler<Web3j> implements IAcc
 
 
     @Override
-    public BlockTxInfo getTxByHash(String hash, ExProps config) throws Exception {
+    public BlockTxInfo getTxByHash(String hash, ExConfig config) throws Exception {
         try {
             Web3j web3j = getClient();
             Transaction tx;
@@ -134,7 +134,7 @@ public class EthAccountHandler extends BaseAccountHandler<Web3j> implements IAcc
 
 
     @Override
-    public String getBalance(String addr, ExProps config) throws Exception {
+    public String getBalance(String addr, ExConfig config) throws Exception {
         try {
             addr = JunctionUtils.hexAddrress(addr);
             Web3j web3j = getClient();

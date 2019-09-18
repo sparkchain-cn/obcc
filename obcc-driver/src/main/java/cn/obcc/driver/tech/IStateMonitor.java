@@ -1,14 +1,10 @@
 package cn.obcc.driver.tech;
 
 import cn.obcc.driver.IChainHandler;
-import cn.obcc.config.ExProps;
-import cn.obcc.driver.module.fn.IUpchainFn;
-import cn.obcc.exception.enums.ETransferStatus;
+import cn.obcc.config.ExConfig;
 import cn.obcc.vo.BizState;
-import cn.obcc.vo.RetData;
 import net.jodah.expiringmap.ExpiringMap;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -75,5 +71,5 @@ public interface IStateMonitor<T> extends IChainHandler<T> {
      * @return
      * @throws Exception
      */
-    public Long getBlockHeight(ExProps config) throws Exception;
+    public Long getBlockHeight(ExConfig config) throws Exception;
 }

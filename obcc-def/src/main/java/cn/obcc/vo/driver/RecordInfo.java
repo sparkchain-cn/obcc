@@ -3,14 +3,14 @@ package cn.obcc.vo.driver;
 import cn.obcc.exception.enums.EMsgType;
 import cn.obcc.exception.enums.EStmtType;
 import cn.obcc.exception.enums.EStoreType;
-import cn.obcc.exception.enums.ETransferStatus;
-import cn.obcc.vo.BcMemo;
+import cn.obcc.exception.enums.ETransferState;
 import cn.obcc.vo.Entity;
 import com.alibaba.fastjson.JSON;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,7 +26,7 @@ import java.util.List;
 public class RecordInfo extends Entity {
     @Id
     private long id;
-    //重发不在driver,driver只有网络IOException才重试
+
     private String bizId;
     //每个bizId在一条链上
     private String chainCode;
@@ -40,6 +40,9 @@ public class RecordInfo extends Entity {
     private String orignBizId;
     private long updateOrder;//更新的第几次
 
+    private String funcName;
+    private String funcParams;
+
     private String srcUser;
     private String srcAccount;
     private String token;
@@ -51,7 +54,7 @@ public class RecordInfo extends Entity {
 
     //流水条数
     private int txSize;
-    private String hashs;
+    private String hashes;
 
     @Transient
     private List<TxRecv> txRecvList = new ArrayList<>();
@@ -75,9 +78,11 @@ public class RecordInfo extends Entity {
     private String consensusJson;
 
     //transfer state
-    private ETransferStatus state;
+    private ETransferState state;
 
+    private Date createTime;
 
+    private Date updateTime;
 
     public List<TxConSensus> getComputedConSensusList() {
         List<TxConSensus> list = JSON.parseArray(consensusJson, TxConSensus.class);

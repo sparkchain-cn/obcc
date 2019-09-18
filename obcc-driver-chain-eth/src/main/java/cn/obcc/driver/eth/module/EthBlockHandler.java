@@ -7,8 +7,7 @@ import cn.obcc.exception.ObccException;
 import cn.obcc.exception.enums.EExceptionCode;
 import cn.obcc.vo.driver.BlockInfo;
 import cn.obcc.vo.driver.BlockTxInfo;
-import cn.obcc.config.ExProps;
-import cn.obcc.vo.RetData;
+import cn.obcc.config.ExConfig;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.methods.response.EthBlock;
@@ -37,7 +36,7 @@ public class EthBlockHandler extends BaseHandler<Web3j> implements IBlockHandler
     }
 
     @Override
-    public BlockInfo getBlockInfo(long blockHeight, ExProps config) throws Exception {
+    public BlockInfo getBlockInfo(long blockHeight, ExConfig config) throws Exception {
         Web3j web3j = getClient();//config.getClient();
         EthBlock.Block block = web3j.ethGetBlockByNumber(
                 DefaultBlockParameter.valueOf(BigInteger.valueOf(blockHeight)), false).send().getBlock();
@@ -59,7 +58,7 @@ public class EthBlockHandler extends BaseHandler<Web3j> implements IBlockHandler
 
 
     @Override
-    public BlockTxInfo getBlockTxInfo(String hash, ExProps config) throws Exception {
+    public BlockTxInfo getBlockTxInfo(String hash, ExConfig config) throws Exception {
         try {
             Web3j web3j = getClient();//config.getClient();
             Transaction tx;

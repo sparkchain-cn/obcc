@@ -16,7 +16,7 @@ import java.util.List;
 @Data
 public class CompileResult {
 
-    private String bizId; //unique
+    private String pkgName; //unique
 
     private String content;
 

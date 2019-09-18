@@ -10,7 +10,7 @@ import org.web3j.protocol.Web3j;
 import cn.obcc.connect.builder.ChainClientBuilder;
 import cn.obcc.driver.IChainDriver;
 import cn.obcc.driver.base.BaseChainDriver;
-import cn.obcc.driver.eth.conn.builder.EthClientBuilderBase;
+import cn.obcc.driver.eth.conn.builder.EthClientBuilder;
 import cn.obcc.driver.eth.module.tech.EthBaseNonceCalculator;
 import cn.obcc.driver.eth.module.tech.EthStateMonitor;
 
@@ -41,7 +41,7 @@ public class EthChainDriver extends BaseChainDriver<Web3j> implements IChainDriv
 
     @Override
     public Class<? extends ChainClientBuilder<Web3j>> getChainClientBuilderClz() throws Exception {
-        return EthClientBuilderBase.class;
+        return EthClientBuilder.class;
     }
 
 

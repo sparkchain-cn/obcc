@@ -1,8 +1,8 @@
 package cn.obcc.driver.contract.solc.test;
 
-import cn.obcc.driver.contract.solc.core.AbiParser;
-import cn.obcc.driver.contract.solc.core.SolcCompiler;
-import cn.obcc.driver.contract.solc.vo.ContractInfo;
+import cn.obcc.driver.contract.solc.abi.AbiFormatParser;
+import cn.obcc.driver.contract.solc.core.ContractCompiler;
+import cn.obcc.driver.contract.solc.vo.CompileVo;
 import cn.obcc.driver.vo.ContractBin;
 import cn.obcc.utils.FileUtils;
 import com.alibaba.fastjson.JSON;
@@ -26,14 +26,14 @@ import java.util.Map;
  * @details 合约编译
  */
 
-public class TestContractCompiler {
+public class TestCompilerVo {
     private String testSolContent = null;
 
     @BeforeClass
     public void before() {
         //读取sol文件(读取合约内容)
         StringBuilder builder = new StringBuilder();
-        InputStream resourceAsStream = TestContractCompiler.class.getClassLoader().getResourceAsStream("Test.sol");
+        InputStream resourceAsStream = TestCompilerVo.class.getClassLoader().getResourceAsStream("Test.sol");
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         if (resourceAsStream == null) {
             System.out.println("Do not read file : Test.sol");
@@ -55,13 +55,13 @@ public class TestContractCompiler {
 
     }
 
-    private ContractInfo compile() {
+    private CompileVo compile() {
         String source = testSolContent;
         //solc  编译文件路径
         String solcPath = "E:\\_eth_solid\\run\\";
         //编译缓存路径
         String tempPath = FileUtils.getRootPath() + "\\result\\";
-        ContractInfo vo = SolcCompiler.compile(source, solcPath, tempPath, true);
+        CompileVo vo = ContractCompiler.compile(source, solcPath, tempPath, true);
 
         System.out.println(vo.toString());
         return vo;
@@ -78,7 +78,7 @@ public class TestContractCompiler {
     }
 
     private List<String> parseAbi() {
-        ContractInfo vo = compile();
+        CompileVo vo = compile();
 
         ContractBin ecas = vo.getMap().get("ecas");
         System.out.println(ecas.toString());
@@ -96,12 +96,6 @@ public class TestContractCompiler {
         return methods;
     }
 
-    @Test
-    public void getAbiFuncInSize() {
-        for (String m : parseAbi()) {
-            int ecas = AbiParser.abiFuncInSize(compile().getMap().get("ecas").getAbi(), m);
-            System.out.println(String.format("mehtod:%s has %d parameters", m, ecas));
-        }
-    }
+
 
 }

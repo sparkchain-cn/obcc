@@ -19,8 +19,8 @@ import cn.obcc.utils.base.StringUtils;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-public class EthClientBuilderBase extends BaseHttpAndWsClientBuilder<Web3j> implements ChainClientBuilder<Web3j> {
-    public static final Logger logger = LoggerFactory.getLogger(EthClientBuilderBase.class);
+public class EthClientBuilder extends BaseHttpAndWsClientBuilder<Web3j> implements ChainClientBuilder<Web3j> {
+    public static final Logger logger = LoggerFactory.getLogger(EthClientBuilder.class);
 
     private EthWebSocketClient ethWebSocketClient;
 
@@ -112,7 +112,7 @@ public class EthClientBuilderBase extends BaseHttpAndWsClientBuilder<Web3j> impl
 
 
     public static Web3j getClient(@NotNull ObccConfig obccConfig) throws Exception {
-        return (Web3j) ChainClientPoolFactory.getClient(obccConfig, EthClientBuilderBase.class);
+        return (Web3j) ChainClientPoolFactory.getClient(obccConfig, EthClientBuilder.class);
     }
 
     /**
@@ -123,7 +123,7 @@ public class EthClientBuilderBase extends BaseHttpAndWsClientBuilder<Web3j> impl
      * @throws Exception
      */
     public static Web3j getClient(@NotNull ObccConfig config, String uuid) throws Exception {
-        Web3j remote = ChainClientPoolFactory.getClient(config.getChain().getName(), uuid, EthClientBuilderBase.class);
+        Web3j remote = ChainClientPoolFactory.getClient(config.getChain().getName(), uuid, EthClientBuilder.class);
         return remote;
     }
 
