@@ -1,7 +1,7 @@
 package cn.obcc.def.callback;
 
 import cn.obcc.stragegy.IStragegy;
-import cn.obcc.vo.driver.BlockTxInfo;
+import cn.obcc.vo.db.BlockTxInfo;
 
 /**
  * @author mgicode

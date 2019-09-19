@@ -3,7 +3,7 @@ package cn.obcc.def.token;
 import cn.obcc.stragegy.IStragegy;
 import cn.obcc.vo.contract.ContractRec;
 import cn.obcc.vo.contract.TokenRec;
-import cn.obcc.vo.driver.TokenInfo;
+import cn.obcc.vo.db.TokenInfo;
 
 /**
  * @author pengrk

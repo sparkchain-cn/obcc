@@ -3,7 +3,7 @@ package cn.obcc.driver.eth.module.account;
 import cn.obcc.config.ExConfig;
 import cn.obcc.driver.eth.EthConstants;
 import cn.obcc.driver.tech.INonceCalculator;
-import cn.obcc.driver.vo.FromAccount;
+import cn.obcc.vo.driver.FromAccount;
 import cn.obcc.exception.ObccException;
 import cn.obcc.enums.EExceptionCode;
 import cn.obcc.utils.base.StringUtils;

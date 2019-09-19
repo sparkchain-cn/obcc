@@ -1,7 +1,7 @@
 package cn.obcc.driver.tech;
 
 import cn.obcc.driver.IDriverHandler;
-import cn.obcc.driver.vo.ChainPipe;
+import cn.obcc.vo.driver.ChainPipe;
 
 /**
  * @author mgicode

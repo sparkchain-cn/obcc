@@ -2,11 +2,11 @@ package cn.obcc.token.stardard;
 
 import cn.obcc.def.token.ITokenParser;
 import cn.obcc.driver.IChainDriver;
-import cn.obcc.driver.utils.ConvertUtils;
+import cn.obcc.utils.ConvertUtils;
 import cn.obcc.stragegy.BaseStrategy;
 import cn.obcc.vo.contract.ContractRec;
 import cn.obcc.vo.contract.TokenRec;
-import cn.obcc.vo.driver.TokenInfo;
+import cn.obcc.vo.db.TokenInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

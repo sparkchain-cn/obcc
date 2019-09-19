@@ -1,7 +1,6 @@
 package cn.obcc.driver.eth.module.contract;
 
-
-import cn.obcc.driver.contract.solc.utils.AbiFuncUtils;
+import cn.obcc.contract.solc.utils.AbiFuncUtils;
 import cn.obcc.vo.contract.FuncVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

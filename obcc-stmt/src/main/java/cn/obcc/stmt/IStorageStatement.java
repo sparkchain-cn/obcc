@@ -3,7 +3,7 @@ package cn.obcc.stmt;
 import java.io.File;
 import java.io.InputStream;
 
-import cn.obcc.driver.vo.BizTxInfo;
+import cn.obcc.vo.driver.BizTxInfo;
 import cn.obcc.enums.EStoreType;
 
 /**

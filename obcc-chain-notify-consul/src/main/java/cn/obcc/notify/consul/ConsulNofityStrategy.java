@@ -3,11 +3,8 @@ package cn.obcc.notify.consul;
 
 import cn.obcc.def.callback.ICallBackNotify;
 import cn.obcc.driver.IChainDriver;
-import cn.obcc.enums.ETransferState;
 import cn.obcc.stragegy.BaseStrategy;
-import cn.obcc.vo.BizState;
-import cn.obcc.vo.driver.BlockTxInfo;
-import com.alibaba.fastjson.JSON;
+import cn.obcc.vo.db.BlockTxInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

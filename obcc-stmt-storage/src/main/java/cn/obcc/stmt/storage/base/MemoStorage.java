@@ -2,7 +2,7 @@ package cn.obcc.stmt.storage.base;
 
 import cn.obcc.config.ObccConfig;
 import cn.obcc.driver.IChainDriver;
-import cn.obcc.driver.vo.FromAccount;
+import cn.obcc.vo.driver.FromAccount;
 import cn.obcc.vo.KeyValue;
 
 import java.io.ByteArrayOutputStream;

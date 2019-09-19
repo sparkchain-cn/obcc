@@ -3,10 +3,8 @@ package cn.obcc.db.dao;
 import cn.obcc.db.base.JdbcDao;
 import cn.obcc.db.base.BaseJdbcTemplateDao;
 import cn.obcc.utils.base.StringUtils;
-import cn.obcc.vo.driver.ContractInfo;
+import cn.obcc.vo.db.ContractInfo;
 import lombok.NonNull;
-
-import javax.validation.constraints.NotEmpty;
 
 /**
  * @author pengrk

@@ -1,12 +1,12 @@
 package cn.obcc.driver.eth.module;
 
-import cn.obcc.driver.base.BaseHandler;
+import cn.obcc.driver.base.BaseDriverHandler;
 import cn.obcc.driver.eth.module.tech.common.BlockTxInfoParser;
-import cn.obcc.driver.module.IBlockHandler;
+import cn.obcc.driver.handler.IBlockHandler;
 import cn.obcc.exception.ObccException;
 import cn.obcc.enums.EExceptionCode;
-import cn.obcc.vo.driver.BlockInfo;
-import cn.obcc.vo.driver.BlockTxInfo;
+import cn.obcc.vo.db.BlockInfo;
+import cn.obcc.vo.db.BlockTxInfo;
 import cn.obcc.config.ExConfig;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
@@ -17,7 +17,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EthBlockHandler extends BaseHandler<Web3j> implements IBlockHandler<Web3j> {
+public class EthBlockHandler extends BaseDriverHandler<Web3j> implements IBlockHandler<Web3j> {
 
 
     @Override

@@ -15,34 +15,24 @@
         <module>obcc-def-nonce</module>
         <module>obcc-def-state</module>
         <module>obcc-def-chain-notify</module>
+        <module>obcc-def-contract</module>
+
 
         <module>obcc-exception</module>
         <module>obcc-utils</module>
         <module>obcc-pool</module>
+
         <module>obcc-driver</module>
         <module>obcc-local-db</module>
         <module>obcc-stmt</module>
 
 
-        <module>obcc-driver-contract</module>
-        <module>obcc-driver-contract-solc</module>
-
-
-
         <module>obcc-local-db-sqlite</module>
         <module>obcc-local-db-mysql</module>
-
 
         <module>obcc-stmt-db</module>
         <module>obcc-stmt-storage</module>
         <module>obcc-stmt-ledger</module>
-
-        <module>obcc-driver-chain-eth</module>
-
-        <module>obcc-client</module>
-        <module>obcc-client-examples</module>
-
-
 
 
         <module>obcc-chain-notify-proc</module>
@@ -54,6 +44,20 @@
         <module>obcc-nonce-redis</module>
         <module>obcc-nonce-biz</module>
         <module>obcc-memo-json</module>
+        <module>obcc-state-proc</module>
+        <module>obcc-state-redis</module>
+        <module>obcc-driver-base</module>
+        <module>obcc-contract-solc</module>
+
+
+        <module>obcc-driver-chain-eth</module>
+
+        <module>obcc-client</module>
+        <module>obcc-client-examples</module>
+
+
+
+
 
 
     </modules>

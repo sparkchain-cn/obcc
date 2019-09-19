@@ -3,7 +3,7 @@ package cn.obcc.notify.uri;
 import cn.obcc.def.callback.ICallBackNotify;
 import cn.obcc.driver.IChainDriver;
 import cn.obcc.stragegy.BaseStrategy;
-import cn.obcc.vo.driver.BlockTxInfo;
+import cn.obcc.vo.db.BlockTxInfo;
 
 /**
  * @author mgicode

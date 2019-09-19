@@ -1,6 +1,6 @@
 package cn.obcc.driver.eth;
 
-import cn.obcc.driver.base.BaseHandler;
+import cn.obcc.driver.base.BaseDriverHandler;
 import cn.obcc.driver.eth.module.*;
 import cn.obcc.driver.eth.module.tech.EthCallBackHandler;
 import cn.obcc.driver.eth.module.tech.EthBaseMemoParser;
@@ -20,8 +20,8 @@ import java.util.Map;
 public class EthChainDriver extends BaseChainDriver<Web3j> implements IChainDriver<Web3j> {
 
     @Override
-    protected Map<String, Class<? extends BaseHandler>> getHanlderClzes() {
-        return new HashMap<String, Class<? extends BaseHandler>>() {{
+    protected Map<String, Class<? extends BaseDriverHandler>> getHanlderClzes() {
+        return new HashMap<String, Class<? extends BaseDriverHandler>>() {{
             put(EDriverHandlerType.ContractHandler.getName(), EthBaseContractHandler.class);
             put(EDriverHandlerType.BlockHandler.getName(), EthBlockHandler.class);
             put(EDriverHandlerType.CallbackListener.getName(), EthCallBackHandler.class);

@@ -1,6 +1,6 @@
 package cn.obcc.driver.eth.module.signature;
 
-import cn.obcc.driver.vo.params.SignTxParams;
+import cn.obcc.vo.driver.SignTxParams;
 import cn.obcc.config.ExConfig;
 import cn.obcc.vo.RetData;
 import org.web3j.tx.gas.DefaultGasProvider;

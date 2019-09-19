@@ -1,15 +1,15 @@
 package cn.obcc.stmt.ledger;
 
 import cn.obcc.config.ExConfig;
-import cn.obcc.driver.vo.FromAccount;
+import cn.obcc.vo.driver.FromAccount;
 import cn.obcc.exception.ObccException;
 import cn.obcc.enums.EExceptionCode;
 import cn.obcc.stmt.ILedgerStatement;
 import cn.obcc.stmt.base.BaseStatement;
 import cn.obcc.stmt.fn.ITokenSendFn;
 import cn.obcc.vo.Page;
-import cn.obcc.vo.driver.AccountInfo;
-import cn.obcc.vo.driver.TokenInfo;
+import cn.obcc.vo.db.AccountInfo;
+import cn.obcc.vo.db.TokenInfo;
 import lombok.NonNull;
 
 public class LedgerStatement extends BaseStatement implements ILedgerStatement {

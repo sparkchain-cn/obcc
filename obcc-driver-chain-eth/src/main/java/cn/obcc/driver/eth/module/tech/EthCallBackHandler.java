@@ -5,7 +5,7 @@ import cn.obcc.driver.IChainDriver;
 import cn.obcc.driver.IDriverHandler;
 import cn.obcc.driver.tech.base.CallbackHandler;
 import cn.obcc.driver.eth.module.tech.callback.EthTxMonitor;
-import cn.obcc.driver.module.ICallbackHandler;
+import cn.obcc.driver.handler.ICallbackHandler;
 import io.reactivex.disposables.Disposable;
 import org.web3j.protocol.Web3j;
 

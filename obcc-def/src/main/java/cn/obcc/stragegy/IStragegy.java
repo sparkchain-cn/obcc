@@ -13,6 +13,9 @@ public interface IStragegy<D> {
 
     public void init(D driver) throws Exception;
 
+    public default void onAfterInit() throws Exception {
+    }
+
     public default void destory() throws Exception {
     }
 

@@ -18,26 +18,10 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public interface IStateMonitor<T> extends IDriverHandler<T> {
 
-    //todo:采用redis进行
-    //bizId->bizId
-    public static Map<String, String> BizIdMap = new ConcurrentHashMap<String, String>();
-
-    //hash->state
-    public static ExpiringMap<String, BizState> StateMap = ExpiringMap.builder()
-            .variableExpiration()
-            .build();
-
-    //bizId->state
-    public static ExpiringMap<String, BizState> BizStateMap = ExpiringMap.builder()
-            .variableExpiration()
-            .build();
-
-
-
 
     public void checkAndSetBizId(String bizId) throws Exception;
 
-    public void checkAndsupplyBizId(String bizId) throws Exception;
+    public void checkAndSupplyBizId(String bizId) throws Exception;
 
     public void checkBizId(String bizId) throws Exception;
 
@@ -55,6 +39,7 @@ public interface IStateMonitor<T> extends IDriverHandler<T> {
     public void delBizState(String bizId) throws Exception;
 
 
+
     public void setHashState(String hash, BizState status) throws Exception;
 
     public BizState getHashState(String hash) throws Exception;
@@ -64,12 +49,5 @@ public interface IStateMonitor<T> extends IDriverHandler<T> {
     public void delHashState(String hash) throws Exception;
 
 
-    /**
-     * pengrk created or updated at 2019年3月29日 下午3:34:51
-     *
-     * @param config
-     * @return
-     * @throws Exception
-     */
-    public Long getBlockHeight(ExConfig config) throws Exception;
+
 }

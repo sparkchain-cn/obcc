@@ -3,7 +3,7 @@ package cn.obcc.driver.eth.module.tech.callback;
 import cn.obcc.config.ObccConfig;
 import cn.obcc.driver.IChainDriver;
 import cn.obcc.driver.eth.module.tech.common.BlockTxInfoParser;
-import cn.obcc.vo.driver.BlockTxInfo;
+import cn.obcc.vo.db.BlockTxInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.web3j.protocol.Web3j;

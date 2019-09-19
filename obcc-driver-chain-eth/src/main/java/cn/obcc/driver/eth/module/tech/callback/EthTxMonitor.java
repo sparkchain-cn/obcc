@@ -2,7 +2,7 @@ package cn.obcc.driver.eth.module.tech.callback;
 
 import cn.obcc.config.ObccConfig;
 import cn.obcc.driver.IChainDriver;
-import cn.obcc.vo.driver.BlockTxInfo;
+import cn.obcc.vo.db.BlockTxInfo;
 import io.reactivex.Flowable;
 import io.reactivex.disposables.Disposable;
 import org.slf4j.Logger;

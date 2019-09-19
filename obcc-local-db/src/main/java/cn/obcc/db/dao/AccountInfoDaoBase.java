@@ -2,7 +2,7 @@ package cn.obcc.db.dao;
 
 import cn.obcc.db.base.JdbcDao;
 import cn.obcc.db.base.BaseJdbcTemplateDao;
-import cn.obcc.vo.driver.AccountInfo;
+import cn.obcc.vo.db.AccountInfo;
 
 /**
  * @author pengrk

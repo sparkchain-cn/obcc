@@ -103,6 +103,11 @@ public class ObccConfig {
 
     private String memoStrategyClzName = "cn.obcc.memo.json.MemoJsonStragegy";
 
+    private String bizStateStrategyClzName = "cn.obcc.state.proc.BizStateProcStrategy";
+    private String hashStateStrategyClzName = "cn.obcc.state.proc.HashStateProcStrategy";
+    private String bizIdCheckStrategyClzName = "cn.obcc.state.proc.BizIdCheckProcStrategy";
+    private String comtractStrategyClzName = "cn.obcc.contract.solc.ContractSolStragegy";
+
     public void setNodeUrl(String nodeUrl) {
         this.nodeUrl = nodeUrl;
         this.getPoolConfig().getNodeWeights().add(new ChainNodeWeight() {{
