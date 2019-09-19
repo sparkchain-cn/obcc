@@ -4,14 +4,10 @@ import cn.obcc.config.ObccConfig;
 import cn.obcc.driver.IChainDriver;
 import cn.obcc.driver.eth.module.tech.common.BlockTxInfoParser;
 import cn.obcc.vo.driver.BlockTxInfo;
-import io.reactivex.disposables.Disposable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.Transaction;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author pengrk
@@ -45,7 +41,7 @@ public class EthCbSupport {
             }
             boolean isContract = BlockTxInfoParser.isContract(web3j, t);
             //解析区块流水
-            String chainCode = driver.getObccConfig().getChain().getName();
+            String chainCode = driver.getConfig().getChain().getName();
             BlockTxInfo txInfo = BlockTxInfoParser.parseTxInfo(web3j, chainCode, driver, t, isContract);
             //todo:修改异步
             if (txInfo != null) {
@@ -76,7 +72,7 @@ public class EthCbSupport {
             return null;
         }
         //解析区块流水
-        String chainCode = driver.getObccConfig().getChain().getName();
+        String chainCode = driver.getConfig().getChain().getName();
         BlockTxInfo txInfo = BlockTxInfoParser.parseTxInfo(web3j, chainCode, driver, t, isContract);
         //todo:修改异步
         if (txInfo != null) {
@@ -94,7 +90,7 @@ public class EthCbSupport {
         //过滤非本应用的
         boolean isContract = BlockTxInfoParser.isContract(web3j, t);
         //解析区块流水
-        String chainCode = driver.getObccConfig().getChain().getName();
+        String chainCode = driver.getConfig().getChain().getName();
         BlockTxInfo txInfo = BlockTxInfoParser.parseTxInfo(web3j, chainCode, driver, t, isContract);
         //todo:修改异步
         if (txInfo != null) {

@@ -1,8 +1,8 @@
 package cn.obcc.driver.module.base;
 
 import cn.obcc.driver.base.BaseHandler;
-import cn.obcc.driver.module.fn.IStateListener;
-import cn.obcc.driver.ICallbackRegister;
+import cn.obcc.listener.IStateListener;
+import cn.obcc.driver.tech.ICallbackRegister;
 import net.jodah.expiringmap.ExpirationPolicy;
 import net.jodah.expiringmap.ExpiringMap;
 import org.slf4j.Logger;

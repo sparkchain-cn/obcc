@@ -2,16 +2,19 @@ package cn.obcc.driver.eth.module;
 
 import cn.obcc.config.ExConfig;
 import cn.obcc.driver.contract.BaseContractHandler;
-import cn.obcc.driver.contract.solc.abi.AbiFormatParser;
+
 import cn.obcc.driver.contract.solc.utils.AbiFuncUtils;
-import cn.obcc.driver.eth.module.contract.ContractEncoder;
+import cn.obcc.driver.eth.module.contract.FuncEncoder;
+import cn.obcc.driver.eth.module.contract.FuncDecoder;
+import cn.obcc.driver.eth.module.contract.InputTypeEncoder;
+import cn.obcc.driver.eth.module.contract.MethodIdEncoder;
 import cn.obcc.driver.module.IContractHandler;
-import cn.obcc.driver.module.fn.IStateListener;
+import cn.obcc.listener.IStateListener;
 import cn.obcc.driver.vo.ChainPipe;
-import cn.obcc.driver.vo.ContractRec;
+import cn.obcc.vo.contract.ContractRec;
 import cn.obcc.driver.vo.FromAccount;
 import cn.obcc.exception.ObccException;
-import cn.obcc.exception.enums.EExceptionCode;
+import cn.obcc.enums.EExceptionCode;
 import cn.obcc.utils.base.StringUtils;
 import cn.obcc.vo.KeyValue;
 import cn.obcc.vo.contract.FuncVo;
@@ -43,10 +46,17 @@ public class EthBaseContractHandler extends BaseContractHandler<Web3j> implement
         ContractRec rec = new ContractRec();
         rec.setMethod(methodName);
 
-        List<String> inputNames = AbiFormatParser.getFunctionInputNames(contractInfo.getAbi(), methodName);
-        List<String> inputTypes = AbiFormatParser.getFunctionInputTypes(contractInfo.getAbi(), methodName);
+        FuncVo vo = AbiFuncUtils.getFuncVo(contractInfo.getAbi(), methodName);
+
+        List<String> inputNames = AbiFuncUtils.getInputNames(vo);
+        List<String> inputTypes = AbiFuncUtils.getInputTypes(vo);
+
+//        List<String> inputNames = AbiFormatParser.getFunctionInputNames(contractInfo.getAbi(), methodName);
+//        List<String> inputTypes = AbiFormatParser.getFunctionInputTypes(contractInfo.getAbi(), methodName);
         //name->values
-        List<KeyValue> values = ContractEncoder.decodeParameters(input.substring(12), inputNames, ContractEncoder.genInputParamTypes(inputTypes));
+
+        List<Class<? extends Type>> typeClsList = InputTypeEncoder.createInputTypeClzList(inputTypes);
+        List<KeyValue> values = FuncDecoder.decodeParameters(input.substring(12), inputNames, typeClsList);
 
         rec.setParams(values);
         return rec;
@@ -54,8 +64,11 @@ public class EthBaseContractHandler extends BaseContractHandler<Web3j> implement
 
     @Override
     public String encodeConstructor(String abi, List<Object> params) throws Exception {
-        List<String> types = AbiFormatParser.getConstructorInputTypes(abi);
-        List<Type> deployParams = ContractEncoder.genInputParams(types, params);
+        FuncVo vo = AbiFuncUtils.getArgsVo(abi);
+        List<String> types = AbiFuncUtils.getInputTypes(vo);
+        // List<String> types = AbiFormatParser.getConstructorInputTypes(abi);
+        //List<Type> deployParams = ContractEncoder.createInputParams(types, params);
+        List<Type> deployParams = InputTypeEncoder.createInputTypeList(types, params);
         String hex = FunctionEncoder.encodeConstructor(deployParams);
         return hex;
     }
@@ -67,8 +80,8 @@ public class EthBaseContractHandler extends BaseContractHandler<Web3j> implement
         FuncVo vo = AbiFuncUtils.getFuncVo(abi, fnName);
         List<String> inputTypes = AbiFuncUtils.getInputTypes(vo);
         List<String> outputTypes = AbiFuncUtils.getOutPutTypes(vo);
-        String hexData = ContractEncoder.getFnEncodeData(fnName, inputTypes, inputValues, outputTypes);
-
+        //  String hexData = ContractEncoder.getFnEncodeData(fnName, inputTypes, inputValues, outputTypes);
+        String hexData = FuncEncoder.encodeFunc(abi, fnName, inputValues);
         return hexData;
     }
 
@@ -79,8 +92,9 @@ public class EthBaseContractHandler extends BaseContractHandler<Web3j> implement
         List<FuncVo> funcList = AbiFuncUtils.getExecFuncList(abi);
         Map<String, String> map = new HashMap<>();
         for (FuncVo vo : funcList) {
-            List<String> inputTypes = AbiFormatParser.getFunctionInputTypes(abi, vo.getName());
-            String methodId = ContractEncoder.buildMethodId(vo.getName(), inputTypes);
+            List<String> inputTypes = AbiFuncUtils.getInputTypes(vo);
+            //List<String> inputTypes = AbiFormatParser.getFunctionInputTypes(abi, vo.getName());
+            String methodId = MethodIdEncoder.buildMethodId(vo.getName(), inputTypes);
             map.put(methodId, vo.getName());
         }
         return map;
@@ -98,8 +112,8 @@ public class EthBaseContractHandler extends BaseContractHandler<Web3j> implement
         //config.setUpchainType(EUpchainType.ContractInvoke);
 
         ChainPipe pipe = new ChainPipe();
-        pipe.getBizState().setChainCode(getDriver().getObccConfig().getChain().getName());
-      //  pipe.setChainTxType(EChainTxType.Contract);
+        pipe.getBizState().setChainCode(getDriver().getConfig().getChain().getName());
+        //  pipe.setChainTxType(EChainTxType.Contract);
         pipe.getBizState().setBizId(bizId);
         pipe.setFromAccount(fromAccount);
         pipe.setAmount("0");

@@ -1,7 +1,7 @@
 package cn.obcc.driver.eth.utils;
 
 import cn.obcc.exception.ObccException;
-import cn.obcc.exception.enums.EExceptionCode;
+import cn.obcc.enums.EExceptionCode;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.request.Transaction;
 import org.web3j.protocol.core.methods.response.EthEstimateGas;

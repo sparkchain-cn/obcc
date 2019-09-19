@@ -2,10 +2,10 @@ package cn.obcc.driver.contract.core;
 
 import cn.obcc.config.ExConfig;
 import cn.obcc.driver.IChainDriver;
-import cn.obcc.driver.module.fn.IStateListener;
+import cn.obcc.listener.IStateListener;
 import cn.obcc.driver.vo.ChainPipe;
 import cn.obcc.driver.vo.FromAccount;
-import cn.obcc.exception.enums.ETransferState;
+import cn.obcc.enums.ETransferState;
 import cn.obcc.vo.BizState;
 import cn.obcc.vo.driver.BlockTxInfo;
 import cn.obcc.vo.driver.ContractInfo;
@@ -36,7 +36,7 @@ public class DeployExecutor {
         //build chainPipe
         ChainPipe pipe = new ChainPipe();
 
-        pipe.getBizState().setChainCode(driver.getObccConfig().getChain().getName());
+        pipe.getBizState().setChainCode(driver.getConfig().getChain().getName());
         pipe.getBizState().setBizId(bizId);
         pipe.setFromAccount(fromAccount);
         pipe.setAmount("0");
@@ -72,7 +72,7 @@ public class DeployExecutor {
         //config.setUpchainType(EUpchainType.ContractInvoke);
 
         ChainPipe pipe = new ChainPipe();
-        pipe.getBizState().setChainCode(driver.getObccConfig().getChain().getName());
+        pipe.getBizState().setChainCode(driver.getConfig().getChain().getName());
         pipe.getBizState().setBizId(bizId);
         pipe.setFromAccount(fromAccount);
         pipe.setAmount("0");

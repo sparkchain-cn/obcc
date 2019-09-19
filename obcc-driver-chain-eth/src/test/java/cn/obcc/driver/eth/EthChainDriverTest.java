@@ -8,7 +8,7 @@ import cn.obcc.driver.eth.module.tech.*;
 import cn.obcc.driver.module.*;
 import cn.obcc.driver.tech.*;
 import cn.obcc.driver.module.base.BaseCallbackRegister;
-import cn.obcc.driver.ICallbackRegister;
+import cn.obcc.driver.tech.ICallbackRegister;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -88,7 +88,7 @@ public class EthChainDriverTest {
         EthBaseContractHandler ethContractHandler = (EthBaseContractHandler) contractHandler;
 
         Assert.assertEquals(ethContractHandler.getDriver(), chainDriver);
-        Assert.assertEquals(ethContractHandler.getObccConfig(), chainDriver.getObccConfig());
+        Assert.assertEquals(ethContractHandler.getConfig(), chainDriver.getConfig());
     }
 
     @Test
@@ -99,18 +99,18 @@ public class EthChainDriverTest {
         EthBlockHandler handlerImpl = (EthBlockHandler) handler;
 
         Assert.assertEquals(handlerImpl.getDriver(), chainDriver);
-        Assert.assertEquals(handlerImpl.getObccConfig(), chainDriver.getObccConfig());
+        Assert.assertEquals(handlerImpl.getConfig(), chainDriver.getConfig());
     }
 
     @Test
     public void testGetCallbackListener() throws Exception {
 
-        ICallbackListener<Web3j> handler = chainDriver.getCallbackListener();
+        ICallbackHandler<Web3j> handler = chainDriver.getCallbackListener();
         Assert.assertNotNull(handler);
-        EthCallBackListener handlerImpl = (EthCallBackListener) handler;
+        EthCallBackHandler handlerImpl = (EthCallBackHandler) handler;
 
         Assert.assertEquals(handlerImpl.getDriver(), chainDriver);
-        Assert.assertEquals(handlerImpl.getObccConfig(), chainDriver.getObccConfig());
+        Assert.assertEquals(handlerImpl.getConfig(), chainDriver.getConfig());
 
     }
 
@@ -121,7 +121,7 @@ public class EthChainDriverTest {
         EthTokenHandler handlerImpl = (EthTokenHandler) handler;
 
         Assert.assertEquals(handlerImpl.getDriver(), chainDriver);
-        Assert.assertEquals(handlerImpl.getObccConfig(), chainDriver.getObccConfig());
+        Assert.assertEquals(handlerImpl.getConfig(), chainDriver.getConfig());
     }
 
     @Test
@@ -131,7 +131,7 @@ public class EthChainDriverTest {
         EthAccountHandler handlerImpl = (EthAccountHandler) handler;
 
         Assert.assertEquals(handlerImpl.getDriver(), chainDriver);
-        Assert.assertEquals(handlerImpl.getObccConfig(), chainDriver.getObccConfig());
+        Assert.assertEquals(handlerImpl.getConfig(), chainDriver.getConfig());
     }
 
     @Test
@@ -141,7 +141,7 @@ public class EthChainDriverTest {
         EthStateMonitor handlerImpl = (EthStateMonitor) handler;
 
         Assert.assertEquals(handlerImpl.getDriver(), chainDriver);
-        Assert.assertEquals(handlerImpl.getObccConfig(), chainDriver.getObccConfig());
+        Assert.assertEquals(handlerImpl.getConfig(), chainDriver.getConfig());
     }
 
     @Test
@@ -151,17 +151,17 @@ public class EthChainDriverTest {
         EthBaseNonceCalculator handlerImpl = (EthBaseNonceCalculator) handler;
 
         Assert.assertEquals(handlerImpl.getDriver(), chainDriver);
-        Assert.assertEquals(handlerImpl.getObccConfig(), chainDriver.getObccConfig());
+        Assert.assertEquals(handlerImpl.getConfig(), chainDriver.getConfig());
     }
 
     @Test
     public void testGetTxSignature() throws Exception {
-        ITxSignatureHandler<Web3j> handler = chainDriver.getTxSignatureHandler();
+        ISignatureHandler<Web3j> handler = chainDriver.getTxSignatureHandler();
         Assert.assertNotNull(handler);
-        EthTxSignatureHandler handlerImpl = (EthTxSignatureHandler) handler;
+        EthSignatureHandler handlerImpl = (EthSignatureHandler) handler;
 
         Assert.assertEquals(handlerImpl.getDriver(), chainDriver);
-        Assert.assertEquals(handlerImpl.getObccConfig(), chainDriver.getObccConfig());
+        Assert.assertEquals(handlerImpl.getConfig(), chainDriver.getConfig());
     }
 
     @Test
@@ -171,7 +171,7 @@ public class EthChainDriverTest {
         EthBaseMemoParser handlerImpl = (EthBaseMemoParser) handler;
 
         Assert.assertEquals(handlerImpl.getDriver(), chainDriver);
-        Assert.assertEquals(handlerImpl.getObccConfig(), chainDriver.getObccConfig());
+        Assert.assertEquals(handlerImpl.getConfig(), chainDriver.getConfig());
     }
 
     @Test

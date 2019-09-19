@@ -1,6 +1,5 @@
 package cn.obcc.driver.contract.solc.test;
 
-import cn.obcc.driver.contract.solc.abi.AbiFormatParser;
 import cn.obcc.driver.contract.solc.core.ContractCompiler;
 import cn.obcc.driver.contract.solc.vo.CompileVo;
 import cn.obcc.driver.vo.ContractBin;

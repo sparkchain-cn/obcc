@@ -7,8 +7,8 @@ import cn.obcc.driver.IChainDriver;
 import cn.obcc.driver.module.*;
 import cn.obcc.driver.tech.*;
 import cn.obcc.driver.module.base.BaseCallbackRegister;
-import cn.obcc.driver.ICallbackRegister;
-import cn.obcc.exception.enums.EDriverHandlerType;
+import cn.obcc.driver.tech.ICallbackRegister;
+import cn.obcc.enums.EDriverHandlerType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +42,7 @@ public abstract class BaseChainDriver<T> implements IChainDriver<T> {
         handlerClzMap.forEach((key, clz) -> {
             try {
                 handlerMap.put(key, clz.newInstance());
-                handlerMap.get(key).initObccConfig(obccConfig, this);
+                handlerMap.get(key).init(obccConfig, this);
             } catch (InstantiationException e) {
                 e.printStackTrace();
             } catch (Exception e) {
@@ -104,8 +104,8 @@ public abstract class BaseChainDriver<T> implements IChainDriver<T> {
     }
 
     @Override
-    public ICallbackListener<T> getCallbackListener() throws Exception {
-        return (ICallbackListener) handlerMap.get(EDriverHandlerType.CallbackListener.getName());
+    public ICallbackHandler<T> getCallbackListener() throws Exception {
+        return (ICallbackHandler) handlerMap.get(EDriverHandlerType.CallbackListener.getName());
     }
 
     @Override
@@ -129,8 +129,8 @@ public abstract class BaseChainDriver<T> implements IChainDriver<T> {
     }
 
     @Override
-    public ITxSignatureHandler<T> getTxSignatureHandler() throws Exception {
-        return (ITxSignatureHandler) handlerMap.get(EDriverHandlerType.TxSignatureHandler.getName());
+    public ISignatureHandler<T> getTxSignatureHandler() throws Exception {
+        return (ISignatureHandler) handlerMap.get(EDriverHandlerType.TxSignatureHandler.getName());
     }
 
     @Override
@@ -148,7 +148,7 @@ public abstract class BaseChainDriver<T> implements IChainDriver<T> {
     }
 
     @Override
-    public ObccConfig getObccConfig() {
+    public ObccConfig getConfig() {
         return obccConfig;
     }
 

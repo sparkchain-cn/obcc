@@ -5,7 +5,7 @@ import cn.obcc.driver.eth.EthConstants;
 import cn.obcc.driver.tech.INonceCalculator;
 import cn.obcc.driver.vo.FromAccount;
 import cn.obcc.exception.ObccException;
-import cn.obcc.exception.enums.EExceptionCode;
+import cn.obcc.enums.EExceptionCode;
 import cn.obcc.utils.base.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

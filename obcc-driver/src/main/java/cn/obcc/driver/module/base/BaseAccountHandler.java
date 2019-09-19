@@ -1,20 +1,26 @@
 package cn.obcc.driver.module.base;
 
+import cn.obcc.config.ExConfig;
 import cn.obcc.driver.base.BaseHandler;
 import cn.obcc.driver.module.IAccountHandler;
-import cn.obcc.driver.module.fn.IStateListener;
+import cn.obcc.driver.module.excutor.AccountTxExcutor;
+import cn.obcc.driver.module.excutor.AcountTransExcutor;
+import cn.obcc.driver.module.excutor.RecordExcutor;
+import cn.obcc.driver.module.excutor.StateCbExcutor;
 import cn.obcc.driver.vo.Account;
 import cn.obcc.driver.vo.BizTxInfo;
 import cn.obcc.driver.vo.ChainPipe;
 import cn.obcc.driver.vo.FromAccount;
-
+import cn.obcc.enums.EExceptionCode;
+import cn.obcc.enums.ETransferState;
 import cn.obcc.exception.ObccException;
-import cn.obcc.exception.enums.*;
+import cn.obcc.listener.IStateListener;
 import cn.obcc.utils.base.StringUtils;
 import cn.obcc.uuid.UuidUtils;
 import cn.obcc.vo.BizState;
-import cn.obcc.vo.driver.*;
-import cn.obcc.config.ExConfig;
+import cn.obcc.vo.driver.AccountInfo;
+import cn.obcc.vo.driver.BlockTxInfo;
+import cn.obcc.vo.driver.RecordInfo;
 import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +36,7 @@ public abstract class BaseAccountHandler<T> extends BaseHandler<T> implements IA
     public static final Logger logger = LoggerFactory.getLogger(BaseAccountHandler.class);
 
 
-    protected abstract String onTransfer(ChainPipe pipe) throws Exception;
+    public abstract String onTransfer(ChainPipe pipe) throws Exception;
 
     @Override
     public AccountInfo createAccount(String bizId, String username, String pwd, ExConfig config) throws Exception {
@@ -55,7 +61,7 @@ public abstract class BaseAccountHandler<T> extends BaseHandler<T> implements IA
     @Override
     public String pay(String bizId, FromAccount account, String amount,
                       String destAddr, IStateListener callback, ExConfig config) throws Exception {
-        ChainPipe pipe = BaseAcountTrans.toChainPipe(bizId, account, amount, destAddr, config, callback);
+        ChainPipe pipe = AcountTransExcutor.toChainPipe(bizId, account, amount, destAddr, config, callback);
         return transfer(pipe);
     }
 
@@ -112,7 +118,7 @@ public abstract class BaseAccountHandler<T> extends BaseHandler<T> implements IA
         StateCbExcutor.call(pipe, null);
 
         //上链
-        String hashes = BaseAcountTrans.multiTransfer(pipe, driver, this);
+        String hashes = AcountTransExcutor.multiTransfer(pipe, driver, this);
 
         return hashes;
 
@@ -120,12 +126,12 @@ public abstract class BaseAccountHandler<T> extends BaseHandler<T> implements IA
 
     @Override
     public BizTxInfo getTxByBizId(String bizId, ExConfig config) throws Exception {
-        return BaseAccountTx.getTxByBizId(bizId, config, getDriver(), this);
+        return AccountTxExcutor.getTxByBizId(bizId, config, getDriver(), this);
     }
 
     @Override
     public BizTxInfo getTxByHashes(@NonNull String hashes, ExConfig config) throws Exception {
-        return BaseAccountTx.getTxByHashs(hashes, config, this);
+        return AccountTxExcutor.getTxByHashs(hashes, config, this);
     }
 
 

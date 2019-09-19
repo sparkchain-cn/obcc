@@ -10,34 +10,50 @@
     <modules>
 
         <module>obcc-def</module>
-        <module>obcc-utils</module>
-        <module>obcc-driver</module>
-        <module>obcc-driver-pool</module>
+        <module>obcc-def-token</module>
+        <module>obcc-def-memo</module>
+        <module>obcc-def-nonce</module>
+        <module>obcc-def-state</module>
+        <module>obcc-def-chain-notify</module>
 
-        <module>obcc-driver-nonce</module>
-        <module>obcc-driver-memo</module>
-        <module>obcc-driver-adjuster</module>
-        <module>obcc-driver-callback</module>
-        <module>obcc-driver-contract-solc</module>
+        <module>obcc-exception</module>
+        <module>obcc-utils</module>
+        <module>obcc-pool</module>
+        <module>obcc-driver</module>
+        <module>obcc-local-db</module>
+        <module>obcc-stmt</module>
+
 
         <module>obcc-driver-contract</module>
-        <module>obcc-driver-callback-pull</module>
-        <module>obcc-driver-callback-notify</module>
-        <module>obcc-driver-callback-notify-consul</module>
+        <module>obcc-driver-contract-solc</module>
 
-        <module>obcc-driver-chain-eth</module>
 
-        <module>obcc-stmt</module>
+
+        <module>obcc-local-db-sqlite</module>
+        <module>obcc-local-db-mysql</module>
+
+
         <module>obcc-stmt-db</module>
         <module>obcc-stmt-storage</module>
         <module>obcc-stmt-ledger</module>
+
+        <module>obcc-driver-chain-eth</module>
+
         <module>obcc-client</module>
         <module>obcc-client-examples</module>
 
-        <module>obcc-local-db</module>
-        <module>obcc-local-db-sqlite</module>
-        <module>obcc-local-db-mysql</module>
-        <module>obcc-driver-state</module>
+
+
+
+        <module>obcc-chain-notify-proc</module>
+        <module>obcc-chain-notify-uri</module>
+        <module>obcc-chain-notify-consul</module>
+        <module>obcc-token-stardard</module>
+        <module>obcc-nonce-proc</module>
+        <module>obcc-nonce-direct</module>
+        <module>obcc-nonce-redis</module>
+        <module>obcc-nonce-biz</module>
+        <module>obcc-memo-json</module>
 
 
     </modules>

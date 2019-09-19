@@ -56,4 +56,25 @@ public class ConvertUtils {
         return toSmall(number, factor).toPlainString();
     }
 
+
+    public static String rvZeroAndDot(String s) {
+        if (StringUtils.isNullOrEmpty(s)) {
+            return null;
+        }
+        if (s.indexOf(".") > 0) {
+            s = s.replaceAll("0+?$", "");//去掉多余的0
+            s = s.replaceAll("[.]$", "");//如最后一位是.则去掉
+        }
+        return s;
+    }
+    public static String hexAddrress(String addr) {
+        if (addr == null) {
+            return null;
+        }
+        if (!addr.startsWith("0x")) {
+            addr = "0x" + addr;
+        }
+        return addr;
+    }
+
 }

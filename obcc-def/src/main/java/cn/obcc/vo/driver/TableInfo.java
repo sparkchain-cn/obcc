@@ -1,7 +1,6 @@
 package cn.obcc.vo.driver;
 
-import cn.obcc.exception.enums.EContractType;
-import cn.obcc.exception.enums.EDbOperaType;
+import cn.obcc.enums.EDbOperaType;
 import lombok.Data;
 
 import javax.persistence.Id;

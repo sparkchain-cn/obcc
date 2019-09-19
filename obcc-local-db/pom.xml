@@ -31,6 +31,11 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.58</version>
         </dependency>
+        <dependency>
+            <groupId>cn.obcc</groupId>
+            <artifactId>obcc-utils</artifactId>
+            <version>${chain.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

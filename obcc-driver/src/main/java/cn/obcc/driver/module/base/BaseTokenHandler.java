@@ -2,19 +2,19 @@ package cn.obcc.driver.module.base;
 
 import cn.obcc.config.ExConfig;
 import cn.obcc.db.utils.BeanUtils;
-import cn.obcc.driver.ITokenParse;
+import cn.obcc.def.token.ITokenParser;
 import cn.obcc.driver.base.BaseHandler;
 import cn.obcc.driver.module.ITokenHandler;
-import cn.obcc.driver.module.fn.IStateListener;
 import cn.obcc.driver.utils.ConvertUtils;
 import cn.obcc.driver.vo.CompileResult;
-import cn.obcc.driver.vo.ContractRec;
 import cn.obcc.driver.vo.FromAccount;
-import cn.obcc.driver.vo.TokenRec;
-import cn.obcc.exception.enums.ETransferState;
+import cn.obcc.enums.ETransferState;
+import cn.obcc.listener.IStateListener;
 import cn.obcc.utils.base.StringUtils;
 import cn.obcc.uuid.UuidUtils;
 import cn.obcc.vo.BizState;
+import cn.obcc.vo.contract.ContractRec;
+import cn.obcc.vo.contract.TokenRec;
 import cn.obcc.vo.driver.BlockTxInfo;
 import cn.obcc.vo.driver.ContractInfo;
 import cn.obcc.vo.driver.TokenInfo;
@@ -144,12 +144,13 @@ public abstract class BaseTokenHandler<T> extends BaseHandler<T> implements ITok
         if (info == null) {
             return null;
         }
-        ITokenParse tokenParse = null;
+        ITokenParser tokenParse = null;
         if (StringUtils.isNotNullOrEmpty(info.getParseClsName())) {
             //todo:cache it
-            tokenParse = (ITokenParse) BeanUtils.newInstance(info.getParseClsName());
+            tokenParse = (ITokenParser) BeanUtils.newInstance(info.getParseClsName());
         } else {
-            tokenParse = new BaseTokenParse();
+            tokenParse = (ITokenParser) BeanUtils.newInstance(config.getStardardTokenParserClzName());
+            /// tokenParse = new BaseTokenParser();
         }
 
         return tokenParse.parse(info, rec);

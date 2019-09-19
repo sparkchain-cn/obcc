@@ -1,17 +1,15 @@
 package cn.obcc.driver.contract.compile;
 
 import cn.obcc.config.ObccConfig;
-import cn.obcc.driver.contract.solc.abi.AbiFormatParser;
+
 import cn.obcc.driver.contract.solc.vo.CompileVo;
 import cn.obcc.driver.vo.CompileResult;
 import cn.obcc.exception.ObccException;
-import cn.obcc.exception.enums.EContractType;
-import cn.obcc.exception.enums.EExceptionCode;
+import cn.obcc.enums.EContractType;
+import cn.obcc.enums.EExceptionCode;
 import cn.obcc.utils.base.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 
 /**
  * ContractCompiler

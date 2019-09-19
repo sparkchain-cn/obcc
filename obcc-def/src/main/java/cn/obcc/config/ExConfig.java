@@ -1,17 +1,9 @@
 package cn.obcc.config;
 
-import cn.obcc.exception.enums.EUpchainType;
-import cn.obcc.vo.BizState;
-import cn.obcc.vo.driver.RecordInfo;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Data
 @NoArgsConstructor

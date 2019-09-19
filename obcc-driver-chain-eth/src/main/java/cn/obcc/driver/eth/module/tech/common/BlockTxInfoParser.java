@@ -5,10 +5,10 @@ import cn.obcc.driver.eth.utils.ContractUtils;
 import cn.obcc.driver.eth.utils.GasFeeUtils;
 import cn.obcc.driver.module.IContractHandler;
 import cn.obcc.driver.module.ITokenHandler;
-import cn.obcc.driver.vo.ContractRec;
-import cn.obcc.driver.vo.TokenRec;
-import cn.obcc.exception.enums.EChainTxType;
-import cn.obcc.exception.enums.ETransferState;
+import cn.obcc.vo.contract.ContractRec;
+import cn.obcc.vo.contract.TokenRec;
+import cn.obcc.enums.EChainTxType;
+import cn.obcc.enums.ETransferState;
 import cn.obcc.utils.base.DateUtils;
 import cn.obcc.utils.base.StringUtils;
 import cn.obcc.vo.BcMemo;
@@ -79,7 +79,7 @@ public class BlockTxInfoParser {
             parseStatus(web3j, hash, gasPrice, txInfo);
             txInfo.setBlockTime(getTradeTime(web3j, blockHash));
             if (!StringUtils.isNullOrEmpty(txInfo.getMemos())) {
-                String preHex = driver.getObccConfig().getMemoPreHex();
+                String preHex = driver.getConfig().getMemoPreHex();
                 // if (txInfo.getMemos().startsWith(preHex)) {
                 //  int preHexLen = preHex.length();
                 BcMemo memo = driver.getMemoParser().decode(txInfo.getMemos());

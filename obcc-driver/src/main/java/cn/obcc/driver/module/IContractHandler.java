@@ -1,9 +1,9 @@
 package cn.obcc.driver.module;
 
-import cn.obcc.driver.IChainHandler;
-import cn.obcc.driver.module.fn.IStateListener;
+import cn.obcc.driver.IDriverHandler;
+import cn.obcc.listener.IStateListener;
 import cn.obcc.driver.vo.CompileResult;
-import cn.obcc.driver.vo.ContractRec;
+import cn.obcc.vo.contract.ContractRec;
 import cn.obcc.driver.vo.FromAccount;
 import cn.obcc.vo.driver.ContractInfo;
 import cn.obcc.config.ExConfig;
@@ -16,7 +16,7 @@ import java.util.List;
  * @email 546711211@qq.com
  * @date 2019年8月22日 上午10:06:43
  */
-public interface IContractHandler<T> extends IChainHandler<T> {
+public interface IContractHandler<T> extends IDriverHandler<T> {
 
     /**
      * <p>

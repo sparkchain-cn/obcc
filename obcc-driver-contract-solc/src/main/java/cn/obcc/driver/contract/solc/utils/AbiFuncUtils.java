@@ -72,6 +72,19 @@ public class AbiFuncUtils {
         }).collect(Collectors.toList());
     }
 
+    public static List<String> getInputNames(@NonNull FuncVo vo) {
+        return vo.getInputs().stream().map(nameTypeVo -> {
+            return nameTypeVo.getName();
+        }).collect(Collectors.toList());
+    }
+
+
+    public static List<String> getOutPutNames(@NonNull FuncVo vo) {
+        return vo.getOutputs().stream().map(nameTypeVo -> {
+            return nameTypeVo.getName();
+        }).collect(Collectors.toList());
+    }
+
 
     private static FuncVo convertToFunc(Map<String, Object> fn) {
         FuncVo vo = new FuncVo();
@@ -105,11 +118,17 @@ public class AbiFuncUtils {
     }
 
 
-    public static List<NameTypeVo> getConstructorInputs(String abi) {
+    public static List<NameTypeVo> getArgsInputs(String abi) {
         Map<String, Object> function = getConstructor(abi);
         List<Object> elements = (List<Object>) function.get("inputs");
         return convertNameType(elements);
     }
+
+    public static FuncVo getArgsVo(String abi) {
+        Map<String, Object> function = getConstructor(abi);
+        return convertToFunc(function);
+    }
+
 
 
     /**

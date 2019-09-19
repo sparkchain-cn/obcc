@@ -2,7 +2,7 @@ package cn.obcc.stmt;
 
 import java.util.List;
 
-import cn.obcc.exception.enums.EDbOperaType;
+import cn.obcc.enums.EDbOperaType;
 import cn.obcc.vo.driver.RecordInfo;
 import cn.obcc.vo.stmt.TableDefinition;
 

@@ -4,10 +4,7 @@ import java.io.File;
 import java.io.InputStream;
 
 import cn.obcc.driver.vo.BizTxInfo;
-import cn.obcc.exception.enums.EStoreType;
-import cn.obcc.stmt.fn.IUploadFn;
-import cn.obcc.stmt.fn.IVerifyFn;
-import cn.obcc.vo.RetData;
+import cn.obcc.enums.EStoreType;
 
 /**
  * @author mgicode

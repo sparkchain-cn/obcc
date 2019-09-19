@@ -5,12 +5,12 @@ import cn.obcc.driver.eth.module.account.AccountTransfer;
 import cn.obcc.driver.eth.module.tech.common.BlockTxInfoParser;
 import cn.obcc.driver.module.IAccountHandler;
 import cn.obcc.driver.module.base.BaseAccountHandler;
-import cn.obcc.driver.utils.JunctionUtils;
+import cn.obcc.driver.utils.ConvertUtils;
 import cn.obcc.driver.vo.Account;
 import cn.obcc.driver.vo.ChainPipe;
 import cn.obcc.driver.vo.FromAccount;
 import cn.obcc.exception.ObccException;
-import cn.obcc.exception.enums.EExceptionCode;
+import cn.obcc.enums.EExceptionCode;
 import cn.obcc.vo.driver.BlockTxInfo;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.ECKeyPair;
@@ -40,7 +40,7 @@ public class EthAccountHandler extends BaseAccountHandler<Web3j> implements IAcc
             ECKeyPair ecKeyPair = Keys.createEcKeyPair();
             String addr = Keys.getAddress(ecKeyPair);
             Account spcAccount = new Account();
-            addr = JunctionUtils.hexAddrress(addr);
+            addr = ConvertUtils.hexAddrress(addr);
             spcAccount.setAddress(addr);
 
             String hexPrivateKey = String.format("%040x", ecKeyPair.getPrivateKey());
@@ -119,7 +119,7 @@ public class EthAccountHandler extends BaseAccountHandler<Web3j> implements IAcc
         try {
             Web3j web3j = getClient();
             Transaction tx;
-            String chaincode = getObccConfig().getChain().getName();
+            String chaincode = getConfig().getChain().getName();
 
             tx = web3j.ethGetTransactionByHash(hash).send().getTransaction().get();
             BlockTxInfo txInfo = BlockTxInfoParser.parseTxInfo(web3j, chaincode, getDriver(), tx);
@@ -136,7 +136,7 @@ public class EthAccountHandler extends BaseAccountHandler<Web3j> implements IAcc
     @Override
     public String getBalance(String addr, ExConfig config) throws Exception {
         try {
-            addr = JunctionUtils.hexAddrress(addr);
+            addr = ConvertUtils.hexAddrress(addr);
             Web3j web3j = getClient();
             EthGetBalance ethGetBalance = web3j.ethGetBalance(addr, DefaultBlockParameterName.LATEST).send();
             BigInteger balance = ethGetBalance.getBalance();

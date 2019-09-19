@@ -1,16 +1,13 @@
 package cn.obcc.stmt.storage.base;
 
-import cn.obcc.config.ExConfig;
 import cn.obcc.config.ObccConfig;
 import cn.obcc.driver.IChainDriver;
-import cn.obcc.driver.module.fn.IStateListener;
 import cn.obcc.driver.vo.FromAccount;
 import cn.obcc.exception.ObccException;
-import cn.obcc.exception.enums.EExceptionCode;
+import cn.obcc.enums.EExceptionCode;
 import cn.obcc.stmt.storage.StorageStatement;
 import cn.obcc.utils.FileSafeUtils;
 import cn.obcc.utils.FileUtils;
-import cn.obcc.vo.BizState;
 import cn.obcc.vo.KeyValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

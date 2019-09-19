@@ -1,6 +1,6 @@
 package cn.obcc.driver.eth.module.tech;
 
-import cn.obcc.driver.memo.BaseMemoParser;
+import cn.obcc.driver.tech.base.BaseMemoParser;
 import org.web3j.protocol.Web3j;
 
 import cn.obcc.driver.tech.IMemoParser;

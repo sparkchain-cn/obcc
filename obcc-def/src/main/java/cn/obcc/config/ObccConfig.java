@@ -1,17 +1,16 @@
 package cn.obcc.config;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import cn.obcc.config.conn.pool.ChainNodeWeight;
-import cn.obcc.config.conn.pool.ConnPoolConfig;
-import cn.obcc.exception.enums.*;
+import cn.obcc.enums.*;
 import cn.obcc.vo.KeyValue;
+import cn.obcc.vo.pool.ChainNodeWeight;
+import cn.obcc.vo.pool.ConnPoolConfig;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -42,8 +41,10 @@ public class ObccConfig {
     private String dbUserName = "root";
     private String dbPassword = "123456";
 
-    private ENonceStrategy nonceStrategy = ENonceStrategy.Memory;
-    private EMemoStrategy memoStrategy = EMemoStrategy.JSON;
+
+    //private ENonceStrategy nonceStrategy = ENonceStrategy.Memory;
+
+
     private ECallbackStrategy callbackStrategy = ECallbackStrategy.Subscribe;
     private EContractType contractType = EContractType.SOLC;
 
@@ -95,6 +96,12 @@ public class ObccConfig {
      */
     private String genePrivateKey = "d66b74561cf0d96766e527122085bb93e777cc758a3a6f485598325cf315209b";
 
+
+    private String stardardTokenParserClzName = "cn.obcc.token.stardard.StardardTokenParser";
+
+    private String nonceStrategyClzName = "cn.obcc.nonce.proc.NonceProcStrategy";
+
+    private String memoStrategyClzName = "cn.obcc.memo.json.MemoJsonStragegy";
 
     public void setNodeUrl(String nodeUrl) {
         this.nodeUrl = nodeUrl;

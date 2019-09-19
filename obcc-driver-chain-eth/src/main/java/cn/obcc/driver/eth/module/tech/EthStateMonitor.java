@@ -2,7 +2,7 @@ package cn.obcc.driver.eth.module.tech;
 
 
 
-import cn.obcc.driver.state.BaseStateMonitor;
+import cn.obcc.driver.tech.base.BaseStateMonitor;
 import cn.obcc.driver.tech.IStateMonitor;
 import cn.obcc.config.ExConfig;
 import org.web3j.protocol.Web3j;

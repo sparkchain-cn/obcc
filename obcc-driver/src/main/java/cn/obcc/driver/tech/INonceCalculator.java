@@ -1,9 +1,9 @@
 package cn.obcc.driver.tech;
 
-import cn.obcc.driver.IChainHandler;
+import cn.obcc.driver.IDriverHandler;
 import cn.obcc.config.ExConfig;
 
-public interface INonceCalculator<T> extends IChainHandler<T> {
+public interface INonceCalculator<T> extends IDriverHandler<T> {
 
 
     /**

@@ -1,6 +1,6 @@
 package cn.obcc.driver.tech;
 
-import cn.obcc.driver.IChainHandler;
+import cn.obcc.driver.IDriverHandler;
 import cn.obcc.config.ExConfig;
 import cn.obcc.vo.BizState;
 import net.jodah.expiringmap.ExpiringMap;
@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @email 546711211@qq.com
  * @date 2019年8月22日 上午10:48:45
  */
-public interface IStateMonitor<T> extends IChainHandler<T> {
+public interface IStateMonitor<T> extends IDriverHandler<T> {
 
     //todo:采用redis进行
     //bizId->bizId

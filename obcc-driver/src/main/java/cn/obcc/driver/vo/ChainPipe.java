@@ -2,7 +2,7 @@ package cn.obcc.driver.vo;
 
 
 import cn.obcc.config.ExConfig;
-import cn.obcc.driver.module.fn.IStateListener;
+import cn.obcc.listener.IStateListener;
 import cn.obcc.vo.BizState;
 import cn.obcc.vo.driver.RecordInfo;
 import lombok.Data;

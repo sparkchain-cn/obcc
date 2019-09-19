@@ -5,8 +5,6 @@ package cn.obcc.db.utils;
  */
 
 
-import cn.obcc.def.annotation.MappingEntity;
-import cn.obcc.def.annotation.MappingId;
 import cn.obcc.utils.base.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +14,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;

@@ -21,6 +21,36 @@
         </dependency>
         <dependency>
             <groupId>cn.obcc</groupId>
+            <artifactId>obcc-exception</artifactId>
+            <version>${chain.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.obcc</groupId>
+            <artifactId>obcc-def-token</artifactId>
+            <version>${chain.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.obcc</groupId>
+            <artifactId>obcc-def-memo</artifactId>
+            <version>${chain.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.obcc</groupId>
+            <artifactId>obcc-def-nonce</artifactId>
+            <version>${chain.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.obcc</groupId>
+            <artifactId>obcc-def-state</artifactId>
+            <version>${chain.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.obcc</groupId>
+            <artifactId>obcc-def-chain-notify</artifactId>
+            <version>${chain.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.obcc</groupId>
             <artifactId>obcc-utils</artifactId>
             <version>${chain.version}</version>
         </dependency>
@@ -43,7 +73,7 @@
 
         <dependency>
             <groupId>cn.obcc</groupId>
-            <artifactId>obcc-driver-pool</artifactId>
+            <artifactId>obcc-pool</artifactId>
             <version>${chain.version}</version>
         </dependency>
         <dependency>

@@ -1,7 +1,7 @@
 package cn.obcc.driver.module;
 
-import cn.obcc.driver.IChainHandler;
-import cn.obcc.driver.module.fn.IStateListener;
+import cn.obcc.driver.IDriverHandler;
+import cn.obcc.listener.IStateListener;
 import cn.obcc.driver.vo.*;
 import cn.obcc.config.ExConfig;
 import cn.obcc.vo.driver.AccountInfo;
@@ -13,7 +13,7 @@ import cn.obcc.vo.driver.BlockTxInfo;
  * @email 546711211@qq.com
  * @date 2019年8月22日 上午9:59:42
  */
-public interface IAccountHandler<T> extends IChainHandler<T> {
+public interface IAccountHandler<T> extends IDriverHandler<T> {
 
     /**
      * 在链上创建钱包,包括激活其钱包,<br>

@@ -4,8 +4,8 @@ import cn.obcc.config.ObccConfig;
 import cn.obcc.config.ExConfig;
 import cn.obcc.driver.contract.BaseContractHandler;
 import cn.obcc.driver.vo.CompileResult;
-import cn.obcc.driver.vo.ContractRec;
-import cn.obcc.exception.enums.EContractType;
+import cn.obcc.vo.contract.ContractRec;
+import cn.obcc.enums.EContractType;
 import cn.obcc.vo.driver.ContractInfo;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -25,8 +25,9 @@ public class BaseContractHandlerTest {
     @BeforeClass
     public void before() throws Exception {
         handler = new BaseContractHandler() {
+
             @Override
-            protected Map<String, String> buildMethodNameIdMap(ContractInfo contractInfo) {
+            protected Map<String, String> buildMethodIdNameMap(String abi) {
                 return null;
             }
 
@@ -36,9 +37,11 @@ public class BaseContractHandlerTest {
             }
 
             @Override
-            public String query(String srcAddr, ContractInfo contractInfo, ExConfig config, String methodName, List params) throws Exception {
+            public String query(String srcAddr, String abi, String contractAddr, String funcName, List params, ExConfig config) throws Exception {
                 return null;
             }
+
+
 
 
             @Override
@@ -58,7 +61,7 @@ public class BaseContractHandlerTest {
         };
         ObccConfig config = new ObccConfig();
         config.setContractType(EContractType.SOLC);
-        handler.initObccConfig(config, null);
+        handler.init(config, null);
 
         //读取sol文件(读取合约内容)
         StringBuilder builder = new StringBuilder();

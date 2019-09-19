@@ -1,6 +1,6 @@
 package cn.obcc.vo;
 
-import cn.obcc.exception.enums.ETransferState;
+import cn.obcc.enums.ETransferState;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

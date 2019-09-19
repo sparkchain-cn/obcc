@@ -6,11 +6,11 @@ import cn.obcc.driver.contract.compile.ContractCompiler;
 import cn.obcc.driver.contract.core.CommContractExecutor;
 import cn.obcc.driver.contract.core.DeployExecutor;
 import cn.obcc.driver.module.IContractHandler;
-import cn.obcc.driver.module.fn.IStateListener;
+import cn.obcc.listener.IStateListener;
 import cn.obcc.driver.vo.CompileResult;
 import cn.obcc.driver.vo.FromAccount;
 import cn.obcc.exception.ObccException;
-import cn.obcc.exception.enums.EExceptionCode;
+import cn.obcc.enums.EExceptionCode;
 import cn.obcc.utils.base.StringUtils;
 import cn.obcc.vo.driver.ContractInfo;
 import com.alibaba.fastjson.JSON;
@@ -77,7 +77,7 @@ public abstract class BaseContractHandler<T> extends BaseHandler<T> implements I
 
     @Override
     public CompileResult compile(String pkgName, String contract, ExConfig config) throws Exception {
-        CompileResult contractCompile = ContractCompiler.compile(contract, getObccConfig());
+        CompileResult contractCompile = ContractCompiler.compile(contract, getConfig());
         contractCompile.setPkgName(pkgName);
         if (contractCompile.getState() == -1) {
             return contractCompile;

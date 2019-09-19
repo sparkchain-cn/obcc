@@ -19,7 +19,7 @@ public interface IChainDriver<T> {
      */
     public IChainDriver<T> init(ObccConfig config, DbFactory db) throws Exception;
 
-    public ObccConfig getObccConfig() throws  Exception;
+    public ObccConfig getConfig() throws  Exception;
 
     public DbFactory getLocalDb() throws Exception;
     /*********************************************************************/
@@ -47,12 +47,12 @@ public interface IChainDriver<T> {
 
     public IBlockHandler<T> getBlockHandler() throws Exception;
 
-    public ITxSignatureHandler<T> getTxSignatureHandler() throws Exception;
+    public ISignatureHandler<T> getTxSignatureHandler() throws Exception;
 
 
     /*****************************************************************/
 
-    public ICallbackListener<T> getCallbackListener() throws  Exception;
+    public ICallbackHandler<T> getCallbackListener() throws  Exception;
 
     public IStateMonitor<T> getStateMonitor() throws Exception;
 

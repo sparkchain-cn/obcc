@@ -1,12 +1,13 @@
 package cn.obcc.driver.eth.module;
 
-import cn.obcc.driver.contract.solc.abi.AbiFormatParser;
+
 import cn.obcc.driver.contract.solc.utils.AbiFuncUtils;
 import cn.obcc.driver.eth.module.token.DefaultSolToken;
 import cn.obcc.driver.module.ITokenHandler;
 import cn.obcc.driver.module.base.BaseTokenHandler;
 import cn.obcc.exception.ObccException;
-import cn.obcc.exception.enums.EExceptionCode;
+import cn.obcc.enums.EExceptionCode;
+import cn.obcc.vo.contract.FuncVo;
 import cn.obcc.vo.driver.TokenInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +44,9 @@ public class EthTokenHandler extends BaseTokenHandler<Web3j> implements ITokenHa
             //return false;
         }
 
-        List<String> names = AbiFormatParser.getFunctionInputNames(token.getContractAbi(), methodName);
+        FuncVo vo = AbiFuncUtils.getFuncVo(token.getContractAbi(), methodName);
+        List<String> names = AbiFuncUtils.getInputNames(vo);
+        // List<String> names = AbiFormatParser.getFunctionInputNames(token.getContractAbi(), methodName);
         //参数为空的check
         if ((names == null || names.size() == 0) && (params == null || params.size() == 0)) {
             return true;

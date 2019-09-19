@@ -1,7 +1,5 @@
 package cn.obcc.driver.vo;
 
-import cn.obcc.driver.utils.JunctionUtils;
-import cn.obcc.utils.base.StringUtils;
 import cn.obcc.vo.driver.BlockTxInfo;
 import lombok.Data;
 

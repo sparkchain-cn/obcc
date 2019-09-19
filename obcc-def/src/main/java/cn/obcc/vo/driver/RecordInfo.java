@@ -1,9 +1,9 @@
 package cn.obcc.vo.driver;
 
-import cn.obcc.exception.enums.EMsgType;
-import cn.obcc.exception.enums.EStmtType;
-import cn.obcc.exception.enums.EStoreType;
-import cn.obcc.exception.enums.ETransferState;
+import cn.obcc.enums.EMsgType;
+import cn.obcc.enums.EStmtType;
+import cn.obcc.enums.EStoreType;
+import cn.obcc.enums.ETransferState;
 import cn.obcc.vo.Entity;
 import com.alibaba.fastjson.JSON;
 import lombok.Data;

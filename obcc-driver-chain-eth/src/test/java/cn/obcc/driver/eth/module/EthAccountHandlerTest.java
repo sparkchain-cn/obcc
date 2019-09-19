@@ -4,13 +4,12 @@ import cn.obcc.config.ExConfig;
 import cn.obcc.config.ObccConfig;
 import cn.obcc.db.DbFactory;
 import cn.obcc.driver.eth.EthChainDriver;
-import cn.obcc.driver.module.fn.IStateListener;
+import cn.obcc.listener.IStateListener;
 import cn.obcc.driver.vo.Account;
 import cn.obcc.driver.vo.BizTxInfo;
 import cn.obcc.driver.vo.ChainPipe;
 import cn.obcc.driver.vo.FromAccount;
-import cn.obcc.exception.enums.EChainTxType;
-import cn.obcc.exception.enums.ETransferState;
+import cn.obcc.enums.ETransferState;
 import cn.obcc.utils.base.DateUtils;
 import cn.obcc.uuid.UuidUtils;
 import cn.obcc.vo.BizState;
@@ -77,10 +76,10 @@ public class EthAccountHandlerTest {
 
         ChainPipe pipe = new ChainPipe();
 
-        pipe.setChainCode(ethAccountHandler.getObccConfig().getChain().getName());
-        pipe.setBizId(UuidUtils.get() + "");
-        this.bizId = pipe.getBizId();
-        pipe.setChainTxType(EChainTxType.Orign);
+        pipe.getBizState().setChainCode(ethAccountHandler.getConfig().getChain().getName());
+        pipe.getBizState().setBizId(UuidUtils.get() + "");
+        this.bizId = pipe.getBizState().getBizId();
+      //  pipe.setChainTxType(EChainTxType.Orign);
         pipe.setFromAccount(new FromAccount() {{
             setSrcAddr(srcAddr);
             setSecret(secret);
@@ -140,7 +139,7 @@ public class EthAccountHandlerTest {
             hash2 = bizState.getHashes();
         };
 
-        String sphash = ethAccountHandler.pay(bizId, account, amount, destAddr, config, callback);
+        String sphash = ethAccountHandler.pay(bizId, account, amount, destAddr, callback, config);
         logger.debug(sphash);
         Assert.assertNotNull(sphash);
 
@@ -162,7 +161,7 @@ public class EthAccountHandlerTest {
     @Test(dependsOnMethods = {"testDoTransfer"})
     public void testGetTxByHashs() throws Exception {
         //testGetTxByBizId和testGetTxByHashs相同
-        BizTxInfo info = ethAccountHandler.getTxByHashs(this.hash, new ExConfig());
+        BizTxInfo info = ethAccountHandler.getTxByHashes(this.hash, new ExConfig());
         Assert.assertNotNull(info);
         Assert.assertNotNull(info.getRecordInfos().get(0));
         Assert.assertEquals(info.getRecordInfos().get(0).getAmount(), txInfo.getAmount());

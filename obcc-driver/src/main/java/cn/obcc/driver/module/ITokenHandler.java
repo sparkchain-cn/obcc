@@ -1,8 +1,10 @@
 package cn.obcc.driver.module;
 
-import cn.obcc.driver.IChainHandler;
-import cn.obcc.driver.module.fn.IStateListener;
+import cn.obcc.driver.IDriverHandler;
+import cn.obcc.listener.IStateListener;
 import cn.obcc.driver.vo.*;
+import cn.obcc.vo.contract.ContractRec;
+import cn.obcc.vo.contract.TokenRec;
 import cn.obcc.vo.driver.TokenInfo;
 import cn.obcc.config.ExConfig;
 
@@ -12,7 +14,7 @@ import cn.obcc.config.ExConfig;
  * @email 546711211@qq.com
  * @date 2019年8月22日 上午9:59:42
  */
-public interface ITokenHandler<T> extends IChainHandler<T> {
+public interface ITokenHandler<T> extends IDriverHandler<T> {
 
     public default String createToken(String bizId, FromAccount account, String tokenName, String tokenCode, Long tokenSupply, ExConfig config) throws Exception {
         return createToken(bizId, account, tokenName, tokenCode, tokenSupply, null, config);

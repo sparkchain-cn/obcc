@@ -1,12 +1,10 @@
 package cn.obcc.vo.driver;
 
-import cn.obcc.exception.enums.EChainTxType;
-import cn.obcc.utils.base.StringUtils;
+import cn.obcc.enums.EChainTxType;
 import cn.obcc.vo.BcMemo;
 import cn.obcc.vo.Entity;
 import lombok.Data;
 
-import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -53,9 +51,9 @@ public class BlockTxInfo extends Entity {
     private String recId;
     private String bizId;
 
-    public boolean isContract() {
-        return StringUtils.isNotNullOrEmpty(contractAddress);
-    }
+    //public boolean isContract() {
+    //    return StringUtils.isNotNullOrEmpty(contractAddress);
+   // }
 
 
 }

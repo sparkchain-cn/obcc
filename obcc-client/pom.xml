@@ -27,11 +27,11 @@
             <artifactId>obcc-utils</artifactId>
             <version>${chain.version}</version>
         </dependency>
-        <dependency>
-            <groupId>cn.obcc</groupId>
-            <artifactId>obcc-driver-pool</artifactId>
-            <version>${chain.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>cn.obcc</groupId>-->
+<!--            <artifactId>obcc-driver-pool</artifactId>-->
+<!--            <version>${chain.version}</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>cn.obcc</groupId>
             <artifactId>obcc-driver</artifactId>
@@ -42,6 +42,60 @@
             <artifactId>obcc-local-db</artifactId>
             <version>${chain.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>cn.obcc</groupId>
+            <artifactId>obcc-chain-notify-proc</artifactId>
+            <version>${chain.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.obcc</groupId>
+            <artifactId>obcc-chain-notify-proc</artifactId>
+            <version>${chain.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.obcc</groupId>
+            <artifactId>obcc-local-db-sqlite</artifactId>
+            <version>${chain.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.obcc</groupId>
+            <artifactId>obcc-memo-json</artifactId>
+            <version>${chain.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.obcc</groupId>
+            <artifactId>obcc-nonce-proc</artifactId>
+            <version>${chain.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.obcc</groupId>
+            <artifactId>obcc-driver-chain-eth</artifactId>
+            <version>${chain.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.obcc</groupId>
+            <artifactId>obcc-stmt-db</artifactId>
+            <version>${chain.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.obcc</groupId>
+            <artifactId>obcc-stmt-ledger</artifactId>
+            <version>${chain.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.obcc</groupId>
+            <artifactId>obcc-stmt-ledger</artifactId>
+            <version>${chain.version}</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>

@@ -2,9 +2,9 @@ package cn.obcc.driver.base;
 
 import cn.obcc.config.ObccConfig;
 import cn.obcc.driver.IChainDriver;
-import cn.obcc.driver.IChainHandler;
+import cn.obcc.driver.IDriverHandler;
 
-public class BaseHandler<T> implements IChainHandler<T> {
+public class BaseHandler<T> implements IDriverHandler<T> {
 
     protected ObccConfig config;
 
@@ -12,14 +12,14 @@ public class BaseHandler<T> implements IChainHandler<T> {
     protected IChainDriver<T> driver;
 
     @Override
-    public IChainHandler initObccConfig(ObccConfig config, IChainDriver<T> driver) throws Exception {
+    public IDriverHandler init(ObccConfig config, IChainDriver<T> driver) throws Exception {
         this.config = config;
         this.driver = driver;
         return this;
     }
 
     @Override
-    public ObccConfig getObccConfig() {
+    public ObccConfig getConfig() {
         return config;
     }
 

@@ -73,40 +73,45 @@
             <artifactId>obcc-utils</artifactId>
             <version>${chain.version}</version>
         </dependency>
-        <dependency>
-            <groupId>cn.obcc</groupId>
-            <artifactId>obcc-driver-nonce</artifactId>
-            <version>${chain.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>cn.obcc</groupId>
-            <artifactId>obcc-driver-memo</artifactId>
-            <version>${chain.version}</version>
-        </dependency>
 
-        <dependency>
-            <groupId>cn.obcc</groupId>
-            <artifactId>obcc-driver-callback</artifactId>
-            <version>${chain.version}</version>
-        </dependency>
         <dependency>
             <groupId>cn.obcc</groupId>
             <artifactId>obcc-driver-contract</artifactId>
             <version>${chain.version}</version>
         </dependency>
+
         <dependency>
             <groupId>cn.obcc</groupId>
-            <artifactId>obcc-driver-state</artifactId>
+            <artifactId>obcc-def-memo</artifactId>
+            <version>${chain.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.obcc</groupId>
+            <artifactId>obcc-def-nonce</artifactId>
+            <version>${chain.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.obcc</groupId>
+            <artifactId>obcc-def-state</artifactId>
+            <version>${chain.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.obcc</groupId>
+            <artifactId>obcc-def-token</artifactId>
+            <version>${chain.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.obcc</groupId>
+            <artifactId>obcc-def-chain-notify</artifactId>
             <version>${chain.version}</version>
         </dependency>
 
 
-        <dependency>
-            <groupId>cn.obcc</groupId>
-            <artifactId>obcc-driver-callback-notify</artifactId>
-            <version>${chain.version}</version>
-            <scope>test</scope>
-        </dependency>
+
         <dependency>
             <groupId>cn.obcc</groupId>
             <artifactId>obcc-local-db-sqlite</artifactId>
@@ -115,11 +120,30 @@
         </dependency>
         <dependency>
             <groupId>cn.obcc</groupId>
-            <artifactId>obcc-driver-adjuster</artifactId>
+            <artifactId>obcc-memo-json</artifactId>
             <version>${chain.version}</version>
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>cn.obcc</groupId>
+            <artifactId>obcc-nonce-proc</artifactId>
+            <version>${chain.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.obcc</groupId>
+            <artifactId>obcc-token-stardard</artifactId>
+            <version>${chain.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>cn.obcc</groupId>
+            <artifactId>obcc-chain-notify-proc</artifactId>
+            <version>${chain.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 

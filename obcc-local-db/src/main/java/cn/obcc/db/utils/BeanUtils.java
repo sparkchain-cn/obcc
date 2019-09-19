@@ -476,7 +476,6 @@ public class BeanUtils {
     public static Object newInstance(String className) {
         try {
             BeanUtils.class.getClassLoader().loadClass(className).newInstance();
-
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {

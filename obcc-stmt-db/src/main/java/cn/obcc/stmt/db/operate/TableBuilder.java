@@ -1,13 +1,11 @@
 package cn.obcc.stmt.db.operate;
 
-import cn.obcc.config.ExConfig;
 import cn.obcc.config.ObccConfig;
 import cn.obcc.driver.IChainDriver;
 import cn.obcc.driver.vo.FromAccount;
-import cn.obcc.exception.enums.EDbOperaType;
+import cn.obcc.enums.EDbOperaType;
 import cn.obcc.uuid.UuidUtils;
 import cn.obcc.vo.KeyValue;
-import cn.obcc.vo.driver.ContractInfo;
 import cn.obcc.vo.driver.TableInfo;
 import cn.obcc.vo.stmt.TableDefinition;
 

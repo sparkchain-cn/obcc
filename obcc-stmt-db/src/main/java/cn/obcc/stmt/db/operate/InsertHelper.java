@@ -1,11 +1,10 @@
 package cn.obcc.stmt.db.operate;
 
-import cn.obcc.config.ExConfig;
 import cn.obcc.config.ObccConfig;
 import cn.obcc.driver.IChainDriver;
 import cn.obcc.driver.vo.FromAccount;
 import cn.obcc.exception.ObccException;
-import cn.obcc.exception.enums.EExceptionCode;
+import cn.obcc.enums.EExceptionCode;
 import cn.obcc.vo.KeyValue;
 import cn.obcc.vo.driver.RecordInfo;
 import com.alibaba.fastjson.JSON;

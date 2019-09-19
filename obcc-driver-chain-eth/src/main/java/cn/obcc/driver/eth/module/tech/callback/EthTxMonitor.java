@@ -2,7 +2,6 @@ package cn.obcc.driver.eth.module.tech.callback;
 
 import cn.obcc.config.ObccConfig;
 import cn.obcc.driver.IChainDriver;
-import cn.obcc.driver.eth.module.tech.common.BlockTxInfoParser;
 import cn.obcc.vo.driver.BlockTxInfo;
 import io.reactivex.Flowable;
 import io.reactivex.disposables.Disposable;
@@ -45,7 +44,7 @@ public class EthTxMonitor {
                     return;
                 }
                 BlockTxInfo info = null;
-                switch (driver.getObccConfig().getCallBackLevel()) {
+                switch (driver.getConfig().getCallBackLevel()) {
                     case SupportUpchain:
                         info = ethCbSupport.supportUpchain(t);
                         break;

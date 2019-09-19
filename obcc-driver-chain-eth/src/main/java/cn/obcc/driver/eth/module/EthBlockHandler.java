@@ -4,7 +4,7 @@ import cn.obcc.driver.base.BaseHandler;
 import cn.obcc.driver.eth.module.tech.common.BlockTxInfoParser;
 import cn.obcc.driver.module.IBlockHandler;
 import cn.obcc.exception.ObccException;
-import cn.obcc.exception.enums.EExceptionCode;
+import cn.obcc.enums.EExceptionCode;
 import cn.obcc.vo.driver.BlockInfo;
 import cn.obcc.vo.driver.BlockTxInfo;
 import cn.obcc.config.ExConfig;
@@ -62,7 +62,7 @@ public class EthBlockHandler extends BaseHandler<Web3j> implements IBlockHandler
         try {
             Web3j web3j = getClient();//config.getClient();
             Transaction tx;
-            String chaincode = getObccConfig().getChain().getName();
+            String chaincode = getConfig().getChain().getName();
             tx = web3j.ethGetTransactionByHash(hash).send().getTransaction().get();
             BlockTxInfo txInfo = BlockTxInfoParser.parseTxInfo(web3j, chaincode, getDriver(), tx);
             if (txInfo != null) {

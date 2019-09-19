@@ -1,6 +1,6 @@
 package cn.obcc.driver.module;
 
-import cn.obcc.driver.IChainHandler;
+import cn.obcc.driver.IDriverHandler;
 import cn.obcc.vo.driver.BlockInfo;
 import cn.obcc.vo.driver.BlockTxInfo;
 import cn.obcc.config.ExConfig;
@@ -11,7 +11,7 @@ import cn.obcc.config.ExConfig;
  * @email 546711211@qq.com
  * @date 2019年8月22日 上午10:04:56
  */
-public interface IBlockHandler<T> extends IChainHandler<T> {
+public interface IBlockHandler<T> extends IDriverHandler<T> {
 
     /**
      * 时间间隔

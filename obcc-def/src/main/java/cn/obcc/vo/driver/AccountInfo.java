@@ -1,6 +1,6 @@
 package cn.obcc.vo.driver;
 
-import cn.obcc.utils.base.StringUtils;
+
 import cn.obcc.vo.Entity;
 import lombok.Data;
 

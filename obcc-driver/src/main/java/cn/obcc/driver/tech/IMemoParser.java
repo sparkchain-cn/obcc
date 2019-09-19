@@ -1,6 +1,6 @@
 package cn.obcc.driver.tech;
 
-import cn.obcc.driver.IChainHandler;
+import cn.obcc.driver.IDriverHandler;
 import cn.obcc.vo.BcMemo;
 
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
  * @email 546711211@qq.com
  * @date 2019年8月27日 上午9:50:21
  */
-public interface IMemoParser<T> extends IChainHandler<T> {
+public interface IMemoParser<T> extends IDriverHandler<T> {
 
     /**
      * 获取支持的大小，以byte为单位

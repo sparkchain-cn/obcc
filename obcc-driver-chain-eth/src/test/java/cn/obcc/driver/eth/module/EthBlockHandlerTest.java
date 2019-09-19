@@ -38,7 +38,7 @@ public class EthBlockHandlerTest {
         chainDriver.init(config, localDb);
 
         ethBlockHandler = new EthBlockHandler();
-        ethBlockHandler.initObccConfig(config, chainDriver);
+        ethBlockHandler.init(config, chainDriver);
     }
 
     @AfterMethod
@@ -57,9 +57,9 @@ public class EthBlockHandlerTest {
         chainDriver.init(config, localDb);
 
         EthBlockHandler ethBlockHandler = new EthBlockHandler();
-        ethBlockHandler.initObccConfig(config, chainDriver);
+        ethBlockHandler.init(config, chainDriver);
 
-        Assert.assertNotNull(ethBlockHandler.getObccConfig());
+        Assert.assertNotNull(ethBlockHandler.getConfig());
         Assert.assertNotNull(ethBlockHandler.getDriver());
     }
 
